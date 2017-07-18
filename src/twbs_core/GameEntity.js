@@ -1,15 +1,16 @@
 const TWBS = {};
 TWBS.Components = {
-    Physics:"Physics",
-    Render:"Render",
-    AI:"AI"
+    Physics: "Physics",
+    Render: "Render",
+    AI: "AI"
 };
+
 /**
  * Super class for all game objects:
  * Game_Character
  * Game_
  */
-class GameEntity{
+class GameEntity {
 
     /**
      * getter for transform
@@ -23,7 +24,7 @@ class GameEntity{
      * constructor
      * initialize components map and transform member
      */
-    constructor(){
+    constructor() {
         this._components = new Map();
         this._transform = new Transform();
     }
@@ -31,25 +32,26 @@ class GameEntity{
     /**
      * constantly updating components
      */
-    update(){
-        this._components.forEach((component)=>{
+    update() {
+        this._components.forEach((component) => {
             component.update();
         });
     }
 
 
 }
+
 /**
  * Superclass for character like entities:
  * battlers, animal(mounts), players, heroes
  *
  * refers to Game_Character in RMMV
  */
-class TWBS_Character extends  GameEntity{
+class TWBS_Character extends GameEntity {
     /**
      *
      */
-    constructor(){
+    constructor() {
         super();
 
         //todo state

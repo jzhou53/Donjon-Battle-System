@@ -7,7 +7,7 @@
  * can have a parent, which allows you to apply position,
  * rotation and scale hierarchically.
  */
-class Transform{
+class Transform {
 
 
     /**
@@ -17,28 +17,40 @@ class Transform{
      * @param scale{Point}
      * @param r{number}
      */
-    constructor(pos,z,scale,r){
+    constructor(pos, z, scale, r) {
+
+
+        this._parent = null;
+        this._childern = [];
+
+        /**
+         * The position of the transform in world space.
+         * @type {number}
+         * @private
+         */
+        this._position = new Point(0, 0);
+
         /**
          * the coordinate of this transform locally
          * @type {Point}
          * @private
          */
-         this._localPosition = pos | new Point(0,0);
+        this._localPosition = pos || new Point(0, 0);
         /**
          * the scale of this transform locally
          * @type {Point}
          * @private
          */
-         this._localScale = scale | new Point(1.0,1.0);
+        this._localScale = scale || new Point(1.0, 1.0);
 
-         this._localRotation = r | 0;
+        this._localRotation = r || 0;
 
         /**
          * this refer to _jumpCount
          * @type {number}
          * @private
          */
-        this._localHigh = z | 0;
+        this._localHight = z || 0;
 
         /**
          * look at the number pad
@@ -50,16 +62,27 @@ class Transform{
     }
 
     /**
+     * @param parent{Transform}
+     */
+    setParent(parent) {
+        if (parent) {
+            this._parent = parent;
+        }
+    }
+
+
+    /**
      * calculate the distance from first transform to the second transform.
      * @param first{Transform}
      * @param second{Transform}
      * @return {number}
      */
-    static distanceTo(first,second){
+    static distanceTo(first, second) {
         let sx = second._localPosition.x - first._localScale.x;
         let sy = second._localPosition.y - first._localScale.y;
-        return Math.abs(sx+sy);
+        return Math.abs(sx + sy);
     }
+
 
 }
 

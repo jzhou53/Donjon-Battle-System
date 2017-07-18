@@ -2,26 +2,31 @@
  *
  * addChild
  */
-class RenderComponent extends Component{
+class RenderComponent extends Component {
     /**
      * getters and setters
      */
     get blendMode() {
         return this._blendMode;
     }
+
     set blendMode(value) {
         this._blendMode = value;
     }
+
     get opacity() {
         return this._opacity;
     }
+
     set opacity(value) {
         this._opacity = value;
     }
-    isTransparent(){
+
+    isTransparent() {
         return this._transparent;
     }
-    setTransparent(transparent){
+
+    setTransparent(transparent) {
         this._transparent = transparent;
     }
 
@@ -30,7 +35,7 @@ class RenderComponent extends Component{
      * @param owner
      * @override
      */
-    constructor(owner){
+    constructor(owner) {
         super(owner);
         //this.initialSprites();
         this._sprites = [];
@@ -46,19 +51,17 @@ class RenderComponent extends Component{
     }
 
 
-
-
 }
 
 /**
  *
  */
-class CharacterRenderComponent extends  RenderComponent{
+class CharacterRenderComponent extends RenderComponent {
     /**
      * initializing class variables
      * @param owner
      */
-    constructor(owner){
+    constructor(owner) {
         super(owner);
 
         this._priorityType = 1;
@@ -72,7 +75,7 @@ class CharacterRenderComponent extends  RenderComponent{
 
     }
 
-    setCharacterBitmap(){
+    setCharacterBitmap() {
 
     }
 

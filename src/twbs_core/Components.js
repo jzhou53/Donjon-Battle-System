@@ -3,7 +3,7 @@
  *  Super abstract class for all components, provide basic owner to game entities,
  *  @abstract
  */
-class Component{
+class Component {
 
     get owner() {
         return this._owner;
@@ -17,8 +17,8 @@ class Component{
      * set the owner when construct the component
      * @param owner {GameEntity}
      */
-    constructor(owner){
-        if (!owner){
+    constructor(owner) {
+        if (!owner) {
             console.warn("Creating component without owner.");
         }
         /**
@@ -32,7 +32,7 @@ class Component{
     /**
      *
      */
-    update(){
+    update() {
 
     }
 

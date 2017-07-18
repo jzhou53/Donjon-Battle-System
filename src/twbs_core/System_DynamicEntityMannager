@@ -1,0 +1,18 @@
+/**
+ * A manager class that store dynamic entities in the game map, and handle updates etc...
+ * for example: characters are stored in a quadtree,
+ *
+ */
+class Manager_DynamicEntity {
+    /**
+     * Constructor
+     */
+    constructor(){
+        this._quadtree = new Quadtree(
+            new Rectangle(0,0,$gameMap.width(),$gameMap.height())
+        );
+    }
+
+
+
+}
