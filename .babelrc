@@ -1,0 +1,11 @@
+{
+  "presets": [
+    "es2015",
+    "stage-2"
+  ],
+  "ignore": [
+    "js/libs/",
+    "dist/",
+    "gulpfile.babel.js"
+  ]
+}
