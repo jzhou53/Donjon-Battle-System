@@ -38,9 +38,9 @@ class CharacterPhysicsComponent extends PhysicsComponent {
      * @param r{number}
      * @override
      */
-    constructor(owner, r) {
+    constructor(owner, r = $gameMap.tileWidth() / 2) {
         super(owner);
-        this._radius = r || 48 / 2;
+        this._radius = r;
 
 
     }

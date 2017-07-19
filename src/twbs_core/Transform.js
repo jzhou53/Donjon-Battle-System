@@ -17,7 +17,7 @@ class Transform {
      * @param scale{Point}
      * @param r{number}
      */
-    constructor(pos, z, scale, r) {
+    constructor(pos = new Point(0, 0), z = 0, scale = new Point(1.0, 1.0), r = 0) {
 
 
         this._parent = null;
@@ -35,22 +35,22 @@ class Transform {
          * @type {Point}
          * @private
          */
-        this._localPosition = pos || new Point(0, 0);
+        this._localPosition = pos;
         /**
          * the scale of this transform locally
          * @type {Point}
          * @private
          */
-        this._localScale = scale || new Point(1.0, 1.0);
+        this._localScale = scale;
 
-        this._localRotation = r || 0;
+        this._localRotation = r;
 
         /**
          * this refer to _jumpCount
          * @type {number}
          * @private
          */
-        this._localHight = z || 0;
+        this._localHight = z;
 
         /**
          * look at the number pad
