@@ -9,6 +9,16 @@
  */
 class Transform {
 
+    /**
+     * getters
+     * @return {number}
+     */
+    get x(){
+        return this._position.x;
+    }
+    get y(){
+        return this._position.y;
+    }
 
     /**
      *

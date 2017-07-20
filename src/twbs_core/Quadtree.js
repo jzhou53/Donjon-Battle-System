@@ -32,8 +32,9 @@ class Quadtree {
 
     /**
      * Split the node into 4 sub-nodes
+     * @private
      */
-    split() {
+    _split() {
 
         const nextLevel = this._level + 1,
             subWidth = Math.round(this._bounds.width / 2),
@@ -81,7 +82,7 @@ class Quadtree {
 
     /**
      * Determine which node the object belongs to
-     * @param {Rectangle} pRect        bounds of the area to be checked, with x, y, width, height
+     * @param {GameEntity} pRect        bounds of the area to be checked, with x, y, width, height
      * @return Integer        index of the sub-node (0-3), or -1 if pRect cannot completely fit within a sub-node and is part of the parent node
      */
     getIndex(pRect) {
@@ -118,7 +119,7 @@ class Quadtree {
      * Insert the object into the node. If the node
      * exceeds the capacity, it will split and add all
      * objects to their corresponding sub-nodes.
-     * @param {Rectangle} pRect        bounds of the object to be added, with x, y, width, height
+     * @param {GameEntity} pRect        bounds of the object to be added, with x, y, width, height
      */
     insert(pRect) {
         let i = 0,
@@ -137,7 +138,7 @@ class Quadtree {
         if (this._objects.length > this._maxObjects && this._level < this._maxLevel) {
 
             if (typeof this._nodes[0] === 'undefined') {
-                this.split();
+                this._split();
             }
 
             while (i < this._objects.length) {
@@ -155,7 +156,7 @@ class Quadtree {
 
     /**
      * Return all objects that could collide with the given object
-     * @param {Rectangle} pRect		bounds of the object to be checked, with x, y, width, height
+     * @param {GameEntity} pRect		bounds of the object to be checked, with x, y, width, height
      * @Return Array		array with all detected objects
      */
     retrieve(pRect){
@@ -183,6 +184,7 @@ class Quadtree {
      * Clear the quadtree
      */
     clear() {
+        console.log("clear Triggered");
         this._objects = [];
         for (let i = 0; i < this._nodes.length; ++i) {
             if (typeof this._nodes[i] !== 'undefined') {
@@ -193,4 +195,55 @@ class Quadtree {
     }
 
 
+
+
+
 }
+
+// /**
+//  *  In addition to what a Rectangle has, a QuadRect has a pointer pointing to the game entity owing this.
+//  *  should only used in Quadtree data structure
+//  */
+// class QuadRect{
+//
+//     get owner() {
+//         return this._owner;
+//     }
+//
+//     /**
+//      * @param owner {Object} should be an game Entity
+//      * @param {number} [x=0] - The X coordinate of the upper-left corner of the rectangle
+//      * @param {number} [y=0] - The Y coordinate of the upper-left corner of the rectangle
+//      * @param {number} [width=0] - The overall width of this rectangle
+//      * @param {number} [height=0] - The overall height of this rectangle
+//      */
+//     constructor(owner,x=0,y=0,width=0,height=0){
+//
+//         /**
+//          * Pointer to the game entity who owns this rect
+//          * @type {Object}
+//          * @private
+//          */
+//         this._owner = owner;
+//
+//         /**
+//          * @member {number}
+//          */
+//         this.x = x;
+//         /**
+//          * @member {number}
+//          */
+//         this.y = y;
+//         /**
+//          * @member {number}
+//          */
+//         this.width = width;
+//         /**
+//          * @member {number}
+//          */
+//         this.height = height;
+//
+//     }
+//
+//
+// }

@@ -13,20 +13,40 @@ TWBS.Components = {
 class GameEntity {
 
     /**
-     * getter for transform
-     * @return {Transform} stores the location and scale and rotation information
+     * the x position
+     * @return {number}
      */
-    get transform() {
-        return this._transform;
+    get x(){
+        return this._transform.x;
     }
+
+    /**
+     * the x position
+     * @return {*}
+     */
+    get y(){
+        return this._transform.y;
+    }
+
+    get width(){
+        return this._radius;
+    }
+
+    get height(){
+        return this._radius;
+    }
+
 
     /**
      * constructor
      * initialize components map and transform member
      */
     constructor() {
+
+        this._radius = 48/2;
         this._components = new Map();
         this._transform = new Transform();
+
     }
 
     /**
@@ -37,6 +57,8 @@ class GameEntity {
             component.update();
         });
     }
+
+
 
 
 }
@@ -62,12 +84,16 @@ class TWBS_Character extends GameEntity {
          */
         this._currentState = null;
 
-
         //create physics component
         this._components.set(
             TWBS.Components.Physics,
             new PhysicsComponent(this)
         );
+
+        //create collide detector (QuadRect)
+
+
+
         //create render component
         // this._components.set(
         //     TWBS.Components.Render,
