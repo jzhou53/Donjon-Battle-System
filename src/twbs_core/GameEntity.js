@@ -29,11 +29,11 @@ class GameEntity {
     }
 
     get width(){
-        return this._radius;
+        return this._components.get(TWBS.Components.Physics)._radius * 2;
     }
 
     get height(){
-        return this._radius;
+        return this._components.get(TWBS.Components.Physics)._radius * 2;
     }
 
 
@@ -43,7 +43,6 @@ class GameEntity {
      */
     constructor() {
 
-        this._radius = 48/2;
         this._components = new Map();
         this._transform = new Transform();
 
