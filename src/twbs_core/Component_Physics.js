@@ -1,13 +1,13 @@
 /**
  * A basic PhysicsComponent class that has transform,
  * TODO: Character's Physics, Horse's Physics, Projectile's Physics, Particle's Physics, StaticObjects's and so on..
- *
+ * @extends Component
  *
  */
 class PhysicsComponent extends Component {
 
     /**
-     *
+     * Constructor
      * @param owner{GameEntity}
      * @override
      */
@@ -30,13 +30,16 @@ class PhysicsComponent extends Component {
 
 }
 
-
+/**
+ * @extends PhysicsComponent
+ */
 class CharacterPhysicsComponent extends PhysicsComponent {
 
     /**
      * @param owner{GameEntity}
      * @param r{number}
      * @override
+     * @constructor
      */
     constructor(owner, r = $gameMap.tileWidth() / 2) {
         super(owner);

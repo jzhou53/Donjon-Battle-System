@@ -9,7 +9,7 @@ class BasicEvent{
     constructor(timeStamp){
 
         this._time = timeStamp;
-        this._evtType = 0;
+        this._evtType = timeStamp;
     }
 
     /**
@@ -17,16 +17,12 @@ class BasicEvent{
      * @return {string}
      */
     getName(){
-        return "";
+        return ""+this._evtType;
     }
 
-    getType(){
+    getEventType(){
         return this._evtType;
     }
-
-    serialize();
-
-    deserialize();
 
 
 }

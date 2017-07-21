@@ -12,8 +12,8 @@ class Manager_DynamicEntity {
     constructor() {
 
         /**
-         * the main data structure storing characters on map
-         * @type {Quadtree}
+         * the main data structure storing characters(collision) on map.
+         * @type {Quadtree} quadtree data structure
          * @private
          */
         this._quadtree = new Quadtree(
@@ -22,28 +22,33 @@ class Manager_DynamicEntity {
             10, //max_objects
             4   //max_level
         );
-        console.debug("quad tree created");
 
         /**
          * the main array storing entities (including characters) on map
-         * @type {Array}
+         * @type {Array} array of {Game_Entities}
          * @private
          */
         this._entities = [];
+
+        /**
+         * store the number of active entities
+         * @type {number}
+         * @private
+         */
+        this._countActiveEntities = 0;
 
 
     }
 
     /**
      * Initialize when entering a new map.
-     * @param mapId
+     * @param mapId{int} the ID to the game Map stored in the database
      */
     setup(mapId){
         if (!$dataMap) {
             throw new Error('The map data is not available');
         }
         //load data from $dataMap (get map info, entities, graphics)
-
 
         //setup entities (both static and dynamic)
 
@@ -57,44 +62,58 @@ class Manager_DynamicEntity {
      * game logic tick (should be 1/60 second)
      */
     update() {
-        console.log(this._quadtree);
         //debugger;
 
-        //clear the tree
-        this._quadtree.clear();
-
-        //update all entities and insert them into the tree again
-        this._entities.forEach((entity) => {
-
-            //entity.update();
+        //update all dynamic entities
+        for(let entity of this._entities.values()){
             this._quadtree.insert(entity);
+        }
 
-        });
+        //update Quadtree
+        this._updateQuadtree();
 
-        //handle collisions
-        let targets = [];
-        this._entities.forEach((first)=>{
-
-            // get all possible targets that might collide with first entity
-            targets = this._quadtree.retrieve(first);
-
-            // handle collision
-            targets.forEach((second)=>{
-                this._handleCollision(first,second);
-            });
-
-        });
 
     }
 
+    /**
+     * clear the tree structure and insert all entities into the tree again, handle collisions
+     * @private
+     */
+    _updateQuadtree(){
+        //clear the tree
+        this._quadtree.clear();
 
+        //insert all entities into the tree again
+        for(let entity of this._entities.values()){
+            this._quadtree.insert(entity);
+        }
+
+        //handle collisions
+        for(let first of this._entities.values()){
+            // get all possible targets that might collide with first entity
+            let targets = this._quadtree.retrieve(first);
+            for(let second of targets.values()){
+                this._handleCollision(first,second);
+            }
+        }
+    }
+
+    /**
+     * retrieve through the quadtree, return all possible targets that might collide with pRect.
+     * example: .findPossibleTarget(new Rectangle(0,0,24,24));
+     * @param pRect{QuadItem} any Object with QuadItem interface. typically just pass a Rect class
+     * @return {Array} array with all detected objects
+     */
+    findPossibleTarget(pRect){
+        return this._quadtree.retrieve(pRect);
+    }
 
 
     /**
      * check if entity first will collide with entity second
      * if collides, then trigger events.
-     * @param first{QuadRect}
-     * @param second{QuadRect}
+     * @param first{QuadItem}
+     * @param second{QuadItem}
      * @private
      */
     _handleCollision(first, second){
@@ -103,15 +122,23 @@ class Manager_DynamicEntity {
     }
 
     /**
+     * DEBUG USE
+     */
+    debugCreateEntity(){
+        const entity = new TWBS_Character();
+        this.addEntity(entity);
+    }
+
+    /**
      *
      * @param entity{GameEntity}
      */
     addEntity(entity) {
 
+        this._countActiveEntities++;
         this._entities.push(entity);
         this._quadtree.insert(entity);
         console.debug("entity added " + this._entities.length);
-
 
     }
 

@@ -8,7 +8,7 @@ TWBS.Components = {
 /**
  * Super class for all game objects:
  * Game_Character
- * Game_
+ * @implements {QuadItem}
  */
 class GameEntity {
 

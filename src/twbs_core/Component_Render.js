@@ -60,6 +60,7 @@ class CharacterRenderComponent extends RenderComponent {
     /**
      * initializing class variables
      * @param owner
+     * @override
      */
     constructor(owner) {
         super(owner);
