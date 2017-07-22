@@ -13,27 +13,30 @@ TWBS.Components = {
 class GameEntity {
 
     /**
-     * the x position
+     * get the x position
      * @return {number}
      */
-    get x(){
+    get x() {
         return this._transform.x;
     }
 
     /**
-     * the x position
+     * get the x position
      * @return {*}
      */
-    get y(){
+    get y() {
         return this._transform.y;
     }
 
-    get width(){
-        return this._components.get(TWBS.Components.Physics)._radius * 2;
+    get width() {
+        //TODO: add scale as a factor
+        return 48;
+        //return this._components.get(TWBS.Components.Physics)._radius * 2;
     }
 
-    get height(){
-        return this._components.get(TWBS.Components.Physics)._radius * 2;
+    get height() {
+        return 48;
+        //return this._components.get(TWBS.Components.Physics)._radius * 2;
     }
 
 
@@ -43,7 +46,17 @@ class GameEntity {
      */
     constructor() {
 
+        /**
+         * a map structure stores components as value, string as key.
+         * @type {Map}
+         * @private
+         */
         this._components = new Map();
+        /**
+         * every entity should have a transform component that stores its location info.
+         * @type {Transform} transform class stores entity's position
+         * @private
+         */
         this._transform = new Transform();
 
     }
@@ -52,12 +65,22 @@ class GameEntity {
      * constantly updating components
      */
     update() {
-        this._components.forEach((component) => {
-            component.update();
-        });
+        this._components.forEach(component =>
+            component.update()
+        );
     }
 
+    /**
+     *
+     * @param pos {Victor}
+     */
+    setPosition(pos) {
+        this._transform._position = pos;
+    }
 
+    setLocalPosition(pos) {
+
+    }
 
 
 }
@@ -90,7 +113,6 @@ class TWBS_Character extends GameEntity {
         );
 
         //create collide detector (QuadRect)
-
 
 
         //create render component

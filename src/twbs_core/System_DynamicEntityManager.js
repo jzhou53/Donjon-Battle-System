@@ -18,10 +18,11 @@ class Manager_DynamicEntity {
          */
         this._quadtree = new Quadtree(
             //new Rectangle(0, 0, $gameMap.width(), $gameMap.height()),
-            new Rectangle(0, 0, 40, 40),
+            new Rectangle(0, 0, Graphics.width, Graphics.height),
             10, //max_objects
             4   //max_level
         );
+        console.debug("quadtree created "+Graphics.width+" * "+Graphics.height);
 
         /**
          * the main array storing entities (including characters) on map
@@ -37,6 +38,7 @@ class Manager_DynamicEntity {
          */
         this._countActiveEntities = 0;
 
+        this._debugBoard = new Sprite();
 
     }
 
@@ -65,13 +67,12 @@ class Manager_DynamicEntity {
         //debugger;
 
         //update all dynamic entities
-        for(let entity of this._entities.values()){
+        for(let entity of this._entities){
             this._quadtree.insert(entity);
         }
 
         //update Quadtree
         this._updateQuadtree();
-
 
     }
 
@@ -84,15 +85,15 @@ class Manager_DynamicEntity {
         this._quadtree.clear();
 
         //insert all entities into the tree again
-        for(let entity of this._entities.values()){
+        for(let entity of this._entities){
             this._quadtree.insert(entity);
         }
 
         //handle collisions
-        for(let first of this._entities.values()){
+        for(let first of this._entities){
             // get all possible targets that might collide with first entity
             let targets = this._quadtree.retrieve(first);
-            for(let second of targets.values()){
+            for(let second of targets){
                 this._handleCollision(first,second);
             }
         }
@@ -126,7 +127,50 @@ class Manager_DynamicEntity {
      */
     debugCreateEntity(){
         const entity = new TWBS_Character();
+        let x = Math.randomInt(Graphics.width - 48),
+            y = Math.randomInt(Graphics.height - 48);
+        entity.setPosition(new Victor(x,y));
         this.addEntity(entity);
+
+    }
+
+    debugShowAllEntity(){
+        this._entities.forEach(entity =>
+            console.log("("+entity.x+", "+entity.y+")")
+        );
+    }
+
+
+    debugDisplayQuadtree(x,y){
+
+        if (!this._debugBoard.bitmap){
+            this._debugBoard.bitmap = new Bitmap(Graphics.width,Graphics.height);
+        }
+
+        this._debugBoard.bitmap.clear();
+
+        let pRect = new Rectangle(x,y,48*8,48*8);
+        let targets = s._quadtree.retrieve(pRect);
+
+        let map = new Map();
+        for(let entity of targets){
+            map.set(entity,true);
+        }
+
+        let color;
+        this._entities.forEach(entity =>{
+            if (!map.has(entity)){
+                color = '#00FFFF';
+            }else{
+                color = '#ff2b32';
+            }
+            console.log(entity.x+","+entity.y+","+entity.width+","+entity.height);
+            this._debugBoard.bitmap.fillRect(entity.x,entity.y,entity.width,entity.height,color);
+        }
+    );
+
+        SceneManager._scene.addChild(this._debugBoard);
+
     }
 
     /**

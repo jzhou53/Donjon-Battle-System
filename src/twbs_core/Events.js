@@ -1,14 +1,15 @@
-
-
+/**
+ *
+ */
 class BasicEvent{
 
     /**
-     *
-     * @param timeStamp
+     * Constructor of a basic event without payloads.
+     * @param timeStamp{number} passing the time Date.now() when this event is created.
      */
     constructor(timeStamp){
 
-        this._time = timeStamp;
+        this._timeStamp = timeStamp;
         this._evtType = timeStamp;
     }
 
@@ -24,8 +25,17 @@ class BasicEvent{
         return this._evtType;
     }
 
+    getTimeStamp(){
+        return this._timeStamp;
+    }
+
+    serialize(){}
+
+    deserialize(){}
 
 }
+
+
 
 
 

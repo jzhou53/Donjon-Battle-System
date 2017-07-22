@@ -184,7 +184,7 @@ class Quadtree {
      * Clear the quadtree
      */
     clear() {
-        console.log("clear Triggered");
+        //console.log("clear Triggered");
         this._objects = [];
         for (let i = 0; i < this._nodes.length; ++i) {
             if (typeof this._nodes[i] !== 'undefined') {
@@ -195,10 +195,10 @@ class Quadtree {
     }
 
 
-
-
-
 }
+
+
+
 
 /**
  *  In addition to what a Rectangle has, a QuadRect has a pointer pointing to the game entity owing this.

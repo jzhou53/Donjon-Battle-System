@@ -13,10 +13,11 @@ class Transform {
      * getters
      * @return {number}
      */
-    get x(){
+    get x() {
         return this._position.x;
     }
-    get y(){
+
+    get y() {
         return this._position.y;
     }
 
@@ -27,8 +28,10 @@ class Transform {
      * @param scale{Point}
      * @param r{number}
      */
-    constructor(pos = new Point(0, 0), z = 0, scale = new Point(1.0, 1.0), r = 0) {
-
+    constructor(pos = new Point(0, 0),
+                z = 0,
+                scale = new Point(1.0, 1.0),
+                r = 0) {
 
         this._parent = null;
         this._childern = [];
@@ -72,11 +75,43 @@ class Transform {
     }
 
     /**
-     * @param parent{Transform}
+     *
+     * @param pTransform{Transform}
      */
-    setParent(parent) {
-        if (parent) {
-            this._parent = parent;
+    addChild(pTransform){
+        this._childern.push(pTransform);
+    }
+
+    /**
+     *
+     * @param pTransform{Transform}
+     * @return {boolean}
+     */
+    attachWith(pTransform){
+
+        if (this._parent){
+            console.error("attempting attach with more than one parent in transform");
+            return false;
+        }else{
+            this._parent = pTransform;
+            this._parent.addChild(this);
+        }
+
+    }
+
+    detach(){
+
+    }
+
+    /**
+     * get the top most transform in this hierarchy.
+     * @return {Transform} the top most transform.
+     */
+    getRoot(){
+        if (this._parent){
+            return this._parent.getRoot();
+        }else{
+            return this;
         }
     }
 

@@ -14,8 +14,14 @@ class EventManager {
          * @private
          */
         this._eventListeners = new Map();
-        this._queuedEvents = new Set();
-
+        /**
+         *
+         * @type {[Set,Set]}
+         * @private
+         */
+        this._queuedEvents = [new Set(),new Set()];
+        this._currentQueue = 0;
+        this._MAX_QUEUE = 2;
     }
 
     /**
@@ -43,6 +49,7 @@ class EventManager {
      */
     removeListener(evtType){
         if (this._eventListeners.has(evtType)){
+            console.debug("removed listener on type: "+evtType);
             return this._eventListeners.delete(evtType);
         }else {
             console.error('attempted to remove a listener on type:'+evtType+' that does not exist.');
@@ -68,6 +75,8 @@ class EventManager {
                 }
             )
 
+        }else{
+            console.debug('Skipping event '+pEvent.getEventType()+' since there are no delegates registered to receive it');
         }
         return processed;
     }
@@ -88,7 +97,7 @@ class EventManager {
 
         //queue
         if (this._eventListeners.has(pEvent.getEventType())){
-            this._queuedEvents.add(pEvent);
+            this._queuedEvents[this._currentQueue].add(pEvent);
             console.debug('Successfully queued event: '+pEvent.getName());
             return true;
         }else{
@@ -106,12 +115,14 @@ class EventManager {
      */
     abortEvent(evtType,allOfType = false){
         let success = false;
+        console.debug("attempt to abort event type: "+evtType);
         //if (this._eventListeners.has(evtType)){
             //TODO check if has bug
-            for(let event of this._queuedEvents){
+            for(let event of this._queuedEvents[this._currentQueue].values()){
                 if (event.getEventType() === evtType){
-                    this._queuedEvents.delete(event);
+                    this._queuedEvents[this._currentQueue].delete(event);
                     success = true;
+                    console.debug("successfully aborted event type: "+evtType+" name: "+event.getName());
                     if(!allOfType)break;
                 }
             }
@@ -121,8 +132,30 @@ class EventManager {
     }
 
 
+    /**
+     *
+     */
     tick(){
+        let time = Date.now();
 
+        let queueToProcess = this._currentQueue;
+        //increase Queue
+        this._currentQueue = (this._currentQueue + 1) % this._MAX_QUEUE;
+        //this._queuedEvents[this._currentQueue].clear();
+
+        //process
+        for(let event of this._queuedEvents[queueToProcess].values()){
+
+            this.triggerEvent(event);
+
+
+        }
+
+        //clean up old processed queue
+        this._queuedEvents[queueToProcess].clear();
+
+        let passedTime = Date.now();
+        console.debug("time took: "+ (passedTime-time));
     }
 
 
