@@ -22,7 +22,7 @@ class Manager_DynamicEntity {
             10, //max_objects
             4   //max_level
         );
-        console.debug("quadtree created "+Graphics.width+" * "+Graphics.height);
+        console.debug("quadtree created " + Graphics.width + " * " + Graphics.height);
 
         /**
          * the main array storing entities (including characters) on map
@@ -46,7 +46,7 @@ class Manager_DynamicEntity {
      * Initialize when entering a new map.
      * @param mapId{int} the ID to the game Map stored in the database
      */
-    setup(mapId){
+    setup(mapId) {
         if (!$dataMap) {
             throw new Error('The map data is not available');
         }
@@ -59,16 +59,15 @@ class Manager_DynamicEntity {
 
     }
 
-
     /**
      * game logic tick (should be 1/60 second)
+     * @public
      */
     update() {
-        //debugger;
 
         //update all dynamic entities
-        for(let entity of this._entities){
-            this._quadtree.insert(entity);
+        for (let entity of this._entities) {
+
         }
 
         //update Quadtree
@@ -78,23 +77,24 @@ class Manager_DynamicEntity {
 
     /**
      * clear the tree structure and insert all entities into the tree again, handle collisions
+     * the quadtree must be restructured every frame.
      * @private
      */
-    _updateQuadtree(){
+    _updateQuadtree() {
         //clear the tree
         this._quadtree.clear();
 
         //insert all entities into the tree again
-        for(let entity of this._entities){
+        for (let entity of this._entities) {
             this._quadtree.insert(entity);
         }
 
         //handle collisions
-        for(let first of this._entities){
+        for (let first of this._entities) {
             // get all possible targets that might collide with first entity
             let targets = this._quadtree.retrieve(first);
-            for(let second of targets){
-                this._handleCollision(first,second);
+            for (let second of targets) {
+                this._handleCollision(first, second);
             }
         }
     }
@@ -105,7 +105,7 @@ class Manager_DynamicEntity {
      * @param pRect{QuadItem} any Object with QuadItem interface. typically just pass a Rect class
      * @return {Array} array with all detected objects
      */
-    findPossibleTarget(pRect){
+    findPossibleTarget(pRect) {
         return this._quadtree.retrieve(pRect);
     }
 
@@ -113,61 +113,75 @@ class Manager_DynamicEntity {
     /**
      * check if entity first will collide with entity second
      * if collides, then trigger events.
-     * @param first{QuadItem}
-     * @param second{QuadItem}
+     * @param first{QuadItem || GameEntity }
+     * @param second{QuadItem || GameEntity}
+     * @return {boolean} if handled
      * @private
      */
-    _handleCollision(first, second){
+    _handleCollision(first, second) {
+        // make sure both item does not point to same object
+        if (first === second) {
+            return false;
+        }
 
+        //simple circle collision detection
+        const dist = Transform.distanceTo(
+            first.getTransform(),
+            second.getTransform()
+        );
+
+        if (dist < first.radius + second.radius)
+        /* collision happened here */
+        {
+            // create collision event?
+            first.onCollision(second);
+            second.onCollision(first);
+        }
 
     }
 
     /**
      * DEBUG USE
      */
-    debugCreateEntity(){
+    debugCreateEntity() {
         const entity = new TWBS_Character();
         let x = Math.randomInt(Graphics.width - 48),
             y = Math.randomInt(Graphics.height - 48);
-        entity.setPosition(new Victor(x,y));
+        entity.setPosition(new Victor(x, y));
         this.addEntity(entity);
 
     }
 
-    debugShowAllEntity(){
-        this._entities.forEach(entity =>
-            console.log("("+entity.x+", "+entity.y+")")
-        );
-    }
+    debugDisplayQuadtree(x, y) {
 
-
-    debugDisplayQuadtree(x,y){
-
-        if (!this._debugBoard.bitmap){
-            this._debugBoard.bitmap = new Bitmap(Graphics.width,Graphics.height);
+        if (!this._debugBoard.bitmap) {
+            this._debugBoard.bitmap = new Bitmap(Graphics.width, Graphics.height);
         }
 
         this._debugBoard.bitmap.clear();
 
-        let pRect = new Rectangle(x,y,48*8,48*8);
-        let targets = s._quadtree.retrieve(pRect);
+        // let pRect = new Rectangle(x,y,48*8,48*8);
+        // let targets = s._quadtree.retrieve(pRect);
 
-        let map = new Map();
-        for(let entity of targets){
-            map.set(entity,true);
-        }
+        // let map = new Map();
+        // for(let entity of targets){
+        //     map.set(entity,true);
+        // }
 
         let color;
-        this._entities.forEach(entity =>{
-            if (!map.has(entity)){
+        this._entities.forEach(entity => {
+                //if (!map.has(entity)){
                 color = '#00FFFF';
-            }else{
-                color = '#ff2b32';
+                //}else{
+                //color = '#ff2b32';
+                //}
+                let radius = entity.width/2;
+                let x = entity.x + radius;
+                let y = entity.y + radius;
+                this._debugBoard.bitmap.drawCircle(x,y,radius,color);
+            //this._debugBoard.bitmap.fillRect(entity.x, entity.y, entity.width, entity.height, color);
             }
-            console.log(entity.x+","+entity.y+","+entity.width+","+entity.height);
-            this._debugBoard.bitmap.fillRect(entity.x,entity.y,entity.width,entity.height,color);
-        }
-    );
+        );
 
         SceneManager._scene.addChild(this._debugBoard);
 

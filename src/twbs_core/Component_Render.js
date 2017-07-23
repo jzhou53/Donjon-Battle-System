@@ -50,6 +50,13 @@ class RenderComponent extends Component {
 
     }
 
+    /**
+     * @override
+     */
+    update(){
+
+    }
+
 
 }
 
@@ -65,13 +72,19 @@ class CharacterRenderComponent extends RenderComponent {
     constructor(owner) {
         super(owner);
 
-        this._priorityType = 1;
-        this._isObjectCharacter = false;
-        this._animationId = 0;
-        this._balloonId = 0;
-        this._animationPlaying = false;
-        this._balloonPlaying = false;
-        this._animationCount = 0;
+
+        this._headSprite = new Sprite();
+        this._upperBodySprite = new Sprite();
+        this._lowwerBodySprite = new Sprite();
+
+
+        // this._priorityType = 1;
+        // this._isObjectCharacter = false;
+        // this._animationId = 0;
+        // this._balloonId = 0;
+        // this._animationPlaying = false;
+        // this._balloonPlaying = false;
+        // this._animationCount = 0;
 
 
     }

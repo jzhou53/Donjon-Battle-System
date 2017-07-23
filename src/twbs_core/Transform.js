@@ -21,56 +21,71 @@ class Transform {
         return this._position.y;
     }
 
+    getPosition(){
+        return this._position;
+    }
+
+    getScale(){
+        return this._scale;
+    }
+
     /**
      *
-     * @param pos{Point}
+     * @param pos{Victor}
      * @param z{number}
-     * @param scale{Point}
+     * @param scale{Victor}
      * @param r{number}
      */
-    constructor(pos = new Point(0, 0),
-                z = 0,
-                scale = new Point(1.0, 1.0),
+    constructor(pos = new Victor(0, 0),
+                scale = new Victor(1.0, 1.0),
                 r = 0) {
 
+        /**
+         *
+         * @type {Transform}
+         * @private
+         */
         this._parent = null;
+
+        /**
+         *
+         * @type {Array} storing {Transforms}
+         * @private
+         */
         this._childern = [];
 
         /**
          * The position of the transform in world space.
-         * @type {number}
+         * @type {Victor}
          * @private
          */
-        this._position = new Point(0, 0);
+        this._position = new Victor(0, 0);
+
+        /**
+         * @private
+         */
+        this._scale = new Victor(0,0);
 
         /**
          * the coordinate of this transform locally
-         * @type {Point}
+         * @type {Victor}
          * @private
          */
         this._localPosition = pos;
         /**
          * the scale of this transform locally
-         * @type {Point}
+         * @type {Victor}
          * @private
          */
         this._localScale = scale;
 
-        this._localRotation = r;
-
         /**
-         * this refer to _jumpCount
+         * store the direction of the object
          * @type {number}
          * @private
          */
-        this._localHight = z;
+        this._localRotation = r;
 
-        /**
-         * look at the number pad
-         * @type {number} in [2,4,6,8]
-         * @private
-         */
-        this._direction = 2;
 
     }
 
@@ -99,8 +114,14 @@ class Transform {
 
     }
 
+    /**
+     * detach from this item's parent
+     */
     detach(){
-
+        if (this._parent){
+            this._parent._childern.splice(this._parent._childern.indexOf(this),1);
+            this._parent = null;
+        }
     }
 
     /**
@@ -115,6 +136,40 @@ class Transform {
         }
     }
 
+    /**
+     *
+     * @return {Victor}
+     */
+    getGlobalPosition(){
+        if (this._parent){
+            return this.getGlobalPosition().add(this._localPosition);
+        }else{
+            return this._localPosition;
+        }
+    }
+
+    /**
+     *
+     * @return {Victor}
+     */
+    getGlobalScale(){
+        if (this._parent){
+            return this.getGlobalScale().add(this._localScale);
+        }else{
+            return this._localScale;
+        }
+    }
+
+    /**
+     *
+     */
+    update(){
+
+        this._position = this.getGlobalPosition();
+        this._scale =  this.getGlobalScale();
+
+    }
+
 
     /**
      * calculate the distance from first transform to the second transform.
@@ -123,10 +178,9 @@ class Transform {
      * @return {number}
      */
     static distanceTo(first, second) {
-        let sx = second._localPosition.x - first._localScale.x;
-        let sy = second._localPosition.y - first._localScale.y;
-        return Math.abs(sx + sy);
+        return first._position.distance(second._position);
     }
+
 
 
 }

@@ -1,5 +1,6 @@
 /**
  *
+ * @abstract
  */
 class BasicEvent{
 
@@ -35,7 +36,17 @@ class BasicEvent{
 
 }
 
+/**
+ * @extends BasicEvent
+ */
+class Evnt_Collision extends BasicEvent{
 
+    constructor(timeStamp, ){
+        super(timeStamp);
+
+    }
+
+}
 
 
 

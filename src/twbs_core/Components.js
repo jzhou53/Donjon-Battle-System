@@ -9,17 +9,13 @@ class Component {
         return this._owner;
     }
 
-    set owner(value) {
-        this._owner = value;
-    }
-
     /**
      * set the owner when construct the component
      * @param owner {GameEntity}
      */
     constructor(owner) {
         if (!owner) {
-            console.warn("Creating component without owner.");
+            console.error("Creating component without owner.");
         }
         /**
          * A pointer to an game entity who owns this component.
@@ -33,7 +29,7 @@ class Component {
      *
      */
     update() {
-
+        throw new Error("Component update not implemented");
     }
 
 

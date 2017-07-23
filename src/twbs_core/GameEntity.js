@@ -8,6 +8,7 @@ TWBS.Components = {
 /**
  * Super class for all game objects:
  * Game_Character
+ * @abstract
  * @implements {QuadItem}
  */
 class GameEntity {
@@ -39,6 +40,14 @@ class GameEntity {
         //return this._components.get(TWBS.Components.Physics)._radius * 2;
     }
 
+    get radius(){
+        //handle with scale
+        return 24;
+    }
+
+    getTransform(){
+        return this._transform;
+    }
 
     /**
      * constructor
@@ -49,13 +58,13 @@ class GameEntity {
         /**
          * a map structure stores components as value, string as key.
          * @type {Map}
-         * @private
+         * @protected
          */
         this._components = new Map();
         /**
          * every entity should have a transform component that stores its location info.
          * @type {Transform} transform class stores entity's position
-         * @private
+         * @protected
          */
         this._transform = new Transform();
 
@@ -82,6 +91,15 @@ class GameEntity {
 
     }
 
+    /**
+     *
+     * @param pEntity {GameEntity}
+     */
+    onCollision(pEntity){
+
+
+    }
+
 
 }
 
@@ -102,7 +120,7 @@ class TWBS_Character extends GameEntity {
         /**
          * there are many states, like moving, guarding, attacking, jumping..
          * @type {State}
-         * @private
+         * @protected
          */
         this._currentState = null;
 
@@ -111,8 +129,6 @@ class TWBS_Character extends GameEntity {
             TWBS.Components.Physics,
             new PhysicsComponent(this)
         );
-
-        //create collide detector (QuadRect)
 
 
         //create render component
@@ -126,4 +142,15 @@ class TWBS_Character extends GameEntity {
         //     new AIComponent(this, this._transform)
         // );
     }
+
+    /**
+     *
+     * @override
+     */
+    update(){
+        super.update();
+
+    }
+
+
 }

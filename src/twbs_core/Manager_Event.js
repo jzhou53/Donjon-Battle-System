@@ -136,26 +136,24 @@ class EventManager {
      *
      */
     tick(){
-        let time = Date.now();
+        let time = performance.now();//Date.now();
 
+        //swap queue
         let queueToProcess = this._currentQueue;
-        //increase Queue
         this._currentQueue = (this._currentQueue + 1) % this._MAX_QUEUE;
-        //this._queuedEvents[this._currentQueue].clear();
 
         //process
         for(let event of this._queuedEvents[queueToProcess].values()){
 
             this.triggerEvent(event);
 
-
         }
 
         //clean up old processed queue
         this._queuedEvents[queueToProcess].clear();
 
-        let passedTime = Date.now();
-        console.debug("time took: "+ (passedTime-time));
+        let passedTime = performance.now();
+        console.debug("time took (queue "+queueToProcess+"): " + (passedTime-time));
     }
 
 

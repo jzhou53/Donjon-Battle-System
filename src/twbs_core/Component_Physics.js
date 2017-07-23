@@ -13,7 +13,6 @@ class PhysicsComponent extends Component {
      */
     constructor(owner) {
         super(owner);
-        //this._transform = transform || new Transform();
         this._radius = 0;
         this._mass = 1.0;
 
