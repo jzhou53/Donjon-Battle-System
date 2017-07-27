@@ -39,7 +39,7 @@ class BasicEvent{
 /**
  * @extends BasicEvent
  */
-class Evnt_Collision extends BasicEvent{
+class Event_Collision extends BasicEvent{
 
     constructor(timeStamp, ){
         super(timeStamp);

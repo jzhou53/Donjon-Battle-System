@@ -21,11 +21,18 @@ class Transform {
         return this._position.y;
     }
 
-    getPosition(){
+
+
+
+    setPosition(pPosition){
+        this._localPosition = pPosition;
+    }
+
+    getPosition() {
         return this._position;
     }
 
-    getScale(){
+    getScale() {
         return this._scale;
     }
 
@@ -37,6 +44,7 @@ class Transform {
      * @param r{number}
      */
     constructor(pos = new Victor(0, 0),
+                z = 0,
                 scale = new Victor(1.0, 1.0),
                 r = 0) {
 
@@ -62,9 +70,10 @@ class Transform {
         this._position = new Victor(0, 0);
 
         /**
+         * radius = scale * tileSize
          * @private
          */
-        this._scale = new Victor(0,0);
+        this._scale = new Victor(1.0, 1.0);
 
         /**
          * the coordinate of this transform locally
@@ -86,6 +95,8 @@ class Transform {
          */
         this._localRotation = r;
 
+        this._localHight = z;
+
 
     }
 
@@ -93,23 +104,23 @@ class Transform {
      *
      * @param pTransform{Transform}
      */
-    addChild(pTransform){
+    _addChild(pTransform) {
         this._childern.push(pTransform);
     }
 
     /**
      *
-     * @param pTransform{Transform}
+     * @param pTransform{Transform} the parent Transform you want this to attach to
      * @return {boolean}
      */
-    attachWith(pTransform){
+    attachWith(pTransform) {
 
-        if (this._parent){
+        if (this._parent) {
             console.error("attempting attach with more than one parent in transform");
             return false;
-        }else{
+        } else {
             this._parent = pTransform;
-            this._parent.addChild(this);
+            this._parent._addChild(this);
         }
 
     }
@@ -117,9 +128,9 @@ class Transform {
     /**
      * detach from this item's parent
      */
-    detach(){
-        if (this._parent){
-            this._parent._childern.splice(this._parent._childern.indexOf(this),1);
+    detach() {
+        if (this._parent) {
+            this._parent._childern.splice(this._parent._childern.indexOf(this), 1);
             this._parent = null;
         }
     }
@@ -128,34 +139,34 @@ class Transform {
      * get the top most transform in this hierarchy.
      * @return {Transform} the top most transform.
      */
-    getRoot(){
-        if (this._parent){
+    getRoot() {
+        if (this._parent) {
             return this._parent.getRoot();
-        }else{
+        } else {
             return this;
         }
     }
 
     /**
-     *
+     * @private
      * @return {Victor}
      */
-    getGlobalPosition(){
-        if (this._parent){
-            return this.getGlobalPosition().add(this._localPosition);
-        }else{
+    _getGlobalPosition() {
+        if (this._parent) {
+            return this._parent._getGlobalPosition().clone().add(this._localPosition);
+        } else {
             return this._localPosition;
         }
     }
 
     /**
-     *
+     * @private
      * @return {Victor}
      */
-    getGlobalScale(){
-        if (this._parent){
-            return this.getGlobalScale().add(this._localScale);
-        }else{
+    _getGlobalScale() {
+        if (this._parent) {
+            return this._parent._getGlobalScale().clone().add(this._localScale);
+        } else {
             return this._localScale;
         }
     }
@@ -163,10 +174,10 @@ class Transform {
     /**
      *
      */
-    update(){
+    update() {
 
-        this._position = this.getGlobalPosition();
-        this._scale =  this.getGlobalScale();
+        this._position = this._getGlobalPosition();
+        this._scale = this._getGlobalScale();
 
     }
 
@@ -181,7 +192,13 @@ class Transform {
         return first._position.distance(second._position);
     }
 
-
+    /**
+     *
+     * @return {string}
+     */
+    toString() {
+        return "(" + this._position.toString() + ") local: " + this._localPosition.toString();
+    }
 
 }
 
