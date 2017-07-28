@@ -13,7 +13,7 @@ class PhysicsComponent extends Component {
      */
     constructor(owner) {
         super(owner);
-        this._radius = 0;
+        this._collisionRadius = 0;
         this._mass = 1.0;
 
     }
@@ -23,7 +23,12 @@ class PhysicsComponent extends Component {
      */
     update() {
         //super.update();
-        console.log("updating...");
+        //console.log("Physics Component updating...");
+    }
+
+
+    getRadius(){
+        return this._collisionRadius;
     }
 
 
@@ -36,13 +41,16 @@ class CharacterPhysicsComponent extends PhysicsComponent {
 
     /**
      * @param owner{GameEntity}
-     * @param r{number}
      * @override
      * @constructor
      */
-    constructor(owner, r = $gameMap.tileWidth() / 2) {
+    constructor(owner) {
         super(owner);
-        this._radius = r;
+
+        let t = this.owner.getTransform();
+
+        //need to use scale
+        this._collisionRadius = (t.getScale().x * 48) / 2;
 
 
     }
@@ -57,8 +65,9 @@ class CharacterPhysicsComponent extends PhysicsComponent {
         return other && Transform.distanceTo(
             this.owner.transform,
             other.owner.transform
-        ) <= this._radius + other._radius;
+        ) <= this._collisionRadius + other._collisionRadius;
     }
+
 
 
 }

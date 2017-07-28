@@ -32,21 +32,26 @@ class GameEntity {
     get width() {
         //TODO: add scale as a factor
         return 48;
-        //return this._components.get(TWBS.Components.Physics)._radius * 2;
     }
 
     get height() {
         return 48;
-        //return this._components.get(TWBS.Components.Physics)._radius * 2;
     }
 
     get radius(){
-        //handle with scale
         return 24;
     }
 
     getTransform(){
         return this._transform;
+    }
+
+    /**
+     *
+     * @param pPos{Victor}
+     */
+    setPosition(pPos){
+        this._transform.setPosition(pPos);
     }
 
     /**
@@ -71,23 +76,15 @@ class GameEntity {
     }
 
     /**
-     * constantly updating components
+     * constantly updating transform and components
      */
     update() {
-        this._components.forEach(component =>
-            component.update()
-        );
-    }
 
-    /**
-     *
-     * @param pos {Victor}
-     */
-    setPosition(pos) {
-        this._transform._position = pos;
-    }
+        this._transform.update();
 
-    setLocalPosition(pos) {
+        for (let component of this._components.values()){
+            component.update();
+        }
 
     }
 
@@ -127,7 +124,7 @@ class TWBS_Character extends GameEntity {
         //create physics component
         this._components.set(
             TWBS.Components.Physics,
-            new PhysicsComponent(this)
+            new CharacterPhysicsComponent(this)
         );
 
 
@@ -152,5 +149,12 @@ class TWBS_Character extends GameEntity {
 
     }
 
+    /**
+     * @override
+     * @return {number}
+     */
+    get radius(){
+        return this._components.get("Physics").getRadius();
+    }
 
 }

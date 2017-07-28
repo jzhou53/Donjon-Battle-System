@@ -64,15 +64,41 @@ class Manager_DynamicEntity {
      * @public
      */
     update() {
+        let debugTimeA = performance.now();
 
         //update all dynamic entities
-        for (let entity of this._entities) {
-
+        for (let i = this._entities.length - 1; i >= 0; i--) {
+            let entity = this._entities[i];
+            entity.update();
         }
 
         //update Quadtree
         this._updateQuadtree();
 
+        //handle character entity collisions
+
+        for (let i = this._entities.length - 1; i >= 0; i--) {
+            let first = this._entities[i],
+                targets = this._quadtree.retrieve(first);
+            for (let j = targets.length - 1; j >= 0; j--) {
+                let second = this._entities[j];
+                this._handleCollision(first,second);
+            }
+
+        }
+
+        /* lef of might be too slow */
+
+        // for (let first of this._entities) {
+        //     // get all possible targets that might collide with first entity
+        //     let targets = this._quadtree.retrieve(first);
+        //     for (let second of targets) {
+        //         this._handleCollision(first, second);
+        //     }
+        // }
+
+        let debugTimeB = performance.now();
+        console.debug("logic tick: "+ (debugTimeB-debugTimeA)+" ms.");
     }
 
     /**
@@ -85,18 +111,15 @@ class Manager_DynamicEntity {
         this._quadtree.clear();
 
         //insert all entities into the tree again
-        for (let entity of this._entities) {
+        for (let i = this._entities.length - 1; i >= 0; i--) {
+            let entity = this._entities[i];
             this._quadtree.insert(entity);
         }
 
-        //handle collisions
-        for (let first of this._entities) {
-            // get all possible targets that might collide with first entity
-            let targets = this._quadtree.retrieve(first);
-            for (let second of targets) {
-                this._handleCollision(first, second);
-            }
-        }
+        // for (let entity of this._entities) {
+        //     this._quadtree.insert(entity);
+        // }
+
     }
 
     /**
@@ -154,6 +177,8 @@ class Manager_DynamicEntity {
 
     debugDisplayQuadtree(x, y) {
 
+
+
         if (!this._debugBoard.bitmap) {
             this._debugBoard.bitmap = new Bitmap(Graphics.width, Graphics.height);
         }
@@ -175,11 +200,11 @@ class Manager_DynamicEntity {
                 //}else{
                 //color = '#ff2b32';
                 //}
-                let radius = entity.width/2;
+                let radius = entity.radius;
                 let x = entity.x + radius;
                 let y = entity.y + radius;
+                //console.log(entity.getTransform().toString()+" r: "+radius);
                 this._debugBoard.bitmap.drawCircle(x,y,radius,color);
-            //this._debugBoard.bitmap.fillRect(entity.x, entity.y, entity.width, entity.height, color);
             }
         );
 

@@ -54,7 +54,7 @@ class RenderComponent extends Component {
      * @override
      */
     update(){
-
+        //console.log("Render Component updating...");
     }
 
 

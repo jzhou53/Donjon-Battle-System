@@ -157,7 +157,7 @@ class Quadtree {
     /**
      * Return all objects that could collide with the given object
      * @param {QuadItem} pRect		bounds of the object to be checked, with x, y, width, height
-     * @Return Array		array with all detected objects
+     * @Return {Array}		array with all detected objects
      */
     retrieve(pRect){
 

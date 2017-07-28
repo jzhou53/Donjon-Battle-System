@@ -21,9 +21,6 @@ class Transform {
         return this._position.y;
     }
 
-
-
-
     setPosition(pPosition){
         this._localPosition = pPosition;
     }
@@ -32,6 +29,10 @@ class Transform {
         return this._position;
     }
 
+    /**
+     *
+     * @return {Victor}
+     */
     getScale() {
         return this._scale;
     }
