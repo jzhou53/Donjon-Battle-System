@@ -1,8 +1,8 @@
 /**
  * a static class replacing RMMV SceneManager
- * @static {Manager_GameScene}
+ * @static {SceneManager}
  */
-class Manager_GameScene {
+class SceneManager {
 
     /**
      * @type {Scene_Base}
@@ -29,10 +29,12 @@ class Manager_GameScene {
     static _boxWidth = 816;
     static _boxHeight = 624;
     static _deltaTime = 1.0 / 60.0;
-    static _currentTime = Manager_GameScene._getTimeInMs();
+    static _currentTime = SceneManager._getTimeInMs();
     static _accumulator = 0.0;
 
-
+    /**
+     * @constructor
+     */
     constructor() {
         throw new Error('This is a static class');
     }

@@ -5,8 +5,6 @@
 const $eventManager = new EventManager();
 const $dynamicEntitiesManager = new Manager_DynamicEntity();
 
-Manager_GameScene.debug();
-
 function createQtree() {
 
     $dynamicEntitiesManager.debugCreateEntity();
