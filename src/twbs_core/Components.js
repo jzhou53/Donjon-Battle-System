@@ -20,7 +20,7 @@ class Component {
         /**
          * A pointer to an game entity who owns this component.
          * @type {GameEntity}
-         * @private
+         * @protected
          */
         this._owner = owner;
     }
@@ -29,7 +29,7 @@ class Component {
      *
      */
     update() {
-        throw new Error("Component update not implemented");
+        throw new Error("Component::update not implemented");
     }
 
 

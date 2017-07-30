@@ -22,7 +22,7 @@ class Manager_DynamicEntity {
             10, //max_objects
             4   //max_level
         );
-        console.debug("quadtree created " + Graphics.width + " * " + Graphics.height);
+        //console.debug("quadtree created " + Graphics.width + " * " + Graphics.height);
 
         /**
          * the main array storing entities (including characters) on map
@@ -76,26 +76,14 @@ class Manager_DynamicEntity {
         this._updateQuadtree();
 
         //handle character entity collisions
-
-        for (let i = this._entities.length - 1; i >= 0; i--) {
-            let first = this._entities[i],
+        for (let i = 0; i < this._entities.length; i++) {
+            const first = this._entities[i],
                 targets = this._quadtree.retrieve(first);
-            for (let j = targets.length - 1; j >= 0; j--) {
-                let second = this._entities[j];
-                this._handleCollision(first,second);
+            for (let j = 0; j < targets.length; j++) {
+                const second = targets[j];
+                this._handleCollision(first,second)
             }
-
         }
-
-        /* lef of might be too slow */
-
-        // for (let first of this._entities) {
-        //     // get all possible targets that might collide with first entity
-        //     let targets = this._quadtree.retrieve(first);
-        //     for (let second of targets) {
-        //         this._handleCollision(first, second);
-        //     }
-        // }
 
         let debugTimeB = performance.now();
         console.debug("logic tick: "+ (debugTimeB-debugTimeA)+" ms.");
@@ -111,14 +99,10 @@ class Manager_DynamicEntity {
         this._quadtree.clear();
 
         //insert all entities into the tree again
-        for (let i = this._entities.length - 1; i >= 0; i--) {
-            let entity = this._entities[i];
+        for (let i = 0; i < this._entities.length; i++) {
+            const entity = this._entities[i];
             this._quadtree.insert(entity);
         }
-
-        // for (let entity of this._entities) {
-        //     this._quadtree.insert(entity);
-        // }
 
     }
 
@@ -156,9 +140,9 @@ class Manager_DynamicEntity {
         if (dist < first.radius + second.radius)
         /* collision happened here */
         {
-            // create collision event?
+            // create collision event? <---- No
             first.onCollision(second);
-            second.onCollision(first);
+            //second.onCollision(first);
         }
 
     }
@@ -168,39 +152,40 @@ class Manager_DynamicEntity {
      */
     debugCreateEntity() {
         const entity = new TWBS_Character();
-        let x = Math.randomInt(Graphics.width - 48),
-            y = Math.randomInt(Graphics.height - 48);
+
+        let x = Math.randomInt(15),
+            y = Math.randomInt(15);
+        // let x = Math.random()*15,
+        //     y = Math.random()*10;
         entity.setPosition(new Victor(x, y));
         this.addEntity(entity);
-
+        const stage = SceneManager._scene;
+        entity.getComponent("Render").debugAddToStage(stage)
+        //console.debug(entity.getTransform().getPosition()+", "+entity.getTransform()._localPosition);
     }
 
-    debugDisplayQuadtree(x, y) {
+    // debugInitSprites(){
+    //     const stage = SceneManager._scene;
+    //     this._entities.forEach(entity =>
+    //         entity.getComponent("Render").debugAddToStage(stage)
+    //     );
+    //
+    // }
 
 
+    debugDisplayQuadtree() {
 
         if (!this._debugBoard.bitmap) {
             this._debugBoard.bitmap = new Bitmap(Graphics.width, Graphics.height);
+            SceneManager._scene.addChild(this._debugBoard);
         }
 
         this._debugBoard.bitmap.clear();
 
-        // let pRect = new Rectangle(x,y,48*8,48*8);
-        // let targets = s._quadtree.retrieve(pRect);
-
-        // let map = new Map();
-        // for(let entity of targets){
-        //     map.set(entity,true);
-        // }
-
         let color;
         this._entities.forEach(entity => {
-                //if (!map.has(entity)){
-                color = '#00FFFF';
-                //}else{
-                //color = '#ff2b32';
-                //}
-                let radius = entity.radius;
+            color = entity.debugFlag ? '#ff2b32' : '#00FFFF';
+            let radius = entity.radius;
                 let x = entity.x + radius;
                 let y = entity.y + radius;
                 //console.log(entity.getTransform().toString()+" r: "+radius);
@@ -208,7 +193,6 @@ class Manager_DynamicEntity {
             }
         );
 
-        SceneManager._scene.addChild(this._debugBoard);
 
     }
 

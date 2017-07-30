@@ -9,20 +9,20 @@ var dirs = {
     dest: 'dist'
 };
 
-var folders = [
-    'twbs_core'
-];
-
 gulp.task('default', ['build']);
 
 /**
  * combine all files into one js file and then compile es6 into es5
  *
  */
+
+
 gulp.task('build', function() {
-
-
-
+    var folders = [
+        'twbs_core',
+        'main',
+        'twbs_managers'
+    ];
     //noinspection JSUnresolvedFunction
     folders.forEach(function (name) {
         gulp.src(dirs.src+'/'+name+'/*.js')
@@ -30,6 +30,8 @@ gulp.task('build', function() {
             .pipe(babel())
             .pipe(gulp.dest(dirs.dest+'/js'));
     });
+
+
 
 
 });

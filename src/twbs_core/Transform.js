@@ -23,6 +23,7 @@ class Transform {
 
     setPosition(pPosition){
         this._localPosition = pPosition;
+        //this.update();
     }
 
     getPosition() {
@@ -36,6 +37,8 @@ class Transform {
     getScale() {
         return this._scale;
     }
+
+
 
     /**
      *
