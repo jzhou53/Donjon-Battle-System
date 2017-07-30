@@ -31,6 +31,7 @@ gulp.task('build', function() {
             .pipe(gulp.dest(dirs.dest+'/js'));
     });
 
+    //copy data files
 
 
 

@@ -24,10 +24,11 @@ class SceneManager {
      * @private
      */
     static _backgroundBitmap = null;
-    static _screenWidth = 816;
-    static _screenHeight = 624;
-    static _boxWidth = 816;
-    static _boxHeight = 624;
+    //TODO: use config file to handle
+    static _screenWidth = 1280;
+    static _screenHeight = 720;
+    static _boxWidth = 1280;
+    static _boxHeight = 720;
     static _deltaTime = 1.0 / 60.0;
     static _currentTime = SceneManager._getTimeInMs();
     static _accumulator = 0.0;
@@ -60,8 +61,30 @@ class SceneManager {
         } catch (e) {
             this.catchException(e);
         }
+        if (Utils.isMobileDevice() ||
+            Utils.isMobileSafari() ||
+            Utils.isAndroidChrome())
+            return;
+
+        let resizeWidth = Graphics.boxWidth - window.innerWidth;
+        let resizeHeight = Graphics.boxHeight - window.innerHeight;
+
+        // debug console
+        this._openConsole();
+        //resize
+        window.moveBy(-1 * resizeWidth / 2, -1 * resizeHeight / 2);
+        window.resizeBy(resizeWidth, resizeHeight);
+
+
     }
 
+    static _openConsole() {
+        if (Utils.isNwjs() && Utils.isOptionValid('test')) {
+            let _debugWindow = require('nw.gui').Window.get().showDevTools();
+            _debugWindow.moveTo(0, 0);
+            window.focus();
+        }
+    };
 
     static debug() {
         console.log(SceneManager._currentTime);
