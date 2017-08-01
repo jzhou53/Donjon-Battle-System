@@ -291,7 +291,10 @@ class SceneManager {
         this.requestUpdate();
     }
 
-
+    /**
+     * @static
+     * check if can change scene, create the new scene
+     */
     static changeScene() {
         if (this.isSceneChanging() && !this.isCurrentSceneBusy()) {
             if (this._scene) {
@@ -311,6 +314,10 @@ class SceneManager {
         }
     }
 
+    /**
+     * start the scene if not, else update it.
+     * @static
+     */
     static updateScene() {
         if (this._scene) {
             if (!this._sceneStarted && this._scene.isReady()) {

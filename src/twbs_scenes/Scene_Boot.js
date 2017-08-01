@@ -65,6 +65,7 @@ class Scene_Boot extends Scene_Base{
     }
 
     /**
+     * will trigger when all data in database is loaded.
      * @override
      */
     start(){
@@ -74,7 +75,8 @@ class Scene_Boot extends Scene_Base{
         // no more battle test and event test.
         this.checkPlayerLocation();
         DataManager.setupNewGame();
-        SceneManager.goto(Scene_Map);
+        //SceneManager.goto(Scene_Map);
+        SceneManager.goto(Scene_SimpleMap);
         Window_TitleCommand.initCommandPosition();
 
         this.updateDocumentTitle();

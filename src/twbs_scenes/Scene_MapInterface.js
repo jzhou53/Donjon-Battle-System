@@ -32,11 +32,14 @@ class Scene_MapInterface extends Scene_Base{
     /**
      * @override
      */
-    // create(){
-    //     super.create();
-    //
-    // }
+    create(){
+        const mapId = $gameMap.mapId();
+        DataManager.loadMapData(mapId);
+    }
 
+    /**
+     * does not include load map data
+     */
     start(){
         super.start();
         SceneManager.clearStack();
@@ -44,6 +47,7 @@ class Scene_MapInterface extends Scene_Base{
 
 
     /**
+     * load data map first then Image(super)
      * @protected
      * @return {boolean}
      */
@@ -53,13 +57,13 @@ class Scene_MapInterface extends Scene_Base{
             this._mapLoaded = true;
         }
         return this._mapLoaded && super.isReady();
-
     }
 
     /**
      * @protected
      */
     _onMapLoaded(){
+        //console.log("_onMapLoaded");
         this._createDisplayObjects();
     }
 
@@ -87,6 +91,7 @@ class Scene_MapInterface extends Scene_Base{
     }
 
     /**
+     * check if is waiting
      * @return {boolean}
      */
     isBusy() {
@@ -104,6 +109,15 @@ class Scene_MapInterface extends Scene_Base{
         }
         return false;
     }
+
+    /**
+     * @override
+     */
+    terminate(){
+
+        this.removeChild(this._spriteset);
+    }
+
 
 
 }

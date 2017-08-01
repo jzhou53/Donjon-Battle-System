@@ -52,12 +52,15 @@ class Scene_Base extends Stage{
     }
 
     /**
-     * @return {boolean}
+     * @return {boolean} if ImageManager is ready
      */
     isReady(){
         return ImageManager.isReady();
     }
 
+    /**
+     *
+     */
     start(){
         this._active = true;
     }

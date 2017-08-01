@@ -23,18 +23,14 @@ class Scene_Map extends Scene_MapInterface{
     }
 
     /**
+     * let dataManager load map data from player's new Map Id
      * @override
      */
     create() {
-        super.create();
         this._transfer = $gamePlayer.isTransferring();
         let mapId = this._transfer ? $gamePlayer.newMapId() : $gameMap.mapId();
         DataManager.loadMapData(mapId);
     }
-
-    // isReady() {
-    //     return super.isReady();
-    // }
 
     /**
      * @override
@@ -105,7 +101,7 @@ class Scene_Map extends Scene_MapInterface{
         this.removeChild(this._fadeSprite);
         this.removeChild(this._mapNameWindow);
         this.removeChild(this._windowLayer);
-        this.removeChild(this._spriteset);
+
     }
 
     /**
@@ -118,7 +114,20 @@ class Scene_Map extends Scene_MapInterface{
         }
         super._onMapLoaded();
     }
-
+    /*
+    Game_Player.prototype.performTransfer = function() {
+        if (this.isTransferring()) {
+            this.setDirection(this._newDirection);
+            if (this._newMapId !== $gameMap.mapId() || this._needsMapReload) {
+                $gameMap.setup(this._newMapId);
+                this._needsMapReload = false;
+            }
+            this.locate(this._newX, this._newY);
+            this.refresh();
+            this.clearTransferInfo();
+        }
+    };
+     */
     /**
      * @private
      */
