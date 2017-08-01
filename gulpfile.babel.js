@@ -21,7 +21,8 @@ gulp.task('build', function() {
     var folders = [
         'twbs_core',
         'main',
-        'twbs_managers'
+        'twbs_managers',
+        'twbs_scenes'
     ];
     //noinspection JSUnresolvedFunction
     folders.forEach(function (name) {

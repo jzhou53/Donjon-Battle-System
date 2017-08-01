@@ -164,15 +164,6 @@ class Manager_DynamicEntity {
         //console.debug(entity.getTransform().getPosition()+", "+entity.getTransform()._localPosition);
     }
 
-    // debugInitSprites(){
-    //     const stage = SceneManager._scene;
-    //     this._entities.forEach(entity =>
-    //         entity.getComponent("Render").debugAddToStage(stage)
-    //     );
-    //
-    // }
-
-
     debugDisplayQuadtree() {
 
         if (!this._debugBoard.bitmap) {
