@@ -3,8 +3,21 @@
  */
 class DataManager {
 
+    /**
+     * @type {string}
+     * @private
+     */
     static _globalId = 'RPGMV';
+    /**
+     * @type {number}
+     * @private
+     */
     static _lastAccessedId = 1;
+
+    /**
+     * @type {String}
+     * @private
+     */
     static _errorUrl = null;
 
     /**
@@ -94,6 +107,9 @@ class DataManager {
         }
     }
 
+    /**
+     * @private
+     */
     static _makeEmptyMap() {
         $dataMap = {};
         $dataMap.data = [];
@@ -154,6 +170,9 @@ class DataManager {
         }
     }
 
+    /**
+     * @private
+     */
     static _checkError() {
         if (DataManager._errorUrl) {
             throw new Error('Failed to load: ' + DataManager._errorUrl);
@@ -168,6 +187,9 @@ class DataManager {
         return item && $dataArmors.contains(item);
     }
 
+    /**
+     * @private
+     */
     static _createGameObjects() {
         $gameTemp = new Game_Temp();
         $gameSystem = new Game_System();
@@ -185,7 +207,7 @@ class DataManager {
     }
 
     /**
-     *
+     * @public
      */
     static setupNewGame() {
         this._createGameObjects();
@@ -196,7 +218,9 @@ class DataManager {
         Graphics.frameCount = 0;
     }
 
-
+    /**
+     * @return {Array}
+     */
     static loadGlobalInfo() {
         let json;
         try {
@@ -225,6 +249,10 @@ class DataManager {
         StorageManager.save(0, JSON.stringify(info));
     }
 
+    /**
+     * @param savefileId {Number}
+     * @return {boolean}
+     */
     static isThisGameFile(savefileId) {
         let globalInfo = this.loadGlobalInfo();
         if (globalInfo && globalInfo[savefileId]) {
@@ -255,6 +283,9 @@ class DataManager {
         return false;
     }
 
+    /**
+     * @return {number}
+     */
     static latestSavefileId() {
         let globalInfo = this.loadGlobalInfo();
         let savefileId = 1;
@@ -295,10 +326,17 @@ class DataManager {
         }
     }
 
+    /**
+     * @return {number}
+     */
     static maxSavefiles() {
         return 20;
     }
 
+    /**
+     * @param savefileId {number}
+     * @return {boolean}
+     */
     static saveGame(savefileId) {
         try {
             StorageManager.backup(savefileId);
@@ -314,6 +352,10 @@ class DataManager {
         }
     }
 
+    /**
+     * @param savefileId {Number}
+     * @return {boolean}
+     */
     static loadGame(savefileId) {
         try {
             return this.loadGameWithoutRescue(savefileId);
@@ -323,15 +365,26 @@ class DataManager {
         }
     }
 
+    /**
+     * @param savefileId {number}
+     * @return {null}
+     */
     static loadSavefileInfo(savefileId) {
         let globalInfo = this.loadGlobalInfo();
         return (globalInfo && globalInfo[savefileId]) ? globalInfo[savefileId] : null;
     }
 
+    /**
+     * @return {number}
+     */
     static lastAccessedSavefileId() {
         return this._lastAccessedId;
     }
 
+    /**
+     * @param savefileId {number}
+     * @return {boolean}
+     */
     static saveGameWithoutRescue(savefileId) {
         let json = JsonEx.stringify(this.makeSaveContents());
         if (json.length >= 200000) {
@@ -345,6 +398,10 @@ class DataManager {
         return true;
     }
 
+    /**
+     * @param savefileId
+     * @return {boolean}
+     */
     static loadGameWithoutRescue(savefileId) {
         let globalInfo = this.loadGlobalInfo();
         if (this.isThisGameFile(savefileId)) {

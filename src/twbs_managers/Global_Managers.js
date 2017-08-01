@@ -1,21 +1,15 @@
 
-/**
- * @global
- * @type {DataManager}
- */
-const $managerData = DataManager;
-const $managerConfig = ConfigManager;
-const $managerStorage = StorageManager;
-const $managerImage = ImageManager;
-const $managerAudio = AudioManager;
-const $managerSound = SoundManager;
-const $managerText =  TextManager;
-const $managerPlugin = PluginManager;
 
-/**
- * @global
- * @type {null}
- */
+let $managerData = DataManager;
+let $managerConfig = ConfigManager;
+let $managerStorage = StorageManager;
+let $managerImage = ImageManager;
+let $managerAudio = AudioManager;
+let $managerSound = SoundManager;
+let $managerText =  TextManager;
+let $managerPlugin = PluginManager;
+
+
 let $dataActors       = null;
 let $dataClasses      = null;
 let $dataSkills       = null;
