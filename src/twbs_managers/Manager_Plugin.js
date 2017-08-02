@@ -1,41 +1,41 @@
 /**
  * The static class that manages the plugins.
  */
-class PluginManager{
+class PluginManager {
 
     /**
      * @type {string}
      * @private
      */
-    static _path         = 'js/plugins/';
+    static _path = 'js/plugins/';
     /**
      * @type {Array}
      * @private
      */
-    static _scripts      = [];
+    static _scripts = [];
     /**
      * @type {Array}
      * @private
      */
-    static _errorUrls    = [];
+    static _errorUrls = [];
     /**
      * @type {{}}
      * @private
      */
-    static _parameters   = {};
+    static _parameters = {};
 
     /**
      * @constructor
      */
-    constructor(){
+    constructor() {
         throw new Error('This is a static class');
     }
 
     /**
      * @param plugins {Array}
      */
-    static setup(plugins){
-        plugins.forEach(function(plugin) {
+    static setup(plugins) {
+        plugins.forEach(function (plugin) {
             if (plugin.status && !this._scripts.contains(plugin.name)) {
                 this.setParameters(plugin.name, plugin.parameters);
                 this.loadScript(plugin.name + '.js');
@@ -44,22 +44,22 @@ class PluginManager{
         }, this);
     }
 
-    static checkErrors(){
+    static checkErrors() {
         const url = this._errorUrls.shift();
         if (url) {
             throw new Error('Failed to load: ' + url);
         }
     }
 
-    static parameters(name){
+    static parameters(name) {
         return this._parameters[name.toLowerCase()] || {};
     }
 
-    static setParameters(name, parameters){
+    static setParameters(name, parameters) {
         this._parameters[name.toLowerCase()] = parameters;
     }
 
-    static loadScript(name){
+    static loadScript(name) {
         const url = this._path + name;
         const script = document.createElement('script');
         script.type = 'text/javascript';
@@ -70,7 +70,7 @@ class PluginManager{
         document.body.appendChild(script);
     }
 
-    static onError(e){
+    static onError(e) {
         this._errorUrls.push(e.target._url);
     }
 

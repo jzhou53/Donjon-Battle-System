@@ -18,7 +18,7 @@ class PhysicsComponent extends Component {
         this._speed = 0;
         this._velocity = new Victor(0, 0);
         this._forces = new Victor(0, 0);
-        this._impactForces = new Victor(0,0);
+        this._impactForces = new Victor(0, 0);
         this._collision = false;
     }
 
@@ -33,7 +33,7 @@ class PhysicsComponent extends Component {
 
     }
 
-    get mass(){
+    get mass() {
         return this._mass;
     }
 
@@ -95,7 +95,7 @@ class PhysicsComponent extends Component {
      *
      * @param pForce{Victor}
      */
-    addImpactForce(pForce){
+    addImpactForce(pForce) {
         this._impactForces.add(pForce);
         this._collision = true;
         //console.log("impact force applied "+pForce+"...");

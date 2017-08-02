@@ -2,12 +2,12 @@
  * The scene class for initializing the entire game.
  * @extends {Scene_Base}
  */
-class Scene_Boot extends Scene_Base{
+class Scene_Boot extends Scene_Base {
 
     /**
      * @override
      */
-    constructor(){
+    constructor() {
         super();
         this._startDate = Date.now();
     }
@@ -15,21 +15,21 @@ class Scene_Boot extends Scene_Base{
     /**
      * @override
      */
-    create(){
+    create() {
         super.create();
         DataManager.loadDatabase();
         ConfigManager.load();
         this.loadSystemWindowImage();
     }
 
-    loadSystemWindowImage(){
+    loadSystemWindowImage() {
         ImageManager.loadSystem('Window');
     }
 
     /**
      * @static
      */
-    static loadSystemImages(){
+    static loadSystemImages() {
         ImageManager.loadSystem('IconSet');
         ImageManager.loadSystem('Balloon');
         ImageManager.loadSystem('Shadow1');
@@ -45,7 +45,7 @@ class Scene_Boot extends Scene_Base{
     /**
      * @override
      */
-    isReady(){
+    isReady() {
         if (super.isReady()) {
             return DataManager.isDatabaseLoaded() && this.isGameFontLoaded();
         } else {
@@ -53,7 +53,7 @@ class Scene_Boot extends Scene_Base{
         }
     }
 
-    isGameFontLoaded(){
+    isGameFontLoaded() {
         if (Graphics.isFontLoaded('GameFont')) {
             return true;
         } else {
@@ -68,7 +68,7 @@ class Scene_Boot extends Scene_Base{
      * will trigger when all data in database is loaded.
      * @override
      */
-    start(){
+    start() {
         super.start();
         SoundManager.preloadImportantSounds();
 
@@ -77,16 +77,16 @@ class Scene_Boot extends Scene_Base{
         DataManager.setupNewGame();
         //SceneManager.goto(Scene_Map);
         SceneManager.goto(Scene_SimpleMap);
-        Window_TitleCommand.initCommandPosition();
+        //Window_TitleCommand.initCommandPosition();
 
         this.updateDocumentTitle();
     }
 
-    updateDocumentTitle(){
+    updateDocumentTitle() {
         document.title = $dataSystem.gameTitle;
     }
 
-    checkPlayerLocation(){
+    checkPlayerLocation() {
         if ($dataSystem.startMapId === 0) {
             throw new Error('Player\'s starting position is not set');
         }

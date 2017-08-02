@@ -30,7 +30,7 @@ class RenderComponent extends Component {
         this._transparent = transparent;
     }
 
-    getSprites(){
+    getSprites() {
         return this._sprites;
     }
 
@@ -38,25 +38,26 @@ class RenderComponent extends Component {
      * interface to display on canvas
      * @return {number}
      */
-    screenX(){
+    screenX() {
         let tw = $gameMap.tileWidth();
         return Math.round(this.scrolledX() * tw + tw / 2);
     }
 
-    screenY(){
+    screenY() {
         let th = $gameMap.tileWidth();
         return Math.round(this.scrolledY() * th + th / 2);
     }
 
-    screenZ(){
+    screenZ() {
         return (this._priorityType << 1 ) + 1;
     }
 
-    scrolledX(){
+    scrolledX() {
         let t = this._owner.getTransform();
         return t.x - $gameMap._displayX;
     }
-    scrolledY(){
+
+    scrolledY() {
         let t = this._owner.getTransform();
         return t.y - $gameMap._displayY;
     }
@@ -86,24 +87,24 @@ class RenderComponent extends Component {
     /**
      * @override
      */
-    update(){
+    update() {
         //console.log("Render Component updating...");
     }
 
-    debugAddToStage(stage){
+    debugAddToStage(stage) {
 
     }
 
 
 }
 
-class CharacterRenderComponent extends RenderComponent{
+class CharacterRenderComponent extends RenderComponent {
 
     /**
      *
      * @param owner
      */
-    constructor(owner){
+    constructor(owner) {
         super(owner);
 
         this._characterName = "Actor1";
@@ -112,17 +113,16 @@ class CharacterRenderComponent extends RenderComponent{
 
     }
 
-    initialSprites(){
+    initialSprites() {
         this._sprite = new Sprite();
         this._setCharacterBitmap();
     }
 
-    _setCharacterBitmap(){
+    _setCharacterBitmap() {
         this._sprite.bitmap = ImageManager.loadCharacter(this._characterName);
     }
 
 }
-
 
 
 /**
@@ -140,15 +140,15 @@ class DummyRenderComponent extends RenderComponent {
         const size = 32;
 
         //note: debugging head
-        this._headSprite = new Sprite(new Bitmap(size,size));
-        this._upperBodySprite = new Sprite(new Bitmap(size,size));
-        this._lowwerBodySprite = new Sprite(new Bitmap(size,size));
+        this._headSprite = new Sprite(new Bitmap(size, size));
+        this._upperBodySprite = new Sprite(new Bitmap(size, size));
+        this._lowwerBodySprite = new Sprite(new Bitmap(size, size));
 
         //should load bitmap from database, but now debug
         const color = '#00FFFF';
-        this._headSprite.bitmap.drawCircle(size/2,size/2,size/2,color);
-        this._upperBodySprite.bitmap.fillRect(0,0,size,size,color);
-        this._lowwerBodySprite.bitmap.fillRect(size/4,0,size/2,size,color);
+        this._headSprite.bitmap.drawCircle(size / 2, size / 2, size / 2, color);
+        this._upperBodySprite.bitmap.fillRect(0, 0, size, size, color);
+        this._lowwerBodySprite.bitmap.fillRect(size / 4, 0, size / 2, size, color);
 
         //set anchor
         this._headSprite.anchor.x = 0.5;
@@ -183,21 +183,21 @@ class DummyRenderComponent extends RenderComponent {
      *
      * @override
      */
-    getSprites(){
-        return [this._headSprite,this._upperBodySprite,this._lowwerBodySprite];
+    getSprites() {
+        return [this._headSprite, this._upperBodySprite, this._lowwerBodySprite];
     }
 
     setCharacterBitmap() {
 
     }
 
-    debugAddToStage(stage){
+    debugAddToStage(stage) {
         stage.addChild(this._headSprite);
         stage.addChild(this._upperBodySprite);
         stage.addChild(this._lowwerBodySprite);
     }
 
-    update(){
+    update() {
         const size = 32;
         this._headSprite.x = this.screenX();
         this._headSprite.y = this.screenY() - size;

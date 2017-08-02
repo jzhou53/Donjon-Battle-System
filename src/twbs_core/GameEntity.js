@@ -38,7 +38,7 @@ class GameEntity {
         return 48;
     }
 
-    get radius(){
+    get radius() {
         throw new Error("should not happen.");
         //return 24;
     }
@@ -48,15 +48,15 @@ class GameEntity {
      * @param str {String}
      * @return {Component}
      */
-    getComponent(str){
-       return this._components.get(str);
+    getComponent(str) {
+        return this._components.get(str);
     }
 
     /**
      *
      * @return {Transform}
      */
-    getTransform(){
+    getTransform() {
         return this._transform;
     }
 
@@ -64,7 +64,7 @@ class GameEntity {
      *
      * @param pPos{Victor}
      */
-    setPosition(pPos){
+    setPosition(pPos) {
         this._transform.setPosition(pPos);
     }
 
@@ -93,19 +93,17 @@ class GameEntity {
      * constantly updating transform and components
      */
     update() {
-
-        for (let component of this._components.values()){
+        for (let component of this._components.values()) {
             component.update();
         }
         this._transform.update();
-
     }
 
     /**
      *
      * @param pEntity {GameEntity}
      */
-    onCollision(pEntity){
+    onCollision(pEntity) {
         //const physics = this._components.get("Physics");
 
         this.debugFlag = true;
@@ -120,10 +118,10 @@ class GameEntity {
 
         //let vrn = tPhysics._velocity.clone().multiply(n);
         //float
-      //let J = vrn.clone().invert().magnitude() * tPhysics.mass;
+        //let J = vrn.clone().invert().magnitude() * tPhysics.mass;
         let J = tPhysics.mass;
 
-        const Fi = n.clone().invert().multiply(new Victor(J,J));
+        const Fi = n.clone().invert().multiply(new Victor(J, J));
         tPhysics.addImpactForce(Fi);
         //console.log("n: "+n.toString()+", vrn: "+vrn.toString()+", J: "+J+", Fi: "+Fi.toString());
 
@@ -148,7 +146,6 @@ class TWBS_Character extends GameEntity {
      */
     constructor() {
         super();
-
 
 
         //todo state
@@ -185,7 +182,7 @@ class TWBS_Character extends GameEntity {
      *
      * @override
      */
-    update(){
+    update() {
         // in GameEntity class, the update order will be:
         //  AI -> State -> physics -> transform
         //this.debugMove();
@@ -193,12 +190,12 @@ class TWBS_Character extends GameEntity {
 
     }
 
-    debugMove(){
+    debugMove() {
 
         if (this._components.get("Physics")._collision) {
             this._fuckyou = true;
         } else {
-            if(!this._fuckyou)
+            if (!this._fuckyou)
                 this._transform._localPosition.add(new Victor(this._debugMoveSpeed, this._debugMoveSpeed));
         }
 
@@ -209,7 +206,7 @@ class TWBS_Character extends GameEntity {
      * @override
      * @return {number}
      */
-    get radius(){
+    get radius() {
         return this._components.get("Physics").getRadius();
     }
 

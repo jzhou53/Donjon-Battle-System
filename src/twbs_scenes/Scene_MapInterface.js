@@ -2,13 +2,13 @@
  * @abstract
  * @extends {Scene_Base}
  */
-class Scene_MapInterface extends Scene_Base{
+class Scene_MapInterface extends Scene_Base {
 
     /**
      * @constructor
      * @override
      */
-    constructor(){
+    constructor() {
         super();
         /**
          * @type {Spriteset_Map}
@@ -32,7 +32,7 @@ class Scene_MapInterface extends Scene_Base{
     /**
      * @override
      */
-    create(){
+    create() {
         const mapId = $gameMap.mapId();
         DataManager.loadMapData(mapId);
     }
@@ -40,7 +40,7 @@ class Scene_MapInterface extends Scene_Base{
     /**
      * does not include load map data
      */
-    start(){
+    start() {
         super.start();
         SceneManager.clearStack();
     }
@@ -51,7 +51,7 @@ class Scene_MapInterface extends Scene_Base{
      * @protected
      * @return {boolean}
      */
-    isReady(){
+    isReady() {
         if (!this._mapLoaded && DataManager.isMapLoaded()) {
             this._onMapLoaded();
             this._mapLoaded = true;
@@ -62,7 +62,7 @@ class Scene_MapInterface extends Scene_Base{
     /**
      * @protected
      */
-    _onMapLoaded(){
+    _onMapLoaded() {
         //console.log("_onMapLoaded");
         this._createDisplayObjects();
     }
@@ -70,7 +70,7 @@ class Scene_MapInterface extends Scene_Base{
     /**
      * @protected
      */
-    _createDisplayObjects(){
+    _createDisplayObjects() {
         this._createSpriteset();
     }
 
@@ -85,7 +85,7 @@ class Scene_MapInterface extends Scene_Base{
     /**
      * @override
      */
-    update(){
+    update() {
         this._updateWaitCount();
         super.update();
     }
@@ -102,7 +102,7 @@ class Scene_MapInterface extends Scene_Base{
      * @return {boolean}
      * @protected
      */
-    _updateWaitCount(){
+    _updateWaitCount() {
         if (this._waitCount > 0) {
             this._waitCount--;
             return true;
@@ -113,11 +113,10 @@ class Scene_MapInterface extends Scene_Base{
     /**
      * @override
      */
-    terminate(){
+    terminate() {
 
         this.removeChild(this._spriteset);
     }
-
 
 
 }

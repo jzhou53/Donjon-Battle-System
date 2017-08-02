@@ -1,11 +1,11 @@
 /**
  *
  */
-class ConfigManager{
+class ConfigManager {
     /**
      * @constructor
      */
-    constructor(){
+    constructor() {
         throw new Error('This is a static class');
     }
 
@@ -15,7 +15,7 @@ class ConfigManager{
     /**
      * @return {number}
      */
-    static get bgmVolume (){
+    static get bgmVolume() {
         return AudioManager._bgmVolume;
     }
 
@@ -23,12 +23,12 @@ class ConfigManager{
     /**
      * @param value {Integer}
      */
-    static set bgmVolume(value){
+    static set bgmVolume(value) {
         AudioManager.bgmVolume = value;
     }
 
 
-    static get bgsVolume (){
+    static get bgsVolume() {
         return AudioManager._bgsVolume;
     }
 
@@ -36,11 +36,11 @@ class ConfigManager{
     /**
      * @param value {Integer}
      */
-    static set bgsVolume(value){
+    static set bgsVolume(value) {
         AudioManager.bgsVolume = value;
     }
 
-    static get meVolume (){
+    static get meVolume() {
         return AudioManager._meVolume;
     }
 
@@ -48,11 +48,11 @@ class ConfigManager{
     /**
      * @param value {Integer}
      */
-    static set meVolume(value){
+    static set meVolume(value) {
         AudioManager.meVolume = value;
     }
 
-    static load (){
+    static load() {
         let json;
         let config = {};
         try {
@@ -66,14 +66,14 @@ class ConfigManager{
         this.applyData(config);
     }
 
-    static save(){
+    static save() {
         StorageManager.save(-1, JSON.stringify(this.makeData()));
     }
 
     /**
      * @return {{}}
      */
-    static makeData(){
+    static makeData() {
         const config = {};
         config.alwaysDash = this.alwaysDash;
         config.commandRemember = this.commandRemember;
@@ -87,7 +87,7 @@ class ConfigManager{
     /**
      * @param config
      */
-    static applyData(config){
+    static applyData(config) {
         this.alwaysDash = this.readFlag(config, 'alwaysDash');
         this.commandRemember = this.readFlag(config, 'commandRemember');
         this.bgmVolume = this.readVolume(config, 'bgmVolume');
@@ -101,7 +101,7 @@ class ConfigManager{
      * @param name {String}
      * @return {boolean}
      */
-    static readFlag(config, name){
+    static readFlag(config, name) {
         return !!config[name];
     }
 
@@ -110,7 +110,7 @@ class ConfigManager{
      * @param name {String}
      * @return {Number}
      */
-    static readVolume(config, name){
+    static readVolume(config, name) {
         const value = config[name];
         if (value !== undefined) {
             return Number(value).clamp(0, 100);

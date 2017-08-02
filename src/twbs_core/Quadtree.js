@@ -1,4 +1,3 @@
-
 /*
  * Javascript Quadtree
  * @version 1.1.1
@@ -156,22 +155,22 @@ class Quadtree {
 
     /**
      * Return all objects that could collide with the given object
-     * @param {QuadItem} pRect		bounds of the object to be checked, with x, y, width, height
-     * @Return {Array}		array with all detected objects
+     * @param {QuadItem} pRect        bounds of the object to be checked, with x, y, width, height
+     * @Return {Array}        array with all detected objects
      */
-    retrieve(pRect){
+    retrieve(pRect) {
 
         const index = this.getIndex(pRect);
         let returnObjects = this._objects;
 
-        if( typeof this._nodes[0] !== 'undefined' ) {
+        if (typeof this._nodes[0] !== 'undefined') {
 
-            if( index !== -1 ) {
-                returnObjects = returnObjects.concat( this._nodes[index].retrieve( pRect ) );
+            if (index !== -1) {
+                returnObjects = returnObjects.concat(this._nodes[index].retrieve(pRect));
 
             } else {
-                for( let i=0; i < this._nodes.length; i=i+1 ) {
-                    returnObjects = returnObjects.concat( this._nodes[i].retrieve( pRect ) );
+                for (let i = 0; i < this._nodes.length; i = i + 1) {
+                    returnObjects = returnObjects.concat(this._nodes[i].retrieve(pRect));
                 }
             }
         }
@@ -198,39 +197,38 @@ class Quadtree {
 }
 
 
-
-
 /**
  *  In addition to what a Rectangle has, a QuadRect has a pointer pointing to the game entity owing this.
  *  should only used in Quadtree data structure
  *  @interface QuadItem
  */
-class QuadItem{
+class QuadItem {
 
     /**
      * x value of the top left point of the rect
      */
-    get x(){
+    get x() {
         throw new Error('x not implemented');
     }
+
     /**
      * y value of the top left point of the rect
      */
-    get y(){
+    get y() {
         throw new Error('y not implemented');
     }
 
     /**
      * width of the detector rectangle
      */
-    get width(){
+    get width() {
         throw new Error('y not implemented');
     }
 
     /**
      * heights of the detector rectangle
      */
-    get height(){
+    get height() {
         throw new Error('y not implemented');
     }
 

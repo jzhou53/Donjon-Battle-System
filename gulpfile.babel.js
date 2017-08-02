@@ -27,7 +27,9 @@ gulp.task('build', function() {
         'twbs_core',
         'main',
         'twbs_managers',
-        'twbs_scenes'
+        'twbs_scenes',
+        'twbs_objects',
+        'twbs_sprites'
     ];
 
     folders.forEach(function (name) {

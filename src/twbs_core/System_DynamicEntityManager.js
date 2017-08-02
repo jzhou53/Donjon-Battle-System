@@ -81,12 +81,12 @@ class Manager_DynamicEntity {
                 targets = this._quadtree.retrieve(first);
             for (let j = 0; j < targets.length; j++) {
                 const second = targets[j];
-                this._handleCollision(first,second)
+                this._handleCollision(first, second)
             }
         }
 
         let debugTimeB = performance.now();
-        console.debug("logic tick: "+ (debugTimeB-debugTimeA)+" ms.");
+        console.debug("logic tick: " + (debugTimeB - debugTimeA) + " ms.");
     }
 
     /**
@@ -175,12 +175,12 @@ class Manager_DynamicEntity {
 
         let color;
         this._entities.forEach(entity => {
-            color = entity.debugFlag ? '#ff2b32' : '#00FFFF';
-            let radius = entity.radius;
+                color = entity.debugFlag ? '#ff2b32' : '#00FFFF';
+                let radius = entity.radius;
                 let x = entity.x + radius;
                 let y = entity.y + radius;
                 //console.log(entity.getTransform().toString()+" r: "+radius);
-                this._debugBoard.bitmap.drawCircle(x,y,radius,color);
+                this._debugBoard.bitmap.drawCircle(x, y, radius, color);
             }
         );
 

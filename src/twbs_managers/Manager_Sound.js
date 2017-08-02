@@ -1,11 +1,11 @@
 /**
  * The static class that plays sound effects defined in the database.
  */
-class SoundManager{
+class SoundManager {
     /**
      * @constructor
      */
-    constructor(){
+    constructor() {
         throw new Error('This is a static class');
     }
 
@@ -13,7 +13,7 @@ class SoundManager{
      * @static
      * @public
      */
-    static preloadImportantSounds(){
+    static preloadImportantSounds() {
         this.loadSystemSound(0);
         this.loadSystemSound(1);
         this.loadSystemSound(2);
@@ -23,7 +23,7 @@ class SoundManager{
     /**
      * @param n {number}
      */
-    static loadSystemSound(n){
+    static loadSystemSound(n) {
         if ($dataSystem) {
             AudioManager.loadStaticSe($dataSystem.sounds[n]);
         }
@@ -32,82 +32,105 @@ class SoundManager{
     /**
      * @param n {number}
      */
-    static playSystemSound(n){
+    static playSystemSound(n) {
         if ($dataSystem) {
             AudioManager.playStaticSe($dataSystem.sounds[n]);
         }
     }
 
-    static playCursor(){
+    static playCursor() {
         this.playSystemSound(0);
     }
-    static playOk(){
+
+    static playOk() {
         this.playSystemSound(1);
     }
-    static playCancel(){
+
+    static playCancel() {
         this.playSystemSound(2);
     }
-    static playBuzzer(){
+
+    static playBuzzer() {
         this.playSystemSound(3);
     }
-    static playEquip(){
+
+    static playEquip() {
         this.playSystemSound(4);
     }
-    static playSave(){
+
+    static playSave() {
         this.playSystemSound(5);
     }
-    static playLoad(){
+
+    static playLoad() {
         this.playSystemSound(6);
     }
-    static playBattleStart(){
+
+    static playBattleStart() {
         this.playSystemSound(7);
     }
-    static playEscape(){
+
+    static playEscape() {
         this.playSystemSound(8);
     }
-    static playEnemyAttack(){
+
+    static playEnemyAttack() {
         this.playSystemSound(9);
     }
-    static playEnemyDamage(){
+
+    static playEnemyDamage() {
         this.playSystemSound(10);
     }
-    static playEnemyCollapse(){
+
+    static playEnemyCollapse() {
         this.playSystemSound(11);
     }
-    static playBossCollapse1(){
+
+    static playBossCollapse1() {
         this.playSystemSound(12);
     }
-    static playBossCollapse2(){
+
+    static playBossCollapse2() {
         this.playSystemSound(13);
     }
-    static playActorDamage(){
+
+    static playActorDamage() {
         this.playSystemSound(14);
     }
-    static playActorCollapse(){
+
+    static playActorCollapse() {
         this.playSystemSound(15);
     }
-    static playRecovery(){
+
+    static playRecovery() {
         this.playSystemSound(16);
     }
-    static playMiss(){
+
+    static playMiss() {
         this.playSystemSound(17);
     }
-    static playEvasion(){
+
+    static playEvasion() {
         this.playSystemSound(18);
     }
-    static playMagicEvasion(){
+
+    static playMagicEvasion() {
         this.playSystemSound(19);
     }
-    static playReflection(){
+
+    static playReflection() {
         this.playSystemSound(20);
     }
-    static playShop(){
+
+    static playShop() {
         this.playSystemSound(21);
     }
-    static playUseItem(){
+
+    static playUseItem() {
         this.playSystemSound(22);
     }
-    static playUseSkill(){
+
+    static playUseSkill() {
         this.playSystemSound(23);
     }
 

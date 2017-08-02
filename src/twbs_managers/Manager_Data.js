@@ -191,19 +191,19 @@ class DataManager {
      * @private
      */
     static _createGameObjects() {
-        $gameTemp = new Game_Temp();
+        //$gameTemp = new Game_Temp();
         $gameSystem = new Game_System();
         $gameScreen = new Game_Screen();
-        $gameTimer = new Game_Timer();
-        $gameMessage = new Game_Message();
-        $gameSwitches = new Game_Switches();
-        $gameVariables = new Game_Variables();
-        $gameSelfSwitches = new Game_SelfSwitches();
-        $gameActors = new Game_Actors();
-        $gameParty = new Game_Party();
-        $gameTroop = new Game_Troop();
+        //$gameTimer = new Game_Timer();
+        //$gameMessage = new Game_Message();
+        //$gameSwitches = new Game_Switches();
+        //$gameVariables = new Game_Variables();
+        //$gameSelfSwitches = new Game_SelfSwitches();
+        //$gameActors = new Game_Actors();
+        //$gameParty = new Game_Party();
+        //$gameTroop = new Game_Troop();
         $gameMap = new Game_Map();
-        $gamePlayer = new Game_Player();
+        //$gamePlayer = new Game_Player();
     }
 
     /**
@@ -212,9 +212,9 @@ class DataManager {
     static setupNewGame() {
         this._createGameObjects();
         this.selectSavefileForNewGame();
-        $gameParty.setupStartingMembers();
-        $gamePlayer.reserveTransfer($dataSystem.startMapId,
-            $dataSystem.startX, $dataSystem.startY);
+        // $gameParty.setupStartingMembers();
+        // $gamePlayer.reserveTransfer($dataSystem.startMapId,
+        //     $dataSystem.startX, $dataSystem.startY);
         Graphics.frameCount = 0;
     }
 
@@ -445,8 +445,8 @@ class DataManager {
         let info = {};
         info.globalId = this._globalId;
         info.title = $dataSystem.gameTitle;
-        info.characters = $gameParty.charactersForSavefile();
-        info.faces = $gameParty.facesForSavefile();
+        //info.characters = $gameParty.charactersForSavefile();
+        //info.faces = $gameParty.facesForSavefile();
         info.playtime = $gameSystem.playtimeText();
         info.timestamp = Date.now();
         return info;
