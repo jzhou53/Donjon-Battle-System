@@ -1,13 +1,12 @@
 
-
-let $managerData = DataManager;
-let $managerConfig = ConfigManager;
-let $managerStorage = StorageManager;
-let $managerImage = ImageManager;
-let $managerAudio = AudioManager;
-let $managerSound = SoundManager;
-let $managerText =  TextManager;
-let $managerPlugin = PluginManager;
+// let $managerData = DataManager;
+// let $managerConfig = ConfigManager;
+// let $managerStorage = StorageManager;
+// let $managerImage = ImageManager;
+// let $managerAudio = AudioManager;
+// let $managerSound = SoundManager;
+// let $managerText =  TextManager;
+// let $managerPlugin = PluginManager;
 
 
 let $dataActors       = null;

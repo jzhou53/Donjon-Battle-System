@@ -16,9 +16,9 @@ class Scene_SimpleMap extends Scene_MapInterface{
      * @override
      */
     create(){
-        const mapId = $gamePlayer.isTransferring() ? $gamePlayer.newMapId() : $gameMap.mapId();
+        //const mapId = $gamePlayer.isTransferring() ? $gamePlayer.newMapId() : $gameMap.mapId();
         //console.log("map id: "+ mapId +" $gamePlayer.newMapId() = "+ $gamePlayer.newMapId() + ",$gameMap.mapId() = "+$gameMap.mapId());
-        DataManager.loadMapData(mapId);
+        DataManager.loadMapData(1);
     }
 
     /**
@@ -35,7 +35,9 @@ class Scene_SimpleMap extends Scene_MapInterface{
 
     }
 
-
+    /**
+     * called constantly
+     */
     update() {
 
         this._updateMain();
@@ -51,18 +53,7 @@ class Scene_SimpleMap extends Scene_MapInterface{
         return this.isActive();
     }
     _updateScene(){
-        // if (!SceneManager.isSceneChanging()) {
-        //     this._updateTransferPlayer();
-        // }
-        // if (!SceneManager.isSceneChanging()) {
-        //     this._updateEncounter();
-        // }
-        // if (!SceneManager.isSceneChanging()) {
-        //     this._updateCallMenu();
-        // }
-        // if (!SceneManager.isSceneChanging()) {
-        //     this._updateCallDebug();
-        // }
+
     }
     /**
      * @private
@@ -71,7 +62,7 @@ class Scene_SimpleMap extends Scene_MapInterface{
         const active = this.isActive();
         $gameMap.update(active);
         $gamePlayer.update(active);
-        $gameTimer.update(active);
+        //$gameTimer.update(active);
         $gameScreen.update();
     }
 
