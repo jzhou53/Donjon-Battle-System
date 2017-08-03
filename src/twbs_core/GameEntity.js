@@ -1,10 +1,3 @@
-const TWBS = {};
-TWBS.Components = {
-    Physics: "Physics",
-    Render: "Render",
-    AI: "AI"
-};
-
 /**
  * Super class for all game objects:
  * Game_Character
@@ -162,12 +155,10 @@ class TWBS_Character extends GameEntity {
             new CharacterPhysicsComponent(this)
         );
 
-        //this._debugMoveSpeed = Math.randomInt(5);
-
         //create render component
         this._components.set(
             "Render",
-            new DummyRenderComponent(this)
+            new CharacterRenderComponent(this)
         );
 
 
@@ -187,18 +178,6 @@ class TWBS_Character extends GameEntity {
         //  AI -> State -> physics -> transform
         //this.debugMove();
         super.update();
-
-    }
-
-    debugMove() {
-
-        if (this._components.get("Physics")._collision) {
-            this._fuckyou = true;
-        } else {
-            if (!this._fuckyou)
-                this._transform._localPosition.add(new Victor(this._debugMoveSpeed, this._debugMoveSpeed));
-        }
-
 
     }
 

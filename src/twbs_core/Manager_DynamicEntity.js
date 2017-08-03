@@ -3,13 +3,13 @@
  * for example: characters are stored in a quadtree,
  *
  */
-
 class Manager_DynamicEntity {
 
     /**
-     * Constructor
+     * @param width {number}
+     * @param height {number}
      */
-    constructor() {
+    constructor(width,height) {
 
         /**
          * the main data structure storing characters(collision) on map.
@@ -17,12 +17,10 @@ class Manager_DynamicEntity {
          * @private
          */
         this._quadtree = new Quadtree(
-            //new Rectangle(0, 0, $gameMap.width(), $gameMap.height()),
-            new Rectangle(0, 0, Graphics.width, Graphics.height),
+            new Rectangle(0, 0, width, height),
             10, //max_objects
             4   //max_level
         );
-        //console.debug("quadtree created " + Graphics.width + " * " + Graphics.height);
 
         /**
          * the main array storing entities (including characters) on map
@@ -44,7 +42,7 @@ class Manager_DynamicEntity {
 
     /**
      * Initialize when entering a new map.
-     * @param mapId{int} the ID to the game Map stored in the database
+     * @param mapId{Number} the ID to the game Map stored in the database
      */
     setup(mapId) {
         if (!$dataMap) {
@@ -86,7 +84,7 @@ class Manager_DynamicEntity {
         }
 
         let debugTimeB = performance.now();
-        console.debug("logic tick: " + (debugTimeB - debugTimeA) + " ms.");
+        //console.debug("logic tick: " + (debugTimeB - debugTimeA) + " ms.");
     }
 
     /**
@@ -160,8 +158,8 @@ class Manager_DynamicEntity {
         entity.setPosition(new Victor(x, y));
         this.addEntity(entity);
         const stage = SceneManager._scene;
-        entity.getComponent("Render").debugAddToStage(stage)
-        //console.debug(entity.getTransform().getPosition()+", "+entity.getTransform()._localPosition);
+        entity.getComponent("Render").debugAddToStage(stage);
+        console.debug(entity.getTransform().getPosition()+", "+entity.getTransform()._localPosition);
     }
 
     debugDisplayQuadtree() {
@@ -175,15 +173,15 @@ class Manager_DynamicEntity {
 
         let color;
         this._entities.forEach(entity => {
+                entity.update();
                 color = entity.debugFlag ? '#ff2b32' : '#00FFFF';
-                let radius = entity.radius;
-                let x = entity.x + radius;
-                let y = entity.y + radius;
+                let radius = entity.radius * 48;
+                let x = entity.x * 48 + radius;
+                let y = entity.y * 48 + radius;
                 //console.log(entity.getTransform().toString()+" r: "+radius);
                 this._debugBoard.bitmap.drawCircle(x, y, radius, color);
             }
         );
-
 
     }
 

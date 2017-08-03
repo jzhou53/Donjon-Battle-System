@@ -12,7 +12,6 @@ class Game_Map {
          */
         this._mapId = 0;
         this._tilesetId = 0;
-        this._events = [];
         this._displayX = 0;
         this._displayY = 0;
         this._nameDisplay = true;

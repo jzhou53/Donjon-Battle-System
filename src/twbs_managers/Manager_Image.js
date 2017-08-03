@@ -13,40 +13,40 @@ class ImageManager {
 
     /**
      * @param filename {String}
-     * @param hue {int}
+     * @param hue {Number}
      */
-    static loadCharacter(filename, hue){
+    static loadCharacter(filename, hue = 0){
         return this.loadBitmap('img/characters/', filename, hue, false);
     }
 
     /**
      * @param filename {String}
-     * @param hue {int}
+     * @param hue {Number}
      */
-    static loadParallax(filename, hue){
+    static loadParallax(filename, hue = 0){
         return this.loadBitmap('img/parallaxes/', filename, hue, false);
     }
 
     /**
      * @param filename {String}
-     * @param hue {int}
+     * @param hue {Number}
      */
-    static loadSystem(filename, hue){
+    static loadSystem(filename, hue = 0){
         return this.loadBitmap('img/system/', filename, hue, false);
     }
 
     /**
      * @param filename {String}
-     * @param hue {int}
+     * @param hue {Number}
      */
-    static loadTileset(filename, hue){
+    static loadTileset(filename, hue = 0){
         return this.loadBitmap('img/tilesets/', filename, hue, false);
     }
 
     /**
      * @param folder {String}
      * @param filename {String}
-     * @param hue {int}
+     * @param hue {Number}
      * @param smooth
      */
     static loadBitmap(folder, filename, hue, smooth){

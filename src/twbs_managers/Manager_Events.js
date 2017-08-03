@@ -2,7 +2,7 @@
  * A event manager class store events and queue them.
  * @static
  */
-class EventManager {
+class EventsManager {
 
     /**
      * @type {Map}

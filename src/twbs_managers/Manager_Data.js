@@ -25,18 +25,7 @@ class DataManager {
      * @private
      */
     static _databaseFiles = [
-        {name: '$dataActors', src: 'Actors.json'},
-        {name: '$dataClasses', src: 'Classes.json'},
-        {name: '$dataSkills', src: 'Skills.json'},
-        {name: '$dataItems', src: 'Items.json'},
-        {name: '$dataWeapons', src: 'Weapons.json'},
-        {name: '$dataArmors', src: 'Armors.json'},
-        {name: '$dataEnemies', src: 'Enemies.json'},
-        {name: '$dataTroops', src: 'Troops.json'},
-        {name: '$dataStates', src: 'States.json'},
-        {name: '$dataAnimations', src: 'Animations.json'},
         {name: '$dataTilesets', src: 'Tilesets.json'},
-        {name: '$dataCommonEvents', src: 'CommonEvents.json'},
         {name: '$dataSystem', src: 'System.json'},
         {name: '$dataMapInfos', src: 'MapInfos.json'}
     ];
@@ -183,9 +172,9 @@ class DataManager {
      * @param item
      * @return {*|boolean|{enumerable, value}|Boolean}
      */
-    static isArmor(item) {
-        return item && $dataArmors.contains(item);
-    }
+    // static isArmor(item) {
+    //     return item && $dataArmors.contains(item);
+    // }
 
     /**
      * @private
@@ -202,7 +191,10 @@ class DataManager {
         //$gameActors = new Game_Actors();
         //$gameParty = new Game_Party();
         //$gameTroop = new Game_Troop();
-        $gameMap = new Game_Map();
+        /**
+         * @type {Game_Map}
+         */
+        $gameMap = new Game_BattleMap();
         //$gamePlayer = new Game_Player();
     }
 
@@ -460,14 +452,7 @@ class DataManager {
         const contents = {};
         contents.system = $gameSystem;
         contents.screen = $gameScreen;
-        contents.timer = $gameTimer;
-        contents.switches = $gameSwitches;
-        contents.variables = $gameVariables;
-        contents.selfSwitches = $gameSelfSwitches;
-        contents.actors = $gameActors;
-        contents.party = $gameParty;
         contents.map = $gameMap;
-        contents.player = $gamePlayer;
         return contents;
     }
 
@@ -477,14 +462,8 @@ class DataManager {
     static extractSaveContents(contents) {
         $gameSystem = contents.system;
         $gameScreen = contents.screen;
-        $gameTimer = contents.timer;
-        $gameSwitches = contents.switches;
-        $gameVariables = contents.variables;
-        $gameSelfSwitches = contents.selfSwitches;
-        $gameActors = contents.actors;
-        $gameParty = contents.party;
         $gameMap = contents.map;
-        $gamePlayer = contents.player;
+
     }
 
 

@@ -69,7 +69,9 @@ class RenderComponent extends Component {
      */
     constructor(owner) {
         super(owner);
-        //this.initialSprites();
+
+        this._priorityType = 1;
+
         this._sprites = [];
 
         this._opacity = 255;
@@ -113,6 +115,9 @@ class CharacterRenderComponent extends RenderComponent {
 
     }
 
+    /**
+     * @override
+     */
     initialSprites() {
         this._sprite = new Sprite();
         this._setCharacterBitmap();
@@ -122,6 +127,10 @@ class CharacterRenderComponent extends RenderComponent {
         this._sprite.bitmap = ImageManager.loadCharacter(this._characterName);
     }
 
+    debugAddToStage(stage){
+        stage.addChild(this._sprite);
+    }
+
 }
 
 
@@ -129,6 +138,7 @@ class CharacterRenderComponent extends RenderComponent {
  *
  */
 class DummyRenderComponent extends RenderComponent {
+
     /**
      * initializing class variables
      * @param owner {GameEntity}
@@ -167,7 +177,6 @@ class DummyRenderComponent extends RenderComponent {
         // this._lowwerBodySprite.y = this.screenY() + size;
 
 
-        // this._priorityType = 1;
         // this._isObjectCharacter = false;
         // this._animationId = 0;
         // this._balloonId = 0;
@@ -178,6 +187,12 @@ class DummyRenderComponent extends RenderComponent {
 
     }
 
+    /**
+     * @override
+     */
+    initialSprites() {
+
+    }
 
     /**
      *
@@ -196,6 +211,8 @@ class DummyRenderComponent extends RenderComponent {
         stage.addChild(this._upperBodySprite);
         stage.addChild(this._lowwerBodySprite);
     }
+
+
 
     update() {
         const size = 32;

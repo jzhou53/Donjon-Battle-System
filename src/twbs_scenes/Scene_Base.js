@@ -70,7 +70,7 @@ class Scene_Base extends Stage {
      * Handle fading update and update all children
      */
     update() {
-        EventManager.tick();
+        EventsManager.tick();
         this.updateFade();
         this._updateChildren();
         AudioManager.checkErrors();
