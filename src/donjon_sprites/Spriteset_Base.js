@@ -10,6 +10,11 @@ class Spriteset_Base extends Sprite {
         super();
         this.setFrame(0, 0, Graphics.width, Graphics.height);
         /**
+         * @type {Array.<Sprite>}
+         * @protected
+         */
+        this._spriteToAddBuffer = [];
+        /**
          * @type {[number,number,number,number]}
          * @protected
          */

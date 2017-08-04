@@ -5,6 +5,11 @@ class Spriteset_Map extends Spriteset_Base {
 
     constructor() {
         super();
+        // add listener
+        EventsManager.addListener(
+            EVENT_TYPES.EntityCreated, this._onEntityCreated
+        );
+
     }
 
     /**
@@ -50,6 +55,11 @@ class Spriteset_Map extends Spriteset_Base {
     };
 
     _createTilemap() {
+        /**
+         * @type {ShaderTilemap|Tilemap}
+         * @protected
+         */
+        this._tilemap = null;
         if (Graphics.isWebGL()) {
             this._tilemap = new ShaderTilemap();
         } else {
@@ -89,15 +99,8 @@ class Spriteset_Map extends Spriteset_Base {
     _createCharacters() {
         this._characterSprites = [];
 
-        //TODO: Somehow add game render components to here
-        // $gameMap.events().forEach(function (event) {
-        //     this._characterSprites.push(new Sprite_Character(event));
-        // }, this);
+        this._updateSpriteBuffer();
 
-        //this._characterSprites.push(new Sprite_Character($gamePlayer));
-        for (let i = 0; i < this._characterSprites.length; i++) {
-            this._tilemap.addChild(this._characterSprites[i]);
-        }
     };
 
     _createShadow() {
@@ -153,6 +156,21 @@ class Spriteset_Map extends Spriteset_Base {
         this._tilemap.origin.y = $gameMap.displayY() * $gameMap.tileHeight();
     };
 
+    /**
+     * @private
+     */
+    _updateSpriteBuffer() {
+        if (this._spriteToAddBuffer.length > 0) {
+            for (let i = 0; i < this._spriteToAddBuffer.length; i++) {
+                const sprite = this._spriteToAddBuffer[i];
+                this._tilemap.addChild(sprite);
+                this._characterSprites.push(sprite)
+            }
+            //clear
+            this._spriteToAddBuffer = [];
+        }
+    }
+
     _updateShadow() {
         // let airship = $gameMap.airship();
         // this._shadowSprite.x = airship.shadowX();
@@ -166,5 +184,28 @@ class Spriteset_Map extends Spriteset_Base {
         this._weather.origin.x = $gameMap.displayX() * $gameMap.tileWidth();
         this._weather.origin.y = $gameMap.displayY() * $gameMap.tileHeight();
     };
+
+    /**
+     * event manager:
+     * @private
+     * @param event {Evnt_EntityCreated}
+     */
+    _onEntityCreated(event) {
+
+        const render = event.getEntity().getComponent("Render");
+
+        if (render) {
+            const sp = render.getSprites();
+            for (let i = 0; i < sp.length; i++) {
+                const sprite = sp[i];
+                this._spriteToAddBuffer.push(sprite);
+            }
+
+        } else {
+            console.error("should not happen......")
+        }
+
+    }
+
 
 }

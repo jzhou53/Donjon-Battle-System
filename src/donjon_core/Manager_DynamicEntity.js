@@ -158,10 +158,10 @@ class Manager_DynamicEntity {
         entity.setPosition(new Victor(x, y));
         this.addEntity(entity);
 
-        const stage = SceneManager._scene;
-        entity.getComponent("Render").debugAddToStage(stage);
+        //const stage = SceneManager._scene;
+        //entity.getComponent("Render").debugAddToStage(stage); //this should happen after
 
-        console.debug("entity added: "+entity.getTransform().getPosition()+", "+entity.getTransform()._localPosition);
+        //console.debug("entity added: "+entity.getTransform().getPosition()+", "+entity.getTransform()._localPosition);
     }
 
     // debugDisplayQuadtree() {
@@ -198,6 +198,13 @@ class Manager_DynamicEntity {
         this._quadtree.insert(entity);
         console.debug("entity added " + this._entities.length);
 
+    }
+
+    /**
+     * @return {Array}
+     */
+    getEntities() {
+        return this._entities;
     }
 
 

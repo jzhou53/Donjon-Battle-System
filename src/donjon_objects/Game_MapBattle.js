@@ -47,4 +47,15 @@ class Game_BattleMap extends Game_Map{
         this._dynamicEntities.update();
 
     }
+
+    /**
+     * @return {Array.<RenderComponent>}
+     */
+    getEntityRenders() {
+        const arr = [];
+        const entities = this._dynamicEntities.getEntities();
+        entities.forEach(entity => arr.push(entity.getComponent("Render")));
+        return arr;
+    }
+
 }

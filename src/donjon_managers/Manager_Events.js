@@ -143,6 +143,7 @@ class EventsManager {
      */
     static tick() {
         let time = performance.now();//Date.now();
+        let eventHandled = 0;
 
         //swap queue
         let queueToProcess = this._currentQueue;
@@ -151,13 +152,15 @@ class EventsManager {
         //process
         for (let event of this._queuedEvents[queueToProcess].values()) {
             this.triggerEvent(event);
+            eventHandled++;
         }
 
         //clean up old processed queue
         this._queuedEvents[queueToProcess].clear();
 
         let passedTime = performance.now();
-        //console.debug("time took (queue "+queueToProcess+"): " + (passedTime-time));
+        if (eventHandled)
+            console.debug("time took (queue " + queueToProcess + ") to handle " + eventHandled + " event(s): " + (passedTime - time));
     }
 
 

@@ -1,5 +1,11 @@
 /**
- *
+ * @global
+ */
+const EVENT_TYPES = {
+    EntityCreated: 1
+};
+
+/**
  * @abstract
  */
 class BasicEvent {
@@ -14,7 +20,7 @@ class BasicEvent {
          * @type {number}
          * @private
          */
-        this._evtType = timeStamp;
+        this._evtType = 0;
     }
 
     /**
@@ -50,15 +56,20 @@ class BasicEvent {
 /**
  * @extends BasicEvent
  */
-class Evnt_MapLoaded extends BasicEvent {
+class Evnt_EntityCreated extends BasicEvent {
 
     /**
      * @param timeStamp
-     * @param mapId {number}
+     * @param entity {GameEntity}
      */
-    constructor(timeStamp, mapId) {
+    constructor(timeStamp, entity) {
         super(timeStamp);
+        this._evtType = EVENT_TYPES.EntityCreated;
+        this._entity = entity;
+    }
 
+    getEntity() {
+        return this._entity;
     }
 
 

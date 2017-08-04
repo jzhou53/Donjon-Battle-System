@@ -20,12 +20,6 @@ class GameEntity {
         this._components = new Map();
 
         /**
-         * @type {Map}
-         * @protected
-         */
-        this._renderComponents = new Map();
-
-        /**
          * every entity should have a transform component that stores its location info.
          * @type {Transform} transform class stores entity's position
          * @protected
@@ -33,6 +27,15 @@ class GameEntity {
         this._transform = new Transform();
 
     }
+
+    /**
+     * @abstract
+     * @protected
+     */
+    _postInit() {
+
+    }
+
     /**
      * get the x position of the transform
      * @return {number}
@@ -163,7 +166,7 @@ class TWBS_Character extends GameEntity {
         //create render component
         this._components.set(
             "Render",
-            new DummyRenderComponent(this)
+            new CharacterRenderComponent(this)
         );
 
 
@@ -172,6 +175,15 @@ class TWBS_Character extends GameEntity {
         //     DonjonBS.Components.Physics,
         //     new AIComponent(this, this._transform)
         // );
+
+        this._postInit();
+    }
+
+    /**
+     * @override
+     */
+    _postInit() {
+        EventsManager.queueEvent(new Evnt_EntityCreated(0, this));
     }
 
     /**

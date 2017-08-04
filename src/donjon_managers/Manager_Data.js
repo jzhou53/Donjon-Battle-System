@@ -183,19 +183,11 @@ class DataManager {
         //$gameTemp = new Game_Temp();
         $gameSystem = new Game_System();
         $gameScreen = new Game_Screen();
-        //$gameTimer = new Game_Timer();
-        //$gameMessage = new Game_Message();
-        //$gameSwitches = new Game_Switches();
-        //$gameVariables = new Game_Variables();
-        //$gameSelfSwitches = new Game_SelfSwitches();
-        //$gameActors = new Game_Actors();
-        //$gameParty = new Game_Party();
-        //$gameTroop = new Game_Troop();
+
         /**
          * @type {Game_Map}
          */
         $gameMap = new Game_BattleMap();
-        //$gamePlayer = new Game_Player();
     }
 
     /**

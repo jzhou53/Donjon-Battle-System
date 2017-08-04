@@ -19,7 +19,6 @@ class Scene_SimpleMap extends Scene_MapInterface {
         //const mapId = $gamePlayer.isTransferring() ? $gamePlayer.newMapId() : $gameMap.mapId();
         //console.log("map id: "+ mapId +" $gamePlayer.newMapId() = "+ $gamePlayer.newMapId() + ",$gameMap.mapId() = "+$gameMap.mapId());
 
-
         DataManager.loadMapData(1);
     }
 
