@@ -24,6 +24,7 @@ gulp.task('build', function() {
      * @type {Array}
      */
     var folders = [
+        'rmmv_core',
         'twbs_core',
         'main',
         'twbs_managers',

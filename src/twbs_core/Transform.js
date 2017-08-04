@@ -10,36 +10,6 @@
 class Transform {
 
     /**
-     * getters
-     * @return {number}
-     */
-    get x() {
-        return this._position.x;
-    }
-
-    get y() {
-        return this._position.y;
-    }
-
-    setPosition(pPosition) {
-        this._localPosition = pPosition;
-        //this.update();
-    }
-
-    getPosition() {
-        return this._position;
-    }
-
-    /**
-     *
-     * @return {Victor}
-     */
-    getScale() {
-        return this._scale;
-    }
-
-
-    /**
      *
      * @param pos{Victor}
      * @param z{number}
@@ -52,14 +22,12 @@ class Transform {
                 r = 0) {
 
         /**
-         *
          * @type {Transform}
          * @private
          */
         this._parent = null;
 
         /**
-         *
          * @type {Array} storing {Transforms}
          * @private
          */
@@ -104,10 +72,45 @@ class Transform {
     }
 
     /**
-     *
-     * @param pTransform{Transform}
+     * @return {number}
      */
-    _addChild(pTransform) {
+    get x() {
+        return this._position.x;
+    }
+
+    /**
+     * @return {number}
+     */
+    get y() {
+        return this._position.y;
+    }
+
+    /**
+     * @param pPosition{Victor}
+     */
+    setPosition(pPosition) {
+        this._localPosition = pPosition;
+        //this.update();
+    }
+
+    /**
+     * @return {Victor}
+     */
+    getPosition() {
+        return this._position;
+    }
+
+    /**
+     * @return {Victor}
+     */
+    getScale() {
+        return this._scale;
+    }
+
+    /**
+     * @param pTransform{Transform} the child
+     */
+    addChild(pTransform) {
         this._childern.push(pTransform);
     }
 
@@ -123,7 +126,7 @@ class Transform {
             return false;
         } else {
             this._parent = pTransform;
-            this._parent._addChild(this);
+            this._parent.addChild(this);
         }
 
     }
@@ -174,14 +177,9 @@ class Transform {
         }
     }
 
-    /**
-     *
-     */
     update() {
-
         this._position = this._getGlobalPosition();
         this._scale = this._getGlobalScale();
-
     }
 
 
@@ -196,11 +194,10 @@ class Transform {
     }
 
     /**
-     *
      * @return {string}
      */
     toString() {
-        return "(" + this._position.toString() + ") local: " + this._localPosition.toString();
+        return "global: (" + this._position + ") local: " + this._localPosition;
     }
 
 }

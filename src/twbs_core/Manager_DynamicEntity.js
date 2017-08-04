@@ -157,9 +157,11 @@ class Manager_DynamicEntity {
         //     y = Math.random()*10;
         entity.setPosition(new Victor(x, y));
         this.addEntity(entity);
+
         const stage = SceneManager._scene;
         entity.getComponent("Render").debugAddToStage(stage);
-        console.debug(entity.getTransform().getPosition()+", "+entity.getTransform()._localPosition);
+
+        console.debug("entity added: "+entity.getTransform().getPosition()+", "+entity.getTransform()._localPosition);
     }
 
     debugDisplayQuadtree() {

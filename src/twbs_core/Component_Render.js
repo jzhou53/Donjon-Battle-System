@@ -83,14 +83,7 @@ class RenderComponent extends Component {
     }
 
     initialSprites() {
-        throw new Error("RenderComponent::initialSprites should be override. ");
-    }
-
-    /**
-     * @override
-     */
-    update() {
-        //console.log("Render Component updating...");
+        throw new Error("RenderComponent::initialSprites not implemented. ");
     }
 
     debugAddToStage(stage) {
@@ -147,12 +140,23 @@ class DummyRenderComponent extends RenderComponent {
     constructor(owner) {
         super(owner);
 
+    }
+
+    /**
+     * @override
+     */
+    initialSprites() {
         const size = 32;
 
         //note: debugging head
-        this._headSprite = new Sprite(new Bitmap(size, size));
-        this._upperBodySprite = new Sprite(new Bitmap(size, size));
-        this._lowwerBodySprite = new Sprite(new Bitmap(size, size));
+        this._headSprite = new Sprite();
+        this._headSprite.bitmap = new Bitmap(size, size);
+
+        this._upperBodySprite = new Sprite();
+        this._upperBodySprite.bitmap = new Bitmap(size, size);
+
+        this._lowwerBodySprite = new Sprite();
+        this._lowwerBodySprite.bitmap = new Bitmap(size, size);
 
         //should load bitmap from database, but now debug
         const color = '#00FFFF';
@@ -168,30 +172,7 @@ class DummyRenderComponent extends RenderComponent {
         this._lowwerBodySprite.anchor.x = 0.5;
         this._lowwerBodySprite.anchor.y = 1;
 
-        //console.debug("t: "+this._owner.getTransform().getPosition());
-        // this._headSprite.x = this.screenX();
-        // this._headSprite.y = this.screenY() - size;
-        // this._upperBodySprite.x = this.screenX();
-        // this._upperBodySprite.y = this.screenY();
-        // this._lowwerBodySprite.x = this.screenX();
-        // this._lowwerBodySprite.y = this.screenY() + size;
-
-
-        // this._isObjectCharacter = false;
-        // this._animationId = 0;
-        // this._balloonId = 0;
-        // this._animationPlaying = false;
-        // this._balloonPlaying = false;
-        // this._animationCount = 0;
-
-
-    }
-
-    /**
-     * @override
-     */
-    initialSprites() {
-
+        console.debug(this._headSprite);
     }
 
     /**
@@ -202,18 +183,19 @@ class DummyRenderComponent extends RenderComponent {
         return [this._headSprite, this._upperBodySprite, this._lowwerBodySprite];
     }
 
-    setCharacterBitmap() {
-
-    }
 
     debugAddToStage(stage) {
         stage.addChild(this._headSprite);
         stage.addChild(this._upperBodySprite);
         stage.addChild(this._lowwerBodySprite);
+        console.debug("added to the stage ");
+        console.debug(stage);
     }
 
 
-
+    /**
+     * @override
+     */
     update() {
         const size = 32;
         this._headSprite.x = this.screenX();

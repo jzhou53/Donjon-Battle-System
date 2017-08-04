@@ -5,10 +5,6 @@
  */
 class Component {
 
-    get owner() {
-        return this._owner;
-    }
-
     /**
      * set the owner when construct the component
      * @param owner {GameEntity}
@@ -26,12 +22,18 @@ class Component {
     }
 
     /**
-     *
+     * @abstract
      */
     update() {
         throw new Error("Component::update not implemented");
     }
 
+    /**
+     * @return {GameEntity}
+     */
+    get owner() {
+        return this._owner;
+    }
 
 }
 

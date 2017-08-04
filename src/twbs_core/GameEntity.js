@@ -7,7 +7,34 @@
 class GameEntity {
 
     /**
-     * get the x position
+     * @constructor
+     * initialize components map and transform member
+     */
+    constructor() {
+
+        /**
+         * a map structure stores components as value, string as key.
+         * @type {Map}
+         * @protected
+         */
+        this._components = new Map();
+
+        /**
+         * @type {Map}
+         * @protected
+         */
+        this._renderComponents = new Map();
+
+        /**
+         * every entity should have a transform component that stores its location info.
+         * @type {Transform} transform class stores entity's position
+         * @protected
+         */
+        this._transform = new Transform();
+
+    }
+    /**
+     * get the x position of the transform
      * @return {number}
      */
     get x() {
@@ -15,7 +42,7 @@ class GameEntity {
     }
 
     /**
-     * get the x position
+     * get the x position of the transform
      * @return {*}
      */
     get y() {
@@ -31,13 +58,14 @@ class GameEntity {
         return 48;
     }
 
+    /**
+     * @abstract
+     */
     get radius() {
-        throw new Error("should not happen.");
-        //return 24;
+        throw new Error("GameEntity:radius not implemented");
     }
 
     /**
-     *
      * @param str {String}
      * @return {Component}
      */
@@ -46,7 +74,6 @@ class GameEntity {
     }
 
     /**
-     *
      * @return {Transform}
      */
     getTransform() {
@@ -54,32 +81,10 @@ class GameEntity {
     }
 
     /**
-     *
      * @param pPos{Victor}
      */
     setPosition(pPos) {
         this._transform.setPosition(pPos);
-    }
-
-    /**
-     * constructor
-     * initialize components map and transform member
-     */
-    constructor() {
-
-        /**
-         * a map structure stores components as value, string as key.
-         * @type {Map}
-         * @protected
-         */
-        this._components = new Map();
-        /**
-         * every entity should have a transform component that stores its location info.
-         * @type {Transform} transform class stores entity's position
-         * @protected
-         */
-        this._transform = new Transform();
-
     }
 
     /**
@@ -120,9 +125,9 @@ class GameEntity {
 
     }
 
-    getSpeed() {
-        return this._components.get("Physics")._speed;
-    }
+    // getSpeed() {
+    //     return this._components.get("Physics")._speed;
+    // }
 
 
 }
@@ -158,7 +163,7 @@ class TWBS_Character extends GameEntity {
         //create render component
         this._components.set(
             "Render",
-            new CharacterRenderComponent(this)
+            new DummyRenderComponent(this)
         );
 
 
@@ -178,7 +183,6 @@ class TWBS_Character extends GameEntity {
         //  AI -> State -> physics -> transform
         //this.debugMove();
         super.update();
-
     }
 
     /**
