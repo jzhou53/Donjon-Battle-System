@@ -3,12 +3,15 @@
  */
 class Spriteset_Map extends Spriteset_Base {
 
+    /**
+     * @override
+     */
     constructor() {
         super();
         // add listener
-        EventsManager.addListener(
-            EVENT_TYPES.EntityCreated, this._onEntityCreated
-        );
+        // EventsManager.addListener(
+        //     EVENT_TYPES.EntityCreated, this._onEntityCreated
+        // );
 
     }
 
@@ -21,7 +24,6 @@ class Spriteset_Map extends Spriteset_Base {
         this._createParallax();
         this._createTilemap();
         this._createCharacters();
-        this._createShadow();
         this._createWeather();
     }
 
@@ -34,19 +36,17 @@ class Spriteset_Map extends Spriteset_Base {
         this._updateTileset();
         this._updateParallax();
         this._updateTilemap();
-        this._updateShadow();
         this._updateWeather();
     }
 
     hideCharacters() {
         for (let i = 0; i < this._characterSprites.length; i++) {
             const sprite = this._characterSprites[i];
-            if (!sprite.isTile()) {
-                sprite.hide();
-            }
+            //if (!sprite.isTile()) {
+            sprite.hide();
+            //}
         }
     }
-
 
     _createParallax() {
         this._parallax = new TilingSprite();
@@ -79,7 +79,7 @@ class Spriteset_Map extends Spriteset_Base {
      */
     loadTileset() {
         /**
-         * @type {json}
+         * @type {{tilesetNames}}
          */
         this._tileset = $gameMap.tileset();
         if (this._tileset) {
@@ -101,15 +101,6 @@ class Spriteset_Map extends Spriteset_Base {
 
         this._updateSpriteBuffer();
 
-    };
-
-    _createShadow() {
-        this._shadowSprite = new Sprite();
-        this._shadowSprite.bitmap = ImageManager.loadSystem('Shadow1');
-        this._shadowSprite.anchor.x = 0.5;
-        this._shadowSprite.anchor.y = 1;
-        this._shadowSprite.z = 6;
-        this._tilemap.addChild(this._shadowSprite);
     };
 
     _createWeather() {
@@ -170,13 +161,6 @@ class Spriteset_Map extends Spriteset_Base {
             this._spriteToAddBuffer = [];
         }
     }
-
-    _updateShadow() {
-        // let airship = $gameMap.airship();
-        // this._shadowSprite.x = airship.shadowX();
-        // this._shadowSprite.y = airship.shadowY();
-        // this._shadowSprite.opacity = airship.shadowOpacity();
-    };
 
     _updateWeather() {
         this._weather.type = $gameScreen.weatherType();

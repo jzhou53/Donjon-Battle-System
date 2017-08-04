@@ -65,6 +65,8 @@ class Scene_MapInterface extends Scene_Base {
     _onMapLoaded() {
         //console.log("_onMapLoaded");
         this._createDisplayObjects();
+        //sent out loaded event
+        EventsManager.queueEvent(new Evnt_SpritesetMapCreated(performance.now(), this._spriteset));
     }
 
     /**

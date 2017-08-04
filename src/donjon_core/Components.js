@@ -19,6 +19,8 @@ class Component {
          * @protected
          */
         this._owner = owner;
+
+        this._setupListeners();
     }
 
     /**
@@ -33,6 +35,13 @@ class Component {
      */
     get owner() {
         return this._owner;
+    }
+
+    /**
+     * @protected
+     * @abstract
+     */
+    _setupListeners() {
     }
 
 }

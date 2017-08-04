@@ -105,9 +105,6 @@ class GameEntity {
      * @param pEntity {GameEntity}
      */
     onCollision(pEntity) {
-        //const physics = this._components.get("Physics");
-
-        this.debugFlag = true;
 
         //p0 (self) - p1 (pEntity)
         const p0 = this._transform.getPosition().clone();
@@ -141,7 +138,7 @@ class GameEntity {
  *
  * refers to Game_Character in RMMV
  */
-class TWBS_Character extends GameEntity {
+class Game_Character extends GameEntity {
     /**
      *
      */
@@ -183,7 +180,7 @@ class TWBS_Character extends GameEntity {
      * @override
      */
     _postInit() {
-        EventsManager.queueEvent(new Evnt_EntityCreated(0, this));
+        //EventsManager.queueEvent(new Evnt_EntityCreated(0, this));
     }
 
     /**

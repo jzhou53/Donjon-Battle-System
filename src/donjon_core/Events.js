@@ -2,7 +2,8 @@
  * @global
  */
 const EVENT_TYPES = {
-    EntityCreated: 1
+    EntityCreated: 1,
+    SpritesetMapCreated: 2
 };
 
 /**
@@ -75,5 +76,20 @@ class Evnt_EntityCreated extends BasicEvent {
 
 }
 
+class Evnt_SpritesetMapCreated extends BasicEvent {
+    /**
+     * @param timeStamp
+     * @param map{Spriteset_Map}
+     */
+    constructor(timeStamp, map) {
+        super(timeStamp);
+        this._evtType = EVENT_TYPES.SpritesetMapCreated;
+        this._spritesetMap = map;
+    }
 
+    getSpriteseMap() {
+        return this._spritesetMap;
+    }
+
+}
 

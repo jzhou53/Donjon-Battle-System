@@ -37,14 +37,27 @@ class RenderComponent extends Component {
          */
         this._transparent = false;
 
+
+    }
+
+    /**
+     * @private
+     */
+    _setupListeners() {
+        //add listener
+        EventsManager.addListener(
+            EVENT_TYPES.SpritesetMapCreated,
+            this._postMapLoaded.bind(this)
+        );
     }
 
     /**
      * Create sprite objects
      * Note: must be called after Stage(ex: SpritesetMap) is created.
+     * @param spriteMap {Spriteset_Map}
      * @abstract
      */
-    initialSprites() {
+    initialSprites(spriteMap) {
         throw new Error("RenderComponent::initialSprites not implemented. ");
     }
 
@@ -137,6 +150,13 @@ class RenderComponent extends Component {
 
     }
 
+    /**
+     * @param evnt {Evnt_SpritesetMapCreated}
+     * @private
+     */
+    _postMapLoaded(evnt) {
+        this.initialSprites(evnt.getSpriteseMap());
+    }
 
 }
 
@@ -169,11 +189,12 @@ class CharacterRenderComponent extends RenderComponent {
     }
 
     /**
-     * @override
+     * @param spritesetMap {Spriteset_Map}
      */
-    initialSprites() {
+    initialSprites(spritesetMap) {
         const sprite = new Sprite_RenderComponent(this);
         this._sprites.push(sprite);
+        spritesetMap._tilemap.addChild(sprite);
     }
 
     characterName() {

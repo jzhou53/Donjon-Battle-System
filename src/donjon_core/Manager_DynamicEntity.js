@@ -149,7 +149,7 @@ class Manager_DynamicEntity {
      * DEBUG USE
      */
     debugCreateEntity() {
-        const entity = new TWBS_Character();
+        const entity = new Game_Character();
 
         let x = Math.randomInt(15),
             y = Math.randomInt(15);
@@ -158,34 +158,8 @@ class Manager_DynamicEntity {
         entity.setPosition(new Victor(x, y));
         this.addEntity(entity);
 
-        //const stage = SceneManager._scene;
-        //entity.getComponent("Render").debugAddToStage(stage); //this should happen after
 
-        //console.debug("entity added: "+entity.getTransform().getPosition()+", "+entity.getTransform()._localPosition);
     }
-
-    // debugDisplayQuadtree() {
-    //
-    //     if (!this._debugBoard.bitmap) {
-    //         this._debugBoard.bitmap = new Bitmap(Graphics.width, Graphics.height);
-    //         SceneManager._scene.addChild(this._debugBoard);
-    //     }
-    //
-    //     this._debugBoard.bitmap.clear();
-    //
-    //     let color;
-    //     this._entities.forEach(entity => {
-    //             entity.update();
-    //             color = entity.debugFlag ? '#ff2b32' : '#00FFFF';
-    //             let radius = entity.radius * 48;
-    //             let x = entity.x * 48 + radius;
-    //             let y = entity.y * 48 + radius;
-    //             //console.log(entity.getTransform().toString()+" r: "+radius);
-    //             this._debugBoard.bitmap.drawCircle(x, y, radius, color);
-    //         }
-    //     );
-    //
-    // }
 
     /**
      *

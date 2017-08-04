@@ -26,7 +26,7 @@ class Game_BattleMap extends Game_Map{
         this._setupDynamicManager();
 
         this._dynamicEntities.debugCreateEntity();
-        this._dynamicEntities.debugCreateEntity();
+
     }
 
     /**
