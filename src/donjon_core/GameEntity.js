@@ -169,7 +169,7 @@ class TWBS_Character extends GameEntity {
 
         //create AI component
         // this._components.set(
-        //     TWBS.Components.Physics,
+        //     DonjonBS.Components.Physics,
         //     new AIComponent(this, this._transform)
         // );
     }

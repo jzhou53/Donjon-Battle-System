@@ -25,12 +25,12 @@ gulp.task('build', function() {
      */
     var folders = [
         'rmmv_core',
-        'twbs_core',
-        'main',
-        'twbs_managers',
-        'twbs_scenes',
-        'twbs_objects',
-        'twbs_sprites'
+        'donjon_core',
+        'donjon_managers',
+        'donjon_scenes',
+        'donjon_objects',
+        'donjon_sprites',
+        'main'
     ];
 
     folders.forEach(function (name) {

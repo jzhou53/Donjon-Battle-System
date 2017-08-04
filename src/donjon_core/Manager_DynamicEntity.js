@@ -36,7 +36,7 @@ class Manager_DynamicEntity {
          */
         this._countActiveEntities = 0;
 
-        this._debugBoard = new Sprite();
+        //this._debugBoard = new Sprite();
 
     }
 
@@ -164,28 +164,28 @@ class Manager_DynamicEntity {
         console.debug("entity added: "+entity.getTransform().getPosition()+", "+entity.getTransform()._localPosition);
     }
 
-    debugDisplayQuadtree() {
-
-        if (!this._debugBoard.bitmap) {
-            this._debugBoard.bitmap = new Bitmap(Graphics.width, Graphics.height);
-            SceneManager._scene.addChild(this._debugBoard);
-        }
-
-        this._debugBoard.bitmap.clear();
-
-        let color;
-        this._entities.forEach(entity => {
-                entity.update();
-                color = entity.debugFlag ? '#ff2b32' : '#00FFFF';
-                let radius = entity.radius * 48;
-                let x = entity.x * 48 + radius;
-                let y = entity.y * 48 + radius;
-                //console.log(entity.getTransform().toString()+" r: "+radius);
-                this._debugBoard.bitmap.drawCircle(x, y, radius, color);
-            }
-        );
-
-    }
+    // debugDisplayQuadtree() {
+    //
+    //     if (!this._debugBoard.bitmap) {
+    //         this._debugBoard.bitmap = new Bitmap(Graphics.width, Graphics.height);
+    //         SceneManager._scene.addChild(this._debugBoard);
+    //     }
+    //
+    //     this._debugBoard.bitmap.clear();
+    //
+    //     let color;
+    //     this._entities.forEach(entity => {
+    //             entity.update();
+    //             color = entity.debugFlag ? '#ff2b32' : '#00FFFF';
+    //             let radius = entity.radius * 48;
+    //             let x = entity.x * 48 + radius;
+    //             let y = entity.y * 48 + radius;
+    //             //console.log(entity.getTransform().toString()+" r: "+radius);
+    //             this._debugBoard.bitmap.drawCircle(x, y, radius, color);
+    //         }
+    //     );
+    //
+    // }
 
     /**
      *
