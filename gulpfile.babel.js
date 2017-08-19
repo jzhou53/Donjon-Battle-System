@@ -30,6 +30,7 @@ gulp.task('build', function() {
         'donjon_scenes',
         'donjon_objects',
         'donjon_sprites',
+        'donjon_components',
         'main'
     ];
 

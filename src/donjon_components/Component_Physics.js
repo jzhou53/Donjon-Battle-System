@@ -98,7 +98,7 @@ class PhysicsComponent extends Component {
     addImpactForce(pForce) {
         this._impactForces.add(pForce);
         this._collision = true;
-        //console.log("impact force applied "+pForce+"...");
+        console.log("impact force applied " + pForce + "...");
     }
 
 }

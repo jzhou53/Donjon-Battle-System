@@ -8,11 +8,6 @@ class Spriteset_Map extends Spriteset_Base {
      */
     constructor() {
         super();
-        // add listener
-        // EventsManager.addListener(
-        //     EVENT_TYPES.EntityCreated, this._onEntityCreated
-        // );
-
     }
 
     /**
@@ -99,7 +94,7 @@ class Spriteset_Map extends Spriteset_Base {
     _createCharacters() {
         this._characterSprites = [];
 
-        this._updateSpriteBuffer();
+        //this._updateSpriteBuffer();
 
     };
 
@@ -147,49 +142,12 @@ class Spriteset_Map extends Spriteset_Base {
         this._tilemap.origin.y = $gameMap.displayY() * $gameMap.tileHeight();
     };
 
-    /**
-     * @private
-     */
-    _updateSpriteBuffer() {
-        if (this._spriteToAddBuffer.length > 0) {
-            for (let i = 0; i < this._spriteToAddBuffer.length; i++) {
-                const sprite = this._spriteToAddBuffer[i];
-                this._tilemap.addChild(sprite);
-                this._characterSprites.push(sprite)
-            }
-            //clear
-            this._spriteToAddBuffer = [];
-        }
-    }
-
     _updateWeather() {
         this._weather.type = $gameScreen.weatherType();
         this._weather.power = $gameScreen.weatherPower();
         this._weather.origin.x = $gameMap.displayX() * $gameMap.tileWidth();
         this._weather.origin.y = $gameMap.displayY() * $gameMap.tileHeight();
     };
-
-    /**
-     * event manager:
-     * @private
-     * @param event {Evnt_EntityCreated}
-     */
-    _onEntityCreated(event) {
-
-        const render = event.getEntity().getComponent("Render");
-
-        if (render) {
-            const sp = render.getSprites();
-            for (let i = 0; i < sp.length; i++) {
-                const sprite = sp[i];
-                this._spriteToAddBuffer.push(sprite);
-            }
-
-        } else {
-            console.error("should not happen......")
-        }
-
-    }
 
 
 }

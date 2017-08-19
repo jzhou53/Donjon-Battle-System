@@ -41,7 +41,8 @@ class RenderComponent extends Component {
     }
 
     /**
-     * @private
+     * @override
+     * @protected
      */
     _setupListeners() {
         //add listener
@@ -146,17 +147,15 @@ class RenderComponent extends Component {
         return t.y - $gameMap._displayY;
     }
 
-    debugAddToStage(stage) {
-
-    }
-
     /**
+     * function is automatically called when event is loaded
      * @param evnt {Evnt_SpritesetMapCreated}
      * @private
      */
     _postMapLoaded(evnt) {
-        this.initialSprites(evnt.getSpriteseMap());
+        this.initialSprites(evnt.getSpritesetMap());
     }
+
 
 }
 
@@ -186,15 +185,21 @@ class CharacterRenderComponent extends RenderComponent {
          */
         this._pattern = 0;
 
+        this._spriteCreated = false;
+
     }
 
     /**
      * @param spritesetMap {Spriteset_Map}
      */
     initialSprites(spritesetMap) {
+        if (this._spriteCreated) {
+            return;
+        }
         const sprite = new Sprite_RenderComponent(this);
         this._sprites.push(sprite);
         spritesetMap._tilemap.addChild(sprite);
+        this._spriteCreated = true;
     }
 
     characterName() {

@@ -2,8 +2,8 @@
  * @global
  */
 const EVENT_TYPES = {
-    EntityCreated: 1,
-    SpritesetMapCreated: 2
+    SpritesetMapCreated: 1,
+    RequestSpriteRefresh: 2
 };
 
 /**
@@ -16,10 +16,14 @@ class BasicEvent {
      * @param timeStamp{number} passing the time Date.now() when this event is created.
      */
     constructor(timeStamp) {
+        /**
+         * @type {number}
+         * @protected
+         */
         this._timeStamp = timeStamp;
         /**
          * @type {number}
-         * @private
+         * @protected
          */
         this._evtType = 0;
     }
@@ -54,28 +58,6 @@ class BasicEvent {
 
 }
 
-/**
- * @extends BasicEvent
- */
-class Evnt_EntityCreated extends BasicEvent {
-
-    /**
-     * @param timeStamp
-     * @param entity {GameEntity}
-     */
-    constructor(timeStamp, entity) {
-        super(timeStamp);
-        this._evtType = EVENT_TYPES.EntityCreated;
-        this._entity = entity;
-    }
-
-    getEntity() {
-        return this._entity;
-    }
-
-
-}
-
 class Evnt_SpritesetMapCreated extends BasicEvent {
     /**
      * @param timeStamp
@@ -87,9 +69,25 @@ class Evnt_SpritesetMapCreated extends BasicEvent {
         this._spritesetMap = map;
     }
 
-    getSpriteseMap() {
+    getSpritesetMap() {
         return this._spritesetMap;
     }
 
 }
 
+class Evnt_RequestSpriteRefresh extends BasicEvent {
+    /**
+     * @param timeStamp
+     * @param map{Spriteset_Map}
+     */
+    constructor(timeStamp, map) {
+        super(timeStamp);
+        this._evtType = EVENT_TYPES.RequestSpriteRefresh;
+        this._spritesetMap = map;
+    }
+
+    getSpritesetMap() {
+        return this._spritesetMap;
+    }
+
+}

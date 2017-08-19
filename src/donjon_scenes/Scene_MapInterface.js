@@ -116,7 +116,6 @@ class Scene_MapInterface extends Scene_Base {
      * @override
      */
     terminate() {
-
         this.removeChild(this._spriteset);
     }
 
