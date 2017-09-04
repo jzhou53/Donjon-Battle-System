@@ -27,7 +27,10 @@ class DataManager {
     static _databaseFiles = [
         {name: '$dataTilesets', src: 'Tilesets.json'},
         {name: '$dataSystem', src: 'System.json'},
-        {name: '$dataMapInfos', src: 'MapInfos.json'}
+        {name: '$dataMapInfos', src: 'MapInfos.json'},
+        //custom data
+        {name: '$dataArmors', src: 'Donjon_Armors.json'},
+        {name: '$dataWeapons', src: 'Donjon_Weapons.json'}
     ];
 
     /**

@@ -72,15 +72,32 @@ class Scene_Boot extends Scene_Base {
         super.start();
         SoundManager.preloadImportantSounds();
 
-        // no more battle test and event test.
+        if ($debugging) {
+            this._donjonDebugStart();
+        } else {
+            this._normalStart();
+        }
+    }
+
+    _normalStart() {
         this.checkPlayerLocation();
         DataManager.setupNewGame();
-        //SceneManager.goto(Scene_Map);
         SceneManager.goto(Scene_SimpleMap);
         //Window_TitleCommand.initCommandPosition();
-
         this.updateDocumentTitle();
     }
+
+    /**
+     * Donjon Debugging
+     * @private
+     */
+    _donjonDebugStart() {
+        document.title = "DEBUGGING";
+
+        boooooooom();
+
+    }
+
 
     updateDocumentTitle() {
         document.title = $dataSystem.gameTitle;

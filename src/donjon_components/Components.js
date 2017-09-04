@@ -38,7 +38,6 @@ class Component {
     }
 
     /**
-     * @protected
      * @abstract
      */
     _setupListeners() {
