@@ -1,11 +1,16 @@
 class Damage {
     /**
-     * @param type {Number}
-     * @param value {Number}
+     * @param rawDamage0 {number}
+     * @param rawDamage1 {number}
+     * @param rawDamage2 {number}
      */
-    constructor(type, value) {
-        this.type = type;
-        this.value = value;
+    constructor(rawDamage0, rawDamage1, rawDamage2) {
+        rawDamage0 = Math.floor(rawDamage0);
+        rawDamage1 = Math.floor(rawDamage1);
+        rawDamage2 = Math.floor(rawDamage2);
+        this.baseDamage = rawDamage0;
+        this.fleshDamage = rawDamage1;
+        this.armorDamage = rawDamage2;
     }
 }
 
@@ -94,64 +99,59 @@ class Game_Equipment extends Game_Items {
 
 class Game_Weapon extends Game_Equipment {
 
-    /**
-     * @const
-     * @type {{CUT: number, PIERCE: number, BLUNT: number}}
-     */
-    static DAMAGE_TYPE = {
-        CUT: 0,
-        PIERCE: 1,
-        BLUNT: 2,
-    };
-
-    static MAP_TO_TYPES = new Map([
-        ['cut', Game_Weapon.DAMAGE_TYPE.CUT],
-        ['pierce', Game_Weapon.DAMAGE_TYPE.PIERCE],
-        ['blunt', Game_Weapon.DAMAGE_TYPE.BLUNT],
-    ]);
+    static BASE_CRITICAL = 25;
 
     /**
      * @constructor
      * @param pDataItem {{
      *  id:number,name:string,
-     *  swingType:string,overheadType:string,thrustType:string,
-     *  swingDamage:number,overheadDamage:number,thrustDamage:number,
+     *  damage:number, ignoreArmor:number, vsArmor:number
+     *  critical:number,shieldDmg:number
      * }}
      */
     constructor(pDataItem) {
         super(pDataItem);
 
-        this._weaponDamages = [
-            new Damage(
-                Game_Weapon.MAP_TO_TYPES.get(pDataItem.swingType), pDataItem.swingDamage
-            ),
-            new Damage(
-                Game_Weapon.MAP_TO_TYPES.get(pDataItem.overheadType), pDataItem.overheadDamage
-            ),
-            new Damage(
-                Game_Weapon.MAP_TO_TYPES.get(pDataItem.thrustType), pDataItem.thrustDamage
-            )
-        ];
+        this._baseDamage = pDataItem.damage;
+        this._ignoreArmor = pDataItem.ignoreArmor;
+        this._againstArmor = pDataItem.vsArmor;
+        this._criticalModifier = pDataItem.critical;
+        this._shieldDamage = pDataItem.shieldDmg;
 
         //other stuff like mass, length, speed ....
 
     }
 
-    /**
-     * @param atkType {number} range must be within 0 ... Game_Weapon.DAMAGE_TYPE.length-1
-     * @return {Damage}
-     */
-    getDamage(atkType = 0) {
-        return this._weaponDamages[atkType];
+    toString() {
+        return "[" + this._id + ": " + this._name + " ("
+            + this._baseDamage + ", " + this._ignoreArmor + "%,"
+            + this._againstArmor + "%"
+            + ")]"
     }
 
-    toString() {
-        const str = ['c', 'p', 'b'];
-        return "[" + this._id + ": " + this._name + " ("
-            + this._weaponDamages[0].value + str[this._weaponDamages[0].type] + ", "
-            + this._weaponDamages[1].value + str[this._weaponDamages[1].type] + ", "
-            + this._weaponDamages[2].value + str[this._weaponDamages[2].type]
-            + ")]"
+    /**
+     * get base critical hit change + modifier
+     * @return {number} 25 + modifier
+     */
+    getMaxCritical() {
+        return this.BASE_CRITICAL + this._criticalModifier;
+    }
+
+    /**
+     * @param speedFactor{number}
+     * @param critical{boolean}
+     * @return {Damage}
+     */
+    makeDamage(speedFactor, critical = false) {
+        let damage = this._baseDamage * speedFactor;
+        let rawFleshDamage = ( damage * this._ignoreArmor ) / 100,
+            rawArmorDamage = ( damage * this._againstArmor ) / 100;
+        console.debug("new damage: " + speedFactor + " * " + this._baseDamage + " = " + damage);
+        if (critical) {
+            rawFleshDamage *= 2;
+            damage *= 2;
+        }
+        return new Damage(damage, rawFleshDamage, rawArmorDamage);
     }
 
 }
@@ -162,59 +162,41 @@ class Game_Armor extends Game_Equipment {
     /**
      * @param pDataItem{{
      *  id:number, name:string,
-     *  maxHp:number, defence: number
-     *  resistance:[number,number,number]
+     *  durability:number
      * }}
      */
     constructor(pDataItem) {
         super(pDataItem);
 
-        this._MaxHitPoint = pDataItem.maxHp;
-        this._hitPoint = this._MaxHitPoint;
-
-        /**
-         * represent the quality of armor, the higher, the better in defencing.
-         * @type {number} the value
-         * @private
-         */
-        this._defence = pDataItem.defence;
-
-        /**
-         * the percentage factors against different damage types. typically cutting damage, piercing damage, and blunt damage.
-         * @type {[number,number,number]} c, p , b
-         * @private
-         */
-        this._resistanceFactors = [
-            pDataItem.resistance[0],
-            pDataItem.resistance[1],
-            pDataItem.resistance[2]
-        ];
-
+        this._MaxDurability = pDataItem.durability;
+        this._durability = this._MaxDurability;
 
         this._broken = false;
-        this._overflowDamage = 0;
+        this._fleshDamage = 0;
+        this._armorDamage = 0;
+
     }
 
     /**
-     * @param pDamage{Damage}
-     * @param speedFactor{float} 1.0 stands for normal
+     * @param pDamage{Damage} raw damages
      */
-    recieveDamage(pDamage, speedFactor) {
-        const factorVal = this._resistanceFactors[pDamage.type]; // 0..100
+    receiveDamage(pDamage) {
 
-        const damage = pDamage.value * speedFactor;
-
-        this._hitPoint -= (damage * factorVal) / 100;
-
-        if (this._hitPoint <= 0) {
-            this._hitPoint = 0;
-            this._broken = true;
-            this._overflowDamage = damage;
+        if (this._broken) {
+            this._fleshDamage = pDamage.baseDamage;
         } else {
-            this._overflowDamage = (damage * (100 - factorVal)) / 100;
+            //10% of remaining armor
+            const def = Math.floor((this._durability * 10) / 100);
+
+            let finalDamage = pDamage.fleshDamage - def;
+            if (finalDamage < 0) {
+                finalDamage = 0;
+            }
+
+            this._fleshDamage = finalDamage;
+            this._armorDamage = pDamage.armorDamage;
+            this.loseDurability(this._armorDamage);
         }
-
-
     }
 
     /**
@@ -225,12 +207,23 @@ class Game_Armor extends Game_Equipment {
         return this._broken;
     }
 
+    getFlushDamage() {
+        return this._fleshDamage;
+    }
+
+    getArmorDamage() {
+        return this._armorDamage;
+    }
+
     /**
-     * get unprotected damage, will be delivered to the character's hitpoint.
-     * @return {number}
+     * @param damage{number}
      */
-    getOverflowDamage() {
-        return this._overflowDamage;
+    loseDurability(damage) {
+        this._durability -= damage;
+        if (this._durability <= 0) {
+            this._durability = 0;
+            this._broken = true;
+        }
     }
 
     /**
@@ -238,11 +231,7 @@ class Game_Armor extends Game_Equipment {
      */
     toString() {
         return "[" + this._id + ": " + this._name + " ("
-            + this._hitPoint + "/" + this._MaxHitPoint + ", "
-            + this._defence + " def, "
-            + this._resistanceFactors[0] + "%c, "
-            + this._resistanceFactors[1] + "%p, "
-            + this._resistanceFactors[2] + "%b"
+            + this._durability + "/" + this._MaxDurability
             + ")]";
     }
 
