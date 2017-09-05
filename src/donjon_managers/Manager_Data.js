@@ -30,7 +30,8 @@ class DataManager {
         {name: '$dataMapInfos', src: 'MapInfos.json'},
         //custom data
         {name: '$dataArmors', src: 'Donjon_Armors.json'},
-        {name: '$dataWeapons', src: 'Donjon_Weapons.json'}
+        {name: '$dataWeapons', src: 'Donjon_Weapons.json'},
+        {name: '$dataBattlers', src: 'Donjon_Battlers.json'}
     ];
 
     /**

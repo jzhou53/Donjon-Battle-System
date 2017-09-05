@@ -134,7 +134,7 @@ class Game_Weapon extends Game_Equipment {
      * @return {number} 25 + modifier
      */
     getMaxCritical() {
-        return this.BASE_CRITICAL + this._criticalModifier;
+        return Game_Weapon.BASE_CRITICAL + this._criticalModifier;
     }
 
     /**
@@ -146,11 +146,13 @@ class Game_Weapon extends Game_Equipment {
         let damage = this._baseDamage * speedFactor;
         let rawFleshDamage = ( damage * this._ignoreArmor ) / 100,
             rawArmorDamage = ( damage * this._againstArmor ) / 100;
-        console.debug("new damage: " + speedFactor + " * " + this._baseDamage + " = " + damage);
         if (critical) {
-            rawFleshDamage *= 2;
-            damage *= 2;
+            rawFleshDamage *= 1.5;
+            damage *= 1.5;
+            //console.warn("Critical!!!!");
         }
+        //console.debug("new damage: " + speedFactor + " * " + this._baseDamage + " = " + damage);
+
         return new Damage(damage, rawFleshDamage, rawArmorDamage);
     }
 
@@ -184,7 +186,11 @@ class Game_Armor extends Game_Equipment {
 
         if (this._broken) {
             this._fleshDamage = pDamage.baseDamage;
+            this._armorDamage = 0;
         } else {
+            this._armorDamage = pDamage.armorDamage;
+            this.loseDurability(this._armorDamage);
+
             //10% of remaining armor
             const def = Math.floor((this._durability * 10) / 100);
 
@@ -194,8 +200,7 @@ class Game_Armor extends Game_Equipment {
             }
 
             this._fleshDamage = finalDamage;
-            this._armorDamage = pDamage.armorDamage;
-            this.loseDurability(this._armorDamage);
+
         }
     }
 
