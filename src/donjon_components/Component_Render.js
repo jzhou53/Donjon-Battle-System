@@ -135,16 +135,16 @@ class RenderComponent extends Component {
      * @return {number}
      */
     scrolledX() {
-        let t = this._owner.getTransform();
-        return t.x - $gameMap._displayX;
+        const transform = this.owner.getTransform();
+        return transform.x - $gameMap._displayX;
     }
 
     /**
      * @return {number}
      */
     scrolledY() {
-        let t = this._owner.getTransform();
-        return t.y - $gameMap._displayY;
+        const transform = this.owner.getTransform();
+        return transform.y - $gameMap._displayY;
     }
 
     /**
@@ -190,7 +190,7 @@ class CharacterRenderComponent extends RenderComponent {
     }
 
     /**
-     * @param spritesetMap {Spriteset_Map}
+     * @param spritesetMap {Spriteset_Map} Stage
      */
     initialSprites(spritesetMap) {
         if (this._spriteCreated) {
