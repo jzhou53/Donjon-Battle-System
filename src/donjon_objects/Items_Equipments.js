@@ -1,3 +1,6 @@
+/**
+ * Data Class for Damage
+ */
 class Damage {
     /**
      * @param rawDamage0 {number}
@@ -138,21 +141,18 @@ class Game_Weapon extends Game_Equipment {
     }
 
     /**
-     * @param speedFactor{number}
-     * @param critical{boolean}
-     * @return {Damage}
+     * @param speedFactor{number} speed bonus to damage, 1.0 stands for normal speed
+     * @param critical{boolean} is hitting head
+     * @return {Damage} the raw damages delivered out
      */
-    makeDamage(speedFactor, critical = false) {
+    getDamage(speedFactor, critical = false) {
         let damage = this._baseDamage * speedFactor;
         let rawFleshDamage = ( damage * this._ignoreArmor ) / 100,
             rawArmorDamage = ( damage * this._againstArmor ) / 100;
         if (critical) {
             rawFleshDamage *= 1.5;
             damage *= 1.5;
-            //console.warn("Critical!!!!");
         }
-        //console.debug("new damage: " + speedFactor + " * " + this._baseDamage + " = " + damage);
-
         return new Damage(damage, rawFleshDamage, rawArmorDamage);
     }
 
@@ -162,6 +162,7 @@ class Game_Weapon extends Game_Equipment {
 class Game_Armor extends Game_Equipment {
 
     /**
+     * @constructor
      * @param pDataItem{{
      *  id:number, name:string,
      *  durability:number

@@ -5,6 +5,7 @@
 class Component_BattleCore extends Component {
 
     /**
+     * @constructor
      * @param owner
      * @param pDataBattler {{id,name,maxHp,headAmr,bodyAmr,meleeWpn,rangedWpn,shield}}
      */
@@ -66,12 +67,14 @@ class Component_BattleCore extends Component {
      * @protected
      */
     _setupListeners() {
-        super._setupListeners();
 
     }
 
+    /**
+     * @override
+     */
     update() {
-        super.update();
+
     }
 
     getMeleeWeapon() {

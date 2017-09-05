@@ -1,5 +1,11 @@
+/**
+ *
+ */
 class Manager_BattleField {
 
+    /**
+     * @constructor
+     */
     constructor() {
 
         this._setupBattleField();
@@ -22,9 +28,9 @@ class Manager_BattleField {
     update() {
 
         while (!this._debugBattleEnded) {
-            this._handleTurn(this._actorA, this._actorB);
+            this._handleTurn_Text(this._actorA, this._actorB);
             if (!this._debugBattleEnded) {
-                this._handleTurn(this._actorB, this._actorA);
+                this._handleTurn_Text(this._actorB, this._actorA);
             }
         }
 
@@ -35,11 +41,12 @@ class Manager_BattleField {
      * @param second{Component_BattleCore}
      * @private
      */
-    _handleTurn(first, second) {
+    _handleTurn_Text(first, second) {
         let string = '';
 
         string += (first.toString() + "向 " + second.toString() + "发动了攻击,");
 
+        //temp
         const chanceHit = 50;
         let criticalFlag = false;
         let d100 = Math.randomInt(100) + 1;
@@ -58,7 +65,7 @@ class Manager_BattleField {
 
             string += ( factor + ")，");
 
-            const rawDamage = first.getMeleeWeapon().makeDamage(factor, criticalFlag);
+            const rawDamage = first.getMeleeWeapon().getDamage(factor, criticalFlag);
 
             let flushDmg, armorDmg;
 
@@ -97,5 +104,59 @@ class Manager_BattleField {
 
     }
 
+
+    /**
+     * @param first{Component_BattleCore} Attacker
+     * @param second{Component_BattleCore} Defender
+     * @private
+     */
+    _handleTurn(first, second) {
+
+        //temp
+        const chanceHit = 50;
+        let criticalFlag = false;
+        let d100 = Math.randomInt(100) + 1;
+
+        if (d100 <= chanceHit) {
+            //taking damage
+
+            d100 = Math.randomInt(100) + 1;
+            if (d100 <= first.getMeleeWeapon().getMaxCritical()) {
+                criticalFlag = true;
+            }
+
+            const factor = Math.randomInt(50) / 100 + 0.75;
+
+            const rawDamage = first.getMeleeWeapon().getDamage(factor, criticalFlag);
+
+            const targetArmor = criticalFlag ? second.getHeadArmor() : second.getBodyArmor();
+
+            const flushDmg = this._getFinalDamage(targetArmor, rawDamage);
+
+            second.loseHitpoint(flushDmg);
+
+            //temp
+            if (second.isDead) {
+                this._debugBattleEnded = true;
+            }
+
+
+        } else {
+            // defend
+
+        }
+
+    }
+
+    /**
+     * @param pArmor {Game_Armor}
+     * @param rawDamage {Damage}
+     * @return {number}
+     * @private
+     */
+    _getFinalDamage(pArmor, rawDamage) {
+        pArmor.receiveDamage(rawDamage);
+        return pArmor.getFlushDamage();
+    }
 
 }
