@@ -109,7 +109,7 @@ class Game_Weapon extends Game_Equipment {
      * @param pDataItem {{
      *  id:number,name:string,
      *  damage:number, ignoreArmor:number, vsArmor:number
-     *  critical:number,shieldDmg:number
+     *  critical:number,shieldDmg:number, range:number
      * }}
      */
     constructor(pDataItem) {
@@ -120,7 +120,7 @@ class Game_Weapon extends Game_Equipment {
         this._againstArmor = pDataItem.vsArmor;
         this._criticalModifier = pDataItem.critical;
         this._shieldDamage = pDataItem.shieldDmg;
-
+        this._range = pDataItem.range;
         //other stuff like mass, length, speed ....
 
     }
@@ -141,19 +141,23 @@ class Game_Weapon extends Game_Equipment {
     }
 
     /**
-     * @param speedFactor{number} speed bonus to damage, 1.0 stands for normal speed
+     * @param speed_factor{number} speed bonus to damage, 1.0 stands for normal speed
      * @param critical{boolean} is hitting head
      * @return {Damage} the raw damages delivered out
      */
-    getDamage(speedFactor, critical = false) {
-        let damage = this._baseDamage * speedFactor;
-        let rawFleshDamage = ( damage * this._ignoreArmor ) / 100,
-            rawArmorDamage = ( damage * this._againstArmor ) / 100;
+    getDamage(speed_factor, critical = false) {
+        let damage = this._baseDamage * speed_factor;
+        let raw_flesh_damage = ( damage * this._ignoreArmor ) / 100,
+            raw_armor_damage = ( damage * this._againstArmor ) / 100;
         if (critical) {
-            rawFleshDamage *= 1.5;
+            raw_flesh_damage *= 1.5;
             damage *= 1.5;
         }
-        return new Damage(damage, rawFleshDamage, rawArmorDamage);
+        return new Damage(damage, raw_flesh_damage, raw_armor_damage);
+    }
+
+    getRange() {
+        return this._range;
     }
 
 }
@@ -181,11 +185,12 @@ class Game_Armor extends Game_Equipment {
     }
 
     /**
+     * taking raw damage, and apply the damages to armor, generate final damage to flesh after.
      * @param pDamage{Damage} raw damages
      */
     receiveDamage(pDamage) {
-
-        if (this._broken) {
+        if (this.isBroken()) {
+            //all damage goes to flesh
             this._fleshDamage = pDamage.baseDamage;
             this._armorDamage = 0;
         } else {
@@ -195,13 +200,10 @@ class Game_Armor extends Game_Equipment {
             //10% of remaining armor
             const def = Math.floor((this._durability * 10) / 100);
 
-            let finalDamage = pDamage.fleshDamage - def;
-            if (finalDamage < 0) {
-                finalDamage = 0;
+            this._fleshDamage = pDamage.fleshDamage - def;
+            if (this._fleshDamage < 0) {
+                this._fleshDamage = 0;
             }
-
-            this._fleshDamage = finalDamage;
-
         }
     }
 
@@ -213,7 +215,7 @@ class Game_Armor extends Game_Equipment {
         return this._broken;
     }
 
-    getFlushDamage() {
+    getFleshDamage() {
         return this._fleshDamage;
     }
 
@@ -222,6 +224,7 @@ class Game_Armor extends Game_Equipment {
     }
 
     /**
+     *
      * @param damage{number}
      */
     loseDurability(damage) {
@@ -229,6 +232,7 @@ class Game_Armor extends Game_Equipment {
         if (this._durability <= 0) {
             this._durability = 0;
             this._broken = true;
+            //armor break event should send out.. maybe to notify environment dropping?
         }
     }
 

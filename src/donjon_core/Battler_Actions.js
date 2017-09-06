@@ -47,8 +47,8 @@ class Action_Attack extends BattlerActions {
 
     execute() {
         Manager_BattleField.handleTurn(
-            this._attacker.getComponent('Battle'),
-            this._target.getComponent('Battle')
+            this._attacker.getBattleComp(),
+            this._target.getBattleComp()
         );
         super.execute();
     }

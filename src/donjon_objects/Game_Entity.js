@@ -6,47 +6,10 @@
  */
 class GameEntity {
 
-    /**
-     * @constructor
-     * initialize components map and transform member
-     */
-    constructor() {
-
-        /**
-         * a map structure stores components as value, string as key.
-         * @type {Map}
-         * @protected
-         */
-        this._components = new Map();
-
-        /**
-         * every entity should have a transform component that stores its location info.
-         * @type {Transform} transform class stores entity's position
-         * @protected
-         */
-        this._transform = new Transform();
-
-    }
-
-    /**
-     * @abstract
-     * @protected
-     */
-    _postInit() {
-    }
-
-    /**
-     * get the x position of the transform
-     * @return {number}
-     */
     get x() {
         return this._transform.x;
     }
 
-    /**
-     * get the x position of the transform
-     * @return {*}
-     */
     get y() {
         return this._transform.y;
     }
@@ -68,11 +31,31 @@ class GameEntity {
     }
 
     /**
-     * @param str {String}
-     * @return {Component}
+     * @constructor
+     * initialize components map and transform member
      */
-    getComponent(str) {
-        return this._components.get(str);
+    constructor() {
+
+        /**
+         * @type {Array}
+         * @protected
+         */
+        this._components = [];
+
+        /**
+         * every entity should have a transform component that stores its location info.
+         * @type {Transform} transform class stores entity's position
+         * @protected
+         */
+        this._transform = new Transform();
+
+    }
+
+    /**
+     * @abstract
+     * @protected
+     */
+    _postInit() {
     }
 
     /**
@@ -93,9 +76,9 @@ class GameEntity {
      * constantly updating transform and components
      */
     update() {
-        for (let component of this._components.values()) {
-            component.update();
-        }
+        this._components.forEach(
+            component => component.update()
+        );
         this._transform.update();
     }
 
@@ -105,28 +88,28 @@ class GameEntity {
      */
     onCollision(pEntity) {
 
-        //p0 (self) - p1 (pEntity)
-        const p0 = this._transform.getPosition().clone();
-        const p1 = pEntity.getTransform().getPosition();
-        //victor
-        let n = p0.subtract(p1).clone().normalize();
-        //victor
-        const tPhysics = pEntity._components.get("Physics");
-
-        //let vrn = tPhysics._velocity.clone().multiply(n);
-        //float
-        //let J = vrn.clone().invert().magnitude() * tPhysics.mass;
-        let J = tPhysics.mass;
-
-        const Fi = n.clone().invert().multiply(new Victor(J, J));
-        tPhysics.addImpactForce(Fi);
-        //console.log("n: "+n.toString()+", vrn: "+vrn.toString()+", J: "+J+", Fi: "+Fi.toString());
+        // //p0 (self) - p1 (pEntity)
+        // const p0 = this._transform.getPosition().clone();
+        // const p1 = pEntity.getTransform().getPosition();
+        // //victor
+        // let n = p0.subtract(p1).clone().normalize();
+        // //victor
+        // const tPhysics = pEntity._components.get("Physics");
+        //
+        // //let vrn = tPhysics._velocity.clone().multiply(n);
+        // //float
+        // //let J = vrn.clone().invert().magnitude() * tPhysics.mass;
+        // let J = tPhysics.mass;
+        //
+        // const Fi = n.clone().invert().multiply(new Victor(J, J));
+        // tPhysics.addImpactForce(Fi);
+        // //console.log("n: "+n.toString()+", vrn: "+vrn.toString()+", J: "+J+", Fi: "+Fi.toString());
 
     }
 
-    // getSpeed() {
-    //     return this._components.get("Physics")._speed;
-    // }
+// getSpeed() {
+//     return this._components.get("Physics")._speed;
+// }
 
 
 }
@@ -138,13 +121,12 @@ class GameEntity {
  * refers to Game_Character in RMMV
  */
 class Game_Character extends GameEntity {
+
     /**
-     * @param pDataCharacter
+     * @param pDataCharacter {{id,name,maxHp,headAmr,bodyAmr,meleeWpn,rangedWpn,shield}}
      */
     constructor(pDataCharacter) {
         super();
-
-        //todo state
         /**
          * there are many states, like moving, guarding, attacking, jumping..
          * @type {BattlerState}
@@ -152,29 +134,47 @@ class Game_Character extends GameEntity {
          */
         this._currentState = null;
 
-
-        this._components.set(
-            "Battle", new Component_BattleCore(this, pDataCharacter)
+        /* Order Matters: AI -> State -> Physics -> Transform */
+        this._components.push(
+            new Component_BattleCore(this, pDataCharacter),
+            new CharacterPhysicsComponent(this),
+            new CharacterRenderComponent(this)
         );
 
-        //create physics component
-        this._components.set(
-            "Physics", new CharacterPhysicsComponent(this)
-        );
+        this._meleeRange = 1.5;
 
-        //create render component
-        this._components.set(
-            "Render", new CharacterRenderComponent(this)
-        );
-
-
-        //create AI component
-        // this._components.set(
-        //     DonjonBS.Components.Physics,
-        //     new AIComponent(this, this._transform)
-        // );
+        this._teamLabel = 0;
 
         this._postInit();
+    }
+
+    /**
+     * @override
+     * @return {number}
+     */
+    get radius() {
+        return this.getPhysicsComp().getRadius();
+    }
+
+    /**
+     * @return {Component_BattleCore}
+     */
+    getBattleComp() {
+        return this._components[0];
+    }
+
+    /**
+     * @return {CharacterPhysicsComponent}
+     */
+    getPhysicsComp() {
+        return this._components[1];
+    }
+
+    /**
+     * @return {CharacterRenderComponent}
+     */
+    getRenderComp() {
+        return this._components[2];
     }
 
     /**
@@ -184,12 +184,12 @@ class Game_Character extends GameEntity {
         //EventsManager.queueEvent(new Evnt_EntityCreated(0, this));
     }
 
-    /**
-     * @override
-     * @return {number}
-     */
-    get radius() {
-        return this.getComponent("Physics").getRadius();
+    setTeam(label) {
+        this._teamLabel = label;
+    }
+
+    getTeam() {
+        return this._teamLabel;
     }
 
     /**
@@ -202,5 +202,37 @@ class Game_Character extends GameEntity {
         //this.debugMove();
         super.update();
     }
+
+    /**
+     * @param targets{Array}
+     */
+    determineTarget(targets) {
+        if (!this.canAttack())
+            return;
+
+        for (let i = 0; i < targets.length; i++) {
+            const target = targets[i];
+            if (this.inMeleeRange(target)) {
+                return target;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param pTarget{Game_Character}
+     */
+    inMeleeRange(pTarget) {
+        const distance = Transform.distanceTo(
+            this.getTransform(), pTarget.getTransform()
+        );
+        //atk range
+        return distance <= this._meleeRange;
+    }
+
+    canAttack() {
+        return true;
+    }
+
 
 }

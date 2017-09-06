@@ -4,6 +4,15 @@
  */
 class Component_BattleCore extends Component {
 
+    static STATES = {
+        WAIT: 0,
+        ATTACK: 1,
+        DEFEND: 2,
+        HIT: 4,
+        DYING: 5,
+        DEAD: 6
+    };
+
     /**
      * @constructor
      * @param owner
@@ -11,17 +20,26 @@ class Component_BattleCore extends Component {
      */
     constructor(owner, pDataBattler) {
         super(owner);
-        this._setupData(pDataBattler);
-        this._currentState = null; //should be normal state
+        /**
+         * States: Waiting, Attacking, Defending, Hitting, Dying, Dead
+         * @type {Component_BattleCore.STATES}
+         * @private
+         */
+        this._currentState = Component_BattleCore.STATES.WAIT;
+
+        this.displayName = pDataBattler.name;
 
         //temp
         this.isDead = false;
 
-        this.displayName = pDataBattler.name;
-
-
         // this._attributes = [];
         // this._abilities = [];
+        this._meleeWeapon = null;
+        this._headArmor = null;
+        this._bodyArmor = null;
+
+        this._setupData(pDataBattler);
+
 
     }
 
@@ -48,10 +66,6 @@ class Component_BattleCore extends Component {
             dataWpn = $dataWeapons[weapons[Math.randomInt(weapons.length)]],
             dataHeadAmr = $dataArmors[headArmor[Math.randomInt(headArmor.length)]],
             dataBodyAmr = $dataArmors[bodyArmor[Math.randomInt(bodyArmor.length)]];
-
-        this._meleeWeapon = null;
-        this._headArmor = null;
-        this._bodyArmor = null;
 
         if (dataWpn)
             this._meleeWeapon = new Game_Weapon(dataWpn);
@@ -100,7 +114,7 @@ class Component_BattleCore extends Component {
         this._hitpoint -= damage;
         if (this._hitpoint <= 0) {
             this._hitpoint = 0;
-            //todo send out death event
+            //todo send out death event, change state
             this.isDead = true;
         }
     }

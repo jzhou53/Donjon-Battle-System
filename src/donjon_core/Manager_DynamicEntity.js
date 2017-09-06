@@ -118,7 +118,7 @@ class Manager_DynamicEntity {
     /**
      * check if entity first will collide with entity second
      * if collides, then trigger events.
-     * @param first{QuadItem || GameEntity }
+     * @param first{QuadItem || GameEntity}
      * @param second{QuadItem || GameEntity}
      * @return {boolean} if handled
      * @private
@@ -149,37 +149,56 @@ class Manager_DynamicEntity {
      * DEBUG USE
      */
     debugCreateEntity() {
-        const entity = new Game_Character();
-
         let x = Math.randomInt(15),
             y = Math.randomInt(15);
-        // let x = Math.random()*15,
-        //     y = Math.random()*10;
-        entity.setPosition(new Victor(x, y));
+
+        let entity = this.createBattler(1, x, y);
         this.addEntity(entity);
+        entity.setTeam(0);
 
+        entity = this.createBattler(2, x + 1, y);
+        this.addEntity(entity);
+        entity.setTeam(1);
 
+        //spawn event should send out..
     }
 
     /**
-     *
-     * @param entity{GameEntity}
+     * @param id {number}
+     * @param x {number}
+     * @param y {number}
+     * @return {Game_Character}
+     */
+    createBattler(id, x, y) {
+        const entity = new Game_Character($dataBattlers[id]);
+        entity.setPosition(new Victor(x, y));
+        return entity;
+    }
+
+    /**
+     * Add entity to both list and quadtree
+     * @param entity{GameEntity | QuadItem}
      */
     addEntity(entity) {
-
         this._countActiveEntities++;
         this._entities.push(entity);
         this._quadtree.insert(entity);
         console.debug("entity added " + this._entities.length);
-
     }
 
     /**
      * @return {Array}
      */
-    getEntities() {
+    getAllEntities() {
         return this._entities;
     }
 
+    /**
+     * @param pEntity {QuadItem | GameEntity}
+     * @return {Array}
+     */
+    getEntitiesAt(pEntity) {
+        return this._quadtree.retrieve(pEntity);
+    }
 
 }

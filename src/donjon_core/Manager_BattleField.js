@@ -6,104 +6,20 @@ class Manager_BattleField {
     /**
      * @constructor
      */
-    constructor() {
+    constructor(dynamic_manager) {
 
-        this._setupBattleField();
+        this._dynamicEntity = null;
+        /**
+         * @type {[Array,Array]}
+         * @private
+         */
+        this._battlers = [[], []];
+
+        this._setupBattleField(dynamic_manager);
 
         this._debugBattleEnded = false;
 
     }
-
-    _setupBattleField() {
-        const dataA = $dataBattlers[1];
-        const dataB = $dataBattlers[2];
-        this._actorA = new Component_BattleCore(null, dataA);
-        this._actorB = new Component_BattleCore(null, dataB);
-
-        console.log(this._actorA);
-        console.log(this._actorB);
-        console.warn("Characters Created!")
-    }
-
-    update() {
-
-        while (!this._debugBattleEnded) {
-            this._handleTurn_Text(this._actorA, this._actorB);
-            if (!this._debugBattleEnded) {
-                this._handleTurn_Text(this._actorB, this._actorA);
-            }
-        }
-
-    }
-
-    /**
-     * @param first{Component_BattleCore}
-     * @param second{Component_BattleCore}
-     * @private
-     */
-    _handleTurn_Text(first, second) {
-        let string = '';
-
-        string += (first.toString() + "向 " + second.toString() + "发动了攻击,");
-
-        //temp
-        const chanceHit = 50;
-        let criticalFlag = false;
-        let d100 = Math.randomInt(100) + 1;
-
-        if (d100 <= chanceHit) {
-            d100 = Math.randomInt(100) + 1;
-            string += "击中了";
-            if (d100 <= first.getMeleeWeapon().getMaxCritical()) {
-                string += "要害头部(速度因子:";
-                criticalFlag = true;
-            } else {
-                string += "身体(速度因子:";
-            }
-
-            let factor = Math.randomInt(50) / 100 + 0.75;
-
-            string += ( factor + ")，");
-
-            const rawDamage = first.getMeleeWeapon().getDamage(factor, criticalFlag);
-
-            let flushDmg, armorDmg;
-
-            if (criticalFlag) {
-                second.getHeadArmor().receiveDamage(rawDamage);
-                flushDmg = second.getHeadArmor().getFlushDamage();
-                armorDmg = second.getHeadArmor().getArmorDamage();
-
-                const str = second.getHeadArmor()._durability + "/" + second.getHeadArmor()._MaxDurability;
-                string += ("头盔(" + str + ")受到" + armorDmg + "点损伤，")
-            } else {
-                second.getBodyArmor().receiveDamage(rawDamage);
-                flushDmg = second.getBodyArmor().getFlushDamage();
-                armorDmg = second.getBodyArmor().getArmorDamage();
-
-                const str = second.getBodyArmor()._durability + "/" + second.getBodyArmor()._MaxDurability;
-                string += ("护甲(" + str + ")受到" + armorDmg + "点损伤，")
-            }
-
-            string += ("肉体受到" + flushDmg + "点伤害。");
-
-            second.loseHitpoint(flushDmg);
-
-            //temp
-            if (second.isDead) {
-                string += ("\n\n" + first.toString() + "击杀了" + second.toString() + "!!!!");
-                this._debugBattleEnded = true;
-            }
-
-
-        } else {
-            string += "但是被" + second.displayName + "格挡或闪避了";
-        }
-
-        console.log(string);
-
-    }
-
 
     /**
      * @param first{Component_BattleCore} Attacker
@@ -113,7 +29,7 @@ class Manager_BattleField {
 
         //temp
         const chanceHit = 50;
-        let criticalFlag = false;
+        let critical_flag = false;
         let d100 = Math.randomInt(100) + 1;
 
         if (d100 <= chanceHit) {
@@ -121,18 +37,19 @@ class Manager_BattleField {
 
             d100 = Math.randomInt(100) + 1;
             if (d100 <= first.getMeleeWeapon().getMaxCritical()) {
-                criticalFlag = true;
+                critical_flag = true;
             }
 
-            const factor = Math.randomInt(50) / 100 + 0.75;
+            const factor = 1.0; //Math.randomInt(50) / 100 + 0.75;
 
-            const rawDamage = first.getMeleeWeapon().getDamage(factor, criticalFlag);
+            const raw_damage = first.getMeleeWeapon().getDamage(factor, critical_flag);
 
-            const targetArmor = criticalFlag ? second.getHeadArmor() : second.getBodyArmor();
+            const target_armor = critical_flag ?
+                second.getHeadArmor() : second.getBodyArmor();
 
-            const flushDmg = this._getFinalDamage(targetArmor, rawDamage);
+            const flesh_dmg = this._calculateFinalDamage(target_armor, raw_damage);
 
-            second.loseHitpoint(flushDmg);
+            second.loseHitpoint(flesh_dmg);
 
             //temp
             if (second.isDead) {
@@ -148,14 +65,126 @@ class Manager_BattleField {
     }
 
     /**
+     * @param dynamic_manager {Manager_DynamicEntity}
+     * @private
+     */
+    _setupBattleField(dynamic_manager) {
+        this._dynamicEntity = dynamic_manager;
+        this._dynamicEntity.debugCreateEntity();
+        const entities = this._dynamicEntity.getAllEntities();
+        entities.forEach(entity => {
+            this._battlers[entity.getTeam()].push(entity);
+        }, this);
+
+
+        console.log('----------------------------');
+        console.log(this.findTargets(this._battlers[0][0]));
+        console.log('----------------------------');
+    }
+
+    update() {
+
+        if (this._debugBattleEnded) {
+            //battle ended.....
+        } else {
+            const tempA = this._battlers[0][0].getBattleComp(),
+                tempB = this._battlers[1][0].getBattleComp();
+
+            this._handleTurn_Text(tempA, tempB);
+            if (this._debugBattleEnded)
+                return;
+            this._handleTurn_Text(tempB, tempA);
+
+        }
+    }
+
+    /**
+     * @param firstComp{Component_BattleCore}
+     * @param secondComp{Component_BattleCore}
+     * @private
+     */
+    _handleTurn_Text(firstComp, secondComp) {
+        let string = '';
+
+        string += (firstComp.toString() + "向 " + secondComp.toString() + "发动了攻击,");
+
+        //temp
+        const chanceHit = 50;
+        let criticalFlag = false;
+        let d100 = Math.randomInt(100) + 1;
+
+        if (d100 <= chanceHit) {
+            d100 = Math.randomInt(100) + 1;
+            string += "击中了";
+            //console.log(first.getMeleeWeapon());
+            if (d100 <= firstComp.getMeleeWeapon().getMaxCritical()) {
+                string += "要害头部(速度因子:";
+                criticalFlag = true;
+            } else {
+                string += "身体(速度因子:";
+            }
+
+            let factor = 1.0;
+
+            string += ( factor + ")，");
+
+            const rawDamage = firstComp.getMeleeWeapon().getDamage(factor, criticalFlag);
+
+            let fleshDmg, armorDmg;
+
+            if (criticalFlag) {
+                secondComp.getHeadArmor().receiveDamage(rawDamage);
+                fleshDmg = secondComp.getHeadArmor().getFleshDamage();
+                armorDmg = secondComp.getHeadArmor().getArmorDamage();
+
+                const str = secondComp.getHeadArmor()._durability + "/" + secondComp.getHeadArmor()._MaxDurability;
+                string += ("头盔(" + str + ")受到" + armorDmg + "点损伤，")
+            } else {
+                secondComp.getBodyArmor().receiveDamage(rawDamage);
+                fleshDmg = secondComp.getBodyArmor().getFleshDamage();
+                armorDmg = secondComp.getBodyArmor().getArmorDamage();
+
+                const str = secondComp.getBodyArmor()._durability + "/" + secondComp.getBodyArmor()._MaxDurability;
+                string += ("护甲(" + str + ")受到" + armorDmg + "点损伤，")
+            }
+
+            string += ("肉体受到" + fleshDmg + "点伤害。");
+
+            secondComp.loseHitpoint(fleshDmg);
+
+            //temp
+            if (secondComp.isDead) {
+                string += ("\n\n" + firstComp.toString() + "击杀了" + secondComp.toString() + "!!!!");
+                this._debugBattleEnded = true;
+            }
+
+
+        } else {
+            string += "但是被" + secondComp.displayName + "格挡或闪避了";
+        }
+
+        console.log(string);
+
+    }
+
+    /**
      * @param pArmor {Game_Armor}
      * @param rawDamage {Damage}
      * @return {number}
      * @private
      */
-    _getFinalDamage(pArmor, rawDamage) {
+    _calculateFinalDamage(pArmor, rawDamage) {
         pArmor.receiveDamage(rawDamage);
-        return pArmor.getFlushDamage();
+        return pArmor.getFleshDamage();
+    }
+
+    /**
+     * @param pBattler {Game_Character}
+     * @return {Array}
+     */
+    findTargets(pBattler) {
+        const arr = this._dynamicEntity.getEntitiesAt(pBattler);
+        return arr.splice(arr.indexOf(pBattler), 1);
     }
 
 }

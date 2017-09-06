@@ -31,8 +31,7 @@ class Game_BattleMap extends Game_Map{
         //set up dynamic entity manager
         this._setupDynamicManager();
 
-        this._dynamicEntities.debugCreateEntity();
-
+        this._setupBattleField();
 
     }
 
@@ -40,13 +39,15 @@ class Game_BattleMap extends Game_Map{
      * @private
      */
     _setupDynamicManager() {
-        this._dynamicEntities = new Manager_DynamicEntity(this.width(),this.height());
+        this._dynamicEntities = new Manager_DynamicEntity(
+            this.width(), this.height()
+        );
         this._dynamicEntities.setup(this.mapId());
 
     }
 
     _setupBattleField() {
-        this._battleField = new Manager_BattleField();
+        this._battleField = new Manager_BattleField(this._dynamicEntities);
 
     }
 
@@ -57,17 +58,9 @@ class Game_BattleMap extends Game_Map{
         super.update(sceneActive);
 
         this._dynamicEntities.update();
+        this._battleField.update();
 
-    }
 
-    /**
-     * @return {Array.<RenderComponent>}
-     */
-    getEntityRenders() {
-        const arr = [];
-        const entities = this._dynamicEntities.getEntities();
-        entities.forEach(entity => arr.push(entity.getComponent("Render")));
-        return arr;
     }
 
 }
