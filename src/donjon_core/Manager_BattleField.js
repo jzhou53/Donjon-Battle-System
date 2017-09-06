@@ -108,9 +108,8 @@ class Manager_BattleField {
     /**
      * @param first{Component_BattleCore} Attacker
      * @param second{Component_BattleCore} Defender
-     * @private
      */
-    _handleTurn(first, second) {
+    static handleTurn(first, second) {
 
         //temp
         const chanceHit = 50;

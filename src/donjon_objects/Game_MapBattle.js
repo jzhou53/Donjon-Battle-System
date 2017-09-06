@@ -12,6 +12,12 @@ class Game_BattleMap extends Game_Map{
          * @private
          */
         this._dynamicEntities = null;
+        /**
+         * @type {Manager_BattleField}
+         * @private
+         */
+        this._battleField = null;
+
     }
 
     /**
@@ -27,6 +33,7 @@ class Game_BattleMap extends Game_Map{
 
         this._dynamicEntities.debugCreateEntity();
 
+
     }
 
     /**
@@ -35,6 +42,11 @@ class Game_BattleMap extends Game_Map{
     _setupDynamicManager() {
         this._dynamicEntities = new Manager_DynamicEntity(this.width(),this.height());
         this._dynamicEntities.setup(this.mapId());
+
+    }
+
+    _setupBattleField() {
+        this._battleField = new Manager_BattleField();
 
     }
 

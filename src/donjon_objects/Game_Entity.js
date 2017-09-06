@@ -33,7 +33,6 @@ class GameEntity {
      * @protected
      */
     _postInit() {
-
     }
 
     /**
@@ -140,30 +139,32 @@ class GameEntity {
  */
 class Game_Character extends GameEntity {
     /**
-     *
+     * @param pDataCharacter
      */
-    constructor() {
+    constructor(pDataCharacter) {
         super();
-
 
         //todo state
         /**
          * there are many states, like moving, guarding, attacking, jumping..
-         * @type {State}
+         * @type {BattlerState}
          * @protected
          */
         this._currentState = null;
 
+
+        this._components.set(
+            "Battle", new Component_BattleCore(this, pDataCharacter)
+        );
+
         //create physics component
         this._components.set(
-            "Physics",
-            new CharacterPhysicsComponent(this)
+            "Physics", new CharacterPhysicsComponent(this)
         );
 
         //create render component
         this._components.set(
-            "Render",
-            new CharacterRenderComponent(this)
+            "Render", new CharacterRenderComponent(this)
         );
 
 
@@ -184,22 +185,22 @@ class Game_Character extends GameEntity {
     }
 
     /**
+     * @override
+     * @return {number}
+     */
+    get radius() {
+        return this.getComponent("Physics").getRadius();
+    }
+
+    /**
      *
      * @override
      */
     update() {
         // in GameEntity class, the update order will be:
-        //  AI -> State -> physics -> transform
+        //  AI -> BattlerState -> physics -> transform
         //this.debugMove();
         super.update();
-    }
-
-    /**
-     * @override
-     * @return {number}
-     */
-    get radius() {
-        return this._components.get("Physics").getRadius();
     }
 
 }

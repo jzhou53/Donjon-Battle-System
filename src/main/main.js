@@ -3,7 +3,7 @@
 //PluginManager.setup($plugins);
 
 //have modified Scene_Boot
-const $debugging = true;
+const $debugging = false;
 
 window.onload = function() {
 
