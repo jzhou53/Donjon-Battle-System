@@ -90,7 +90,6 @@ class Transform {
      */
     setPosition(pPosition) {
         this._localPosition = pPosition;
-        //this.update();
     }
 
     /**
@@ -120,7 +119,6 @@ class Transform {
      * @return {boolean}
      */
     attachWith(pTransform) {
-
         if (this._parent) {
             console.error("attempting attach with more than one parent in transform");
             return false;
@@ -128,7 +126,6 @@ class Transform {
             this._parent = pTransform;
             this._parent.addChild(this);
         }
-
     }
 
     /**
@@ -202,3 +199,93 @@ class Transform {
 
 }
 
+
+class RMMV_Transform {
+
+    /**
+     * @param pos {Victor}
+     * @param z {number}
+     * @param scale {Victor}
+     * @param r {number}
+     */
+    constructor(pos, z, scale, r) {
+        this._position = pos;
+        this._realPosition = pos.clone();
+        this._scale = scale;
+    }
+
+    get x() {
+        return this._realPosition.x;
+    }
+
+    get y() {
+        return this._realPosition.y;
+    }
+
+    /**
+     * @param pos {Victor}
+     */
+    setPosition(pos) {
+        this._position = new Victor(
+            Math.round(pos.x), Math.round(pos.y)
+        );
+        this._realPosition = this._position.clone();
+    }
+
+    getScale() {
+        return this._scale;
+    }
+
+    getPosition() {
+        return this._position;
+    }
+
+    update() {
+        const x = this._position.x, y = this._position.y,
+            realX = this._realPosition.x, realY = this._realPosition.y;
+
+        if (x < realX) {
+            this._realPosition.x = Math.max(realX - this._distancePerFrame(), x);
+        }
+        if (x > realX) {
+            this._realPosition.x = Math.min(realX + this._distancePerFrame(), x);
+        }
+        if (y < realY) {
+            this._realPosition.y = Math.max(realY - this._distancePerFrame(), y);
+        }
+        if (y > realY) {
+            this._realPosition.y = Math.min(realY + this._distancePerFrame(), y);
+        }
+    }
+
+    /**
+     * @param deltaPos{Victor}
+     */
+    kinematicMove(deltaPos) {
+        this._position.add(deltaPos)
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isMoving() {
+        return this._realPosition.x !== this._position.x ||
+            this._realPosition.y !== this._position.y
+    }
+
+    /**
+     * @return {number}
+     * @private
+     */
+    _distancePerFrame() {
+        return Math.pow(2, this._realMoveSpeed()) / 256;
+    }
+
+    /**
+     * @return {number}
+     * @private
+     */
+    _realMoveSpeed() {
+        return 3;
+    }
+}

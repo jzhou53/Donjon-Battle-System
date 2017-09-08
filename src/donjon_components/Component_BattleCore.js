@@ -22,7 +22,7 @@ class Component_BattleCore extends Component {
         super(owner);
         /**
          * States: Waiting, Attacking, Defending, Hitting, Dying, Dead
-         * @type {Component_BattleCore.STATES}
+         * @type {number}
          * @private
          */
         this._currentState = Component_BattleCore.STATES.WAIT;
@@ -32,15 +32,12 @@ class Component_BattleCore extends Component {
         //temp
         this.isDead = false;
 
-        // this._attributes = [];
         // this._abilities = [];
         this._meleeWeapon = null;
         this._headArmor = null;
         this._bodyArmor = null;
 
         this._setupData(pDataBattler);
-
-
     }
 
     get hp() {
@@ -56,24 +53,28 @@ class Component_BattleCore extends Component {
      * @private
      */
     _setupData(pDataBattler) {
+        this._initAttributes(pDataBattler);
+        this._initEquipments(pDataBattler);
+    }
+
+    _initAttributes(pDataBattler) {
         this._maxHitpoint = pDataBattler.maxHp;
         this._hitpoint = this._maxHitpoint;
+    }
 
-        //pick a random equipment of equipments
+    _initEquipments(pDataBattler) {
         const weapons = pDataBattler.meleeWpn,
             headArmor = pDataBattler.headAmr,
             bodyArmor = pDataBattler.bodyAmr,
             dataWpn = $dataWeapons[weapons[Math.randomInt(weapons.length)]],
             dataHeadAmr = $dataArmors[headArmor[Math.randomInt(headArmor.length)]],
             dataBodyAmr = $dataArmors[bodyArmor[Math.randomInt(bodyArmor.length)]];
-
         if (dataWpn)
             this._meleeWeapon = new Game_Weapon(dataWpn);
         if (dataHeadAmr)
             this._headArmor = new Game_Armor(dataHeadAmr);
         if (dataBodyAmr)
             this._bodyArmor = new Game_Armor(dataBodyAmr);
-
     }
 
     /**
@@ -110,13 +111,35 @@ class Component_BattleCore extends Component {
         if (this.isDead) {
             return;
         }
-
         this._hitpoint -= damage;
         if (this._hitpoint <= 0) {
             this._hitpoint = 0;
             //todo send out death event, change state
             this.isDead = true;
         }
+    }
+
+    /**
+     * @param newState {number}
+     */
+    changeState(newState) {
+        this._currentState = newState;
+    }
+
+    getState() {
+        return this._currentState;
+    }
+
+    /**
+     * @param target{Component_BattleCore}
+     */
+    swing(target) {
+        EventsManager.queueEvent(new Evnt_CharacterPerformAttack(
+            performance.now(),
+            this,
+            target,
+            Game_Weapon.ATTACK_TYPES.SWING
+        ));
     }
 
     toString() {

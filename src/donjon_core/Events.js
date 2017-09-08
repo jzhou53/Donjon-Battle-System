@@ -3,7 +3,8 @@
  */
 const EVENT_TYPES = {
     SpritesetMapCreated: 1,
-    RequestSpriteRefresh: 2
+    RequestSpriteRefresh: 2,
+    CharacterPerformAttack: 3,
 };
 
 /**
@@ -58,6 +59,7 @@ class BasicEvent {
 
 }
 
+
 class Evnt_SpritesetMapCreated extends BasicEvent {
     /**
      * @param timeStamp
@@ -90,4 +92,31 @@ class Evnt_RequestSpriteRefresh extends BasicEvent {
         return this._spritesetMap;
     }
 
+}
+
+class Evnt_CharacterPerformAttack extends BasicEvent {
+    /**
+     * @param timeStamp{number}
+     * @param pPerformer{Component_BattleCore}
+     * @param pTarget{Component_BattleCore}
+     * @param attackType{number}
+     */
+    constructor(timeStamp, pPerformer, pTarget, attackType) {
+        super(timeStamp);
+        this._performer = pPerformer;
+        this._target = pTarget;
+        this._atkType = attackType;
+    }
+
+    getTarget() {
+        return this._target;
+    }
+
+    getPerformer() {
+        return this._performer;
+    }
+
+    getAttackType() {
+        return this._atkType;
+    }
 }

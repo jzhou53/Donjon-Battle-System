@@ -5,6 +5,12 @@
  */
 class Manager_DynamicEntity {
 
+    static nextId = 0;
+
+    static getNextEntityId() {
+        return ++Manager_DynamicEntity.nextId;
+    }
+
     /**
      * @param width {number}
      * @param height {number}
@@ -62,29 +68,34 @@ class Manager_DynamicEntity {
      * @public
      */
     update() {
-        let debugTimeA = performance.now();
+        let delta_time = performance.now();
 
-        //update all dynamic entities
-        for (let i = this._entities.length - 1; i >= 0; i--) {
-            let entity = this._entities[i];
-            entity.update();
-        }
-
-        //update Quadtree
+        this._updateAllEntities();
         this._updateQuadtree();
+        this._handleEntityCollisions();
 
-        //handle character entity collisions
+        delta_time = performance.now() - delta_time;
+        //console.debug("logic tick: " + delta_time + " ms.");
+    }
+
+    _handleEntityCollisions() {
         for (let i = 0; i < this._entities.length; i++) {
             const first = this._entities[i],
                 targets = this._quadtree.retrieve(first);
             for (let j = 0; j < targets.length; j++) {
-                const second = targets[j];
-                this._handleCollision(first, second)
+                this._handleCollision(first, targets[j])
             }
         }
+    }
 
-        let debugTimeB = performance.now();
-        //console.debug("logic tick: " + (debugTimeB - debugTimeA) + " ms.");
+    /**
+     * call update function of all entities in array _entities
+     * @private
+     */
+    _updateAllEntities() {
+        for (let i = this._entities.length - 1; i >= 0; i--) {
+            this._entities[i].update();
+        }
     }
 
     /**
@@ -93,15 +104,12 @@ class Manager_DynamicEntity {
      * @private
      */
     _updateQuadtree() {
-        //clear the tree
         this._quadtree.clear();
-
         //insert all entities into the tree again
         for (let i = 0; i < this._entities.length; i++) {
             const entity = this._entities[i];
             this._quadtree.insert(entity);
         }
-
     }
 
     /**
@@ -135,7 +143,7 @@ class Manager_DynamicEntity {
             second.getTransform()
         );
 
-        if (dist < first.radius + second.radius)
+        if (dist <= first.radius + second.radius)
         /* collision happened here */
         {
             // create collision event? <---- No
@@ -149,16 +157,23 @@ class Manager_DynamicEntity {
      * DEBUG USE
      */
     debugCreateEntity() {
-        let x = Math.randomInt(15),
-            y = Math.randomInt(15);
+        let x, y;
+        let entity;
+        x = Math.randomInt(15);
+        y = Math.randomInt(15);
+        for (let i = 0; i < 5; ++i) {
+            entity = this.createBattler(1, x + i, y);
+            this.addEntity(entity);
+            entity.setTeam(0);
+        }
+        x = Math.randomInt(15);
+        y = Math.randomInt(15);
+        for (let i = 0; i < 5; ++i) {
+            entity = this.createBattler(1, x + i, y);
+            this.addEntity(entity);
+            entity.setTeam(1);
+        }
 
-        let entity = this.createBattler(1, x, y);
-        this.addEntity(entity);
-        entity.setTeam(0);
-
-        entity = this.createBattler(2, x + 1, y);
-        this.addEntity(entity);
-        entity.setTeam(1);
 
         //spawn event should send out..
     }
@@ -170,7 +185,10 @@ class Manager_DynamicEntity {
      * @return {Game_Character}
      */
     createBattler(id, x, y) {
-        const entity = new Game_Character($dataBattlers[id]);
+        const entity = new Game_Character(
+            Manager_DynamicEntity.getNextEntityId(),
+            $dataBattlers[id]
+        );
         entity.setPosition(new Victor(x, y));
         return entity;
     }

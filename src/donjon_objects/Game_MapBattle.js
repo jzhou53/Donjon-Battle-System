@@ -56,11 +56,8 @@ class Game_BattleMap extends Game_Map{
      */
     update(sceneActive) {
         super.update(sceneActive);
-
         this._dynamicEntities.update();
         this._battleField.update();
-
-
     }
 
 }

@@ -32,23 +32,34 @@ class GameEntity {
 
     /**
      * @constructor
+     * @param id {number}
      * initialize components map and transform member
      */
-    constructor() {
+    constructor(id) {
 
         /**
-         * @type {Array}
+         * @type {number} unique id assigned to the entity
+         * @private
+         */
+        this._id = id || -1;
+
+        /**
+         * @type {Array} array of Component objects
          * @protected
          */
         this._components = [];
 
         /**
          * every entity should have a transform component that stores its location info.
-         * @type {Transform} transform class stores entity's position
+         * @type {RMMV_Transform} transform class stores entity's position
          * @protected
          */
-        this._transform = new Transform();
+        this._transform = new RMMV_Transform(new Victor(0, 0), 0, new Victor(1.0, 1.0), 1);
 
+    }
+
+    get id() {
+        return this._id;
     }
 
     /**
@@ -59,7 +70,7 @@ class GameEntity {
     }
 
     /**
-     * @return {Transform}
+     * @return {RMMV_Transform}
      */
     getTransform() {
         return this._transform;
@@ -84,7 +95,7 @@ class GameEntity {
 
     /**
      *
-     * @param pEntity {GameEntity}
+     * @param pEntity {GameEntity||Game_Character}
      */
     onCollision(pEntity) {
 
@@ -107,11 +118,6 @@ class GameEntity {
 
     }
 
-// getSpeed() {
-//     return this._components.get("Physics")._speed;
-// }
-
-
 }
 
 /**
@@ -123,10 +129,11 @@ class GameEntity {
 class Game_Character extends GameEntity {
 
     /**
+     * @param id {number}
      * @param pDataCharacter {{id,name,maxHp,headAmr,bodyAmr,meleeWpn,rangedWpn,shield}}
      */
-    constructor(pDataCharacter) {
-        super();
+    constructor(id, pDataCharacter) {
+        super(id);
         /**
          * there are many states, like moving, guarding, attacking, jumping..
          * @type {BattlerState}
@@ -197,10 +204,29 @@ class Game_Character extends GameEntity {
      * @override
      */
     update() {
-        // in GameEntity class, the update order will be:
-        //  AI -> BattlerState -> physics -> transform
-        //this.debugMove();
+        //todo: execute action object made by AI component other wise Idel
+
+        if (!this.getTransform().isMoving() &&
+            this._currentState !== BattlerState.TYPES.ATTACKING) {
+            let x = Math.randomInt(3) - 1,
+                y = Math.randomInt(3) - 1;
+            this.getTransform().kinematicMove(new Victor(x, y));
+        }
+
         super.update();
+    }
+
+    /**
+     * @param pEntity {GameEntity||Game_Character}
+     */
+    onCollision(pEntity) {
+        if (this.getTeam() === pEntity.getTeam()) {
+            return;
+        }
+        if (this._currentState !== BattlerState.TYPES.ATTACKING) {
+            this._currentState = BattlerState.TYPES.ATTACKING;
+            console.debug(this.id + " Attacked " + pEntity.id);
+        }
     }
 
     /**

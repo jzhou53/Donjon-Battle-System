@@ -46,22 +46,22 @@ class PhysicsComponent extends Component {
      * @private
      */
     _updateBodyEuler() {
-        //t {Transform}
-        const transform = this.owner.getTransform();
-
-        //delta change in velocity
-        const dv = this._forces.clone().divide(new Victor(this._mass, this._mass));
-
-        // limit the max speed
-        // dv.x = Math.max(Math.min(dv.x,5),-5);
-        // dv.y = Math.max(Math.min(dv.y,5),-5);
-
-        this._velocity.add(dv);
-        //update the position
-        transform._localPosition.add(this._velocity);
-        this._speed = this._velocity.magnitude();
-
-        //console.debug("force: " + this._forces + ", " + this._velocity.toString() + " = " + this._speed + " m/s");
+        // //t {Transform}
+        // const transform = this.owner.getTransform();
+        //
+        // //delta change in velocity
+        // const dv = this._forces.clone().divide(new Victor(this._mass, this._mass));
+        //
+        // // limit the max speed
+        // // dv.x = Math.max(Math.min(dv.x,5),-5);
+        // // dv.y = Math.max(Math.min(dv.y,5),-5);
+        //
+        // this._velocity.add(dv);
+        // //update the position
+        // transform._localPosition.add(this._velocity);
+        // this._speed = this._velocity.magnitude();
+        //
+        // //console.debug("force: " + this._forces + ", " + this._velocity.toString() + " = " + this._speed + " m/s");
     }
 
     /**
@@ -69,25 +69,25 @@ class PhysicsComponent extends Component {
      * @private
      */
     _calcLoads() {
-        //rest forces
-        this._forces.x = 0;
-        this._forces.y = 0;
-
-        //aggregate forces
-        if (this._collision) {
-            this._forces.add(this._impactForces);
-            this._collision = false;
-            this.owner.debugFlag = false;
-        } else {
-            //to halt, debug
-            this._forces.add(this._velocity.clone().invert());
-            //other forces
-
-        }
-
-        //reset impact forces
-        this._impactForces.x = 0;
-        this._impactForces.y = 0;
+        // //rest forces
+        // this._forces.x = 0;
+        // this._forces.y = 0;
+        //
+        // //aggregate forces
+        // if (this._collision) {
+        //     this._forces.add(this._impactForces);
+        //     this._collision = false;
+        //     this.owner.debugFlag = false;
+        // } else {
+        //     //to halt, debug
+        //     this._forces.add(this._velocity.clone().invert());
+        //     //other forces
+        //
+        // }
+        //
+        // //reset impact forces
+        // this._impactForces.x = 0;
+        // this._impactForces.y = 0;
 
     }
 

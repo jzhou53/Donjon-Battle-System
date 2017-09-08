@@ -84,18 +84,19 @@ class Manager_BattleField {
 
     update() {
 
-        if (this._debugBattleEnded) {
-            //battle ended.....
-        } else {
-            const tempA = this._battlers[0][0].getBattleComp(),
-                tempB = this._battlers[1][0].getBattleComp();
+        // if (this._debugBattleEnded) {
+        //     //battle ended.....
+        // } else {
+        //     const tempA = this._battlers[0][0].getBattleComp(),
+        //         tempB = this._battlers[1][0].getBattleComp();
+        //
+        //     this._handleTurn_Text(tempA, tempB);
+        //     if (this._debugBattleEnded)
+        //         return;
+        //     this._handleTurn_Text(tempB, tempA);
+        //
+        // }
 
-            this._handleTurn_Text(tempA, tempB);
-            if (this._debugBattleEnded)
-                return;
-            this._handleTurn_Text(tempB, tempA);
-
-        }
     }
 
     /**

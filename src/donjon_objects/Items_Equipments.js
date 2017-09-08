@@ -104,6 +104,12 @@ class Game_Weapon extends Game_Equipment {
 
     static BASE_CRITICAL = 25;
 
+    static ATTACK_TYPES = {
+        SWING: 1,
+        THRUST: 2,
+        OVERHEAD: 3,
+    };
+
     /**
      * @constructor
      * @param pDataItem {{
@@ -161,6 +167,16 @@ class Game_Weapon extends Game_Equipment {
     }
 
 }
+
+class Game_MeleeWeapon extends Game_Weapon {
+
+    constructor(pDataItem) {
+        super(pDataItem);
+
+    }
+
+}
+
 
 
 class Game_Armor extends Game_Equipment {
