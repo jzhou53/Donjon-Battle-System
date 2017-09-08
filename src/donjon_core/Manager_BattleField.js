@@ -76,10 +76,6 @@ class Manager_BattleField {
             this._battlers[entity.getTeam()].push(entity);
         }, this);
 
-
-        console.log('----------------------------');
-        console.log(this.findTargets(this._battlers[0][0]));
-        console.log('----------------------------');
     }
 
     update() {
@@ -97,6 +93,13 @@ class Manager_BattleField {
         //
         // }
 
+
+        //this._battlers[0][0].getRangeRect();
+
+        this.findTargets(this._battlers[0][0]);
+        //console.log(this._battlers[0][0].x+","+this._battlers[0][0].x);
+        //console.log();
+        //console.log(this._dynamicEntity.getEntitiesAt(this._battlers[0][0]));
     }
 
     /**
@@ -184,7 +187,8 @@ class Manager_BattleField {
      * @return {Array}
      */
     findTargets(pBattler) {
-        const arr = this._dynamicEntity.getEntitiesAt(pBattler);
+        const arr = this._dynamicEntity.getEntitiesAt(pBattler.getRangeRect());
+        console.log(arr);
         return arr.splice(arr.indexOf(pBattler), 1);
     }
 

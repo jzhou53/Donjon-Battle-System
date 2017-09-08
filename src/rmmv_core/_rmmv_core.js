@@ -5010,8 +5010,7 @@ Tilemap.WATERFALL_AUTOTILE_TABLE = [
 function ShaderTilemap() {
     Tilemap.apply(this, arguments);
     this.roundPixels = true;
-};
-
+}
 ShaderTilemap.prototype = Object.create(Tilemap.prototype);
 ShaderTilemap.prototype.constructor = ShaderTilemap;
 
@@ -5066,7 +5065,7 @@ ShaderTilemap.prototype.refresh = function() {
     if (this._lastBitmapLength !== this.bitmaps.length) {
         this._lastBitmapLength = this.bitmaps.length;
         this.refreshTileset();
-    };
+    }
     this._needsRepaint = true;
 };
 
@@ -5704,7 +5703,7 @@ ScreenSprite.warnYep = function () {
 
 Object.defineProperty(ScreenSprite.prototype, 'anchor', {
     get: function () {
-        ScreenSprite.warnYep();
+        //ScreenSprite.warnYep();
         this.scale.x = 1;
         this.scale.y = 1;
         return {x: 0, y: 0};
@@ -6494,7 +6493,7 @@ WindowLayer.prototype.initialize = function() {
 
 WindowLayer.prototype.onRemoveAsAChild = function() {
     this.removeChildren();
-}
+};
 
 WindowLayer.voidFilter = new PIXI.filters.VoidFilter();
 

@@ -200,6 +200,19 @@ class Game_Character extends GameEntity {
     }
 
     /**
+     * @return {QuadItem||Rectangle}
+     */
+    getRangeRect() {
+        //temp, use scale instead
+        let x = this.getTransform().x - (this._meleeRange - 0.5), //this.getTransform().getScale();
+            y = this.getTransform().y - (this._meleeRange - 0.5),
+            w = this._meleeRange * 2,
+            h = this._meleeRange * 2;
+        console.log("(" + x + ", " + y + ", " + w + ", " + h + ")");
+        return new Rectangle(x, y, w, h);
+    }
+
+    /**
      *
      * @override
      */

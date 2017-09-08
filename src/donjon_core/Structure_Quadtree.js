@@ -159,12 +159,9 @@ class Quadtree {
      * @Return {Array}        array with all detected objects
      */
     retrieve(pRect) {
-
         const index = this.getIndex(pRect);
         let returnObjects = this._objects;
-
         if (typeof this._nodes[0] !== 'undefined') {
-
             if (index !== -1) {
                 returnObjects = returnObjects.concat(this._nodes[index].retrieve(pRect));
 
@@ -174,9 +171,7 @@ class Quadtree {
                 }
             }
         }
-
         return returnObjects;
-
     }
 
     /**
@@ -203,34 +198,16 @@ class Quadtree {
  *  @interface QuadItem
  */
 class QuadItem {
-
-    /**
-     * x value of the top left point of the rect
-     */
     get x() {
         throw new Error('x not implemented');
     }
-
-    /**
-     * y value of the top left point of the rect
-     */
     get y() {
         throw new Error('y not implemented');
     }
-
-    /**
-     * width of the detector rectangle
-     */
     get width() {
         throw new Error('y not implemented');
     }
-
-    /**
-     * heights of the detector rectangle
-     */
     get height() {
         throw new Error('y not implemented');
     }
-
-
 }

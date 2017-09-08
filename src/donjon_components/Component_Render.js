@@ -131,20 +131,12 @@ class RenderComponent extends Component {
         return (this._priorityType << 1 ) + 1;
     }
 
-    /**
-     * @return {number}
-     */
     scrolledX() {
-        const transform = this.owner.getTransform();
-        return transform.x - $gameMap._displayX;
+        return this.owner.getTransform().x - $gameMap._displayX;
     }
 
-    /**
-     * @return {number}
-     */
     scrolledY() {
-        const transform = this.owner.getTransform();
-        return transform.y - $gameMap._displayY;
+        return this.owner.getTransform().y - $gameMap._displayY;
     }
 
     /**
