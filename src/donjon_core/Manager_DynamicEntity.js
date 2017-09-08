@@ -138,12 +138,12 @@ class Manager_DynamicEntity {
         }
 
         //simple circle collision detection
-        const dist = Transform.distanceTo(
+        const dist = Transform.squaredDistanceTo(
             first.getTransform(),
             second.getTransform()
         );
 
-        if (dist <= first.radius + second.radius)
+        if (dist <= Math.pow(first.radius + second.radius, 2))
         /* collision happened here */
         {
             // create collision event? <---- No
@@ -169,7 +169,7 @@ class Manager_DynamicEntity {
         x = Math.randomInt(15);
         y = Math.randomInt(15);
         for (let i = 0; i < 5; ++i) {
-            entity = this.createBattler(1, x + i, y);
+            entity = this.createBattler(2, x + i, y);
             this.addEntity(entity);
             entity.setTeam(1);
         }

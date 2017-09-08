@@ -186,8 +186,8 @@ class Transform {
      * @param second{Transform}
      * @return {number}
      */
-    static distanceTo(first, second) {
-        return first._position.distance(second._position);
+    static squaredDistanceTo(first, second) {
+        return first._position.distanceSq(second._position);
     }
 
     /**
@@ -257,6 +257,7 @@ class RMMV_Transform {
             this._realPosition.y = Math.min(realY + this._distancePerFrame(), y);
         }
     }
+
 
     /**
      * @param deltaPos{Victor}

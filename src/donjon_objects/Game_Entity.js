@@ -6,6 +6,10 @@
  */
 class GameEntity {
 
+    get id() {
+        return this._id;
+    }
+
     get x() {
         return this._transform.x;
     }
@@ -56,10 +60,6 @@ class GameEntity {
          */
         this._transform = new RMMV_Transform(new Victor(0, 0), 0, new Victor(1.0, 1.0), 1);
 
-    }
-
-    get id() {
-        return this._id;
     }
 
     /**
@@ -199,6 +199,10 @@ class Game_Character extends GameEntity {
         return this._teamLabel;
     }
 
+    getState() {
+        return this._currentState;
+    }
+
     /**
      * @return {QuadItem||Rectangle}
      */
@@ -208,7 +212,7 @@ class Game_Character extends GameEntity {
             y = this.getTransform().y - (this._meleeRange - 0.5),
             w = this._meleeRange * 2,
             h = this._meleeRange * 2;
-        console.log("(" + x + ", " + y + ", " + w + ", " + h + ")");
+        //console.log("(" + x + ", " + y + ", " + w + ", " + h + ")");
         return new Rectangle(x, y, w, h);
     }
 
@@ -219,12 +223,12 @@ class Game_Character extends GameEntity {
     update() {
         //todo: execute action object made by AI component other wise Idel
 
-        if (!this.getTransform().isMoving() &&
-            this._currentState !== BattlerState.TYPES.ATTACKING) {
-            let x = Math.randomInt(3) - 1,
-                y = Math.randomInt(3) - 1;
-            this.getTransform().kinematicMove(new Victor(x, y));
-        }
+        // if (!this.getTransform().isMoving() &&
+        //     this._currentState !== BattlerState.TYPES.ATTACKING) {
+        //     let x = Math.randomInt(3) - 1,
+        //         y = Math.randomInt(3) - 1;
+        //     this.getTransform().kinematicMove(new Victor(x, y));
+        // }
 
         super.update();
     }
@@ -233,12 +237,14 @@ class Game_Character extends GameEntity {
      * @param pEntity {GameEntity||Game_Character}
      */
     onCollision(pEntity) {
+
+
         if (this.getTeam() === pEntity.getTeam()) {
             return;
         }
         if (this._currentState !== BattlerState.TYPES.ATTACKING) {
             this._currentState = BattlerState.TYPES.ATTACKING;
-            console.debug(this.id + " Attacked " + pEntity.id);
+            console.debug(this.id + " Halt " + pEntity.id);
         }
     }
 
@@ -262,11 +268,11 @@ class Game_Character extends GameEntity {
      * @param pTarget{Game_Character}
      */
     inMeleeRange(pTarget) {
-        const distance = Transform.distanceTo(
+        const distance = Transform.squaredDistanceTo(
             this.getTransform(), pTarget.getTransform()
         );
         //atk range
-        return distance <= this._meleeRange;
+        return distance <= this._meleeRange * this._meleeRange;
     }
 
     canAttack() {

@@ -92,15 +92,71 @@ class Manager_BattleField {
         //     this._handleTurn_Text(tempB, tempA);
         //
         // }
+        for (let j = 0; j < 2; ++j) {
+            for (let i = 0; i < this._battlers[0].length; i++) {
+                let first = this._battlers[j][i];
+                if (!first.getTransform().isMoving() && first.getState() !== BattlerState.TYPES.ATTACKING) {
+                    let leastTarget = this.findNearestTarget(first);
+                    this.moveBattlerToward(first, leastTarget);
+                }
+            }
+        }
 
 
-        //this._battlers[0][0].getRangeRect();
 
-        this.findTargets(this._battlers[0][0]);
-        //console.log(this._battlers[0][0].x+","+this._battlers[0][0].x);
-        //console.log();
-        //console.log(this._dynamicEntity.getEntitiesAt(this._battlers[0][0]));
     }
+
+
+    findNearestTarget(first) {
+        let targets = this.findTargets(first);
+
+        let least = Number.MAX_VALUE, leastTarget = targets[0];
+        for (let i = 1; i < targets.length; i++) {
+            let distance = Transform.squaredDistanceTo(first.getTransform(), targets[i].getTransform());
+            //distance = Math.round(distance);
+            if (distance < least) {
+                least = distance;
+                leastTarget = targets[i];
+            }
+        }
+        return leastTarget;
+    }
+
+    moveBattlerToward(first, second) {
+        let d0 = first.getTransform().getPosition(),
+            d1 = second.getTransform().getPosition();
+
+        let direction = d1.clone();
+        direction.subtract(d0).normalize();
+        //temp
+        this.moveStraight(first, direction);
+        //first.getTransform().kinematicMove(direction);
+    }
+
+    /**
+     * @param first{Game_Character}
+     * @param direction{Victor}
+     */
+    moveStraight(first, direction) {
+        let transform = first.getTransform(),
+            sx = direction.x,
+            sy = direction.y;
+        if (Math.abs(sx) > Math.abs(sy)) {
+            if (sx > 0) {
+                transform.kinematicMove(new Victor(1, 0));
+            } else {
+                transform.kinematicMove(new Victor(-1, 0));
+            }
+        } else if (sy !== 0) {
+            if (sy > 0) {
+                transform.kinematicMove(new Victor(0, 1));
+            } else {
+                transform.kinematicMove(new Victor(0, -1));
+            }
+        }
+
+    }
+
 
     /**
      * @param firstComp{Component_BattleCore}
@@ -187,9 +243,10 @@ class Manager_BattleField {
      * @return {Array}
      */
     findTargets(pBattler) {
-        const arr = this._dynamicEntity.getEntitiesAt(pBattler.getRangeRect());
-        console.log(arr);
-        return arr.splice(arr.indexOf(pBattler), 1);
+        let arr = this._dynamicEntity.getEntitiesAt(pBattler.getRangeRect());
+        return arr.filter(battler =>
+            battler.getTeam() !== pBattler.getTeam()
+        );
     }
 
 }
