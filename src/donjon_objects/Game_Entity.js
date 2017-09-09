@@ -204,6 +204,13 @@ class Game_Character extends GameEntity {
     }
 
     /**
+     * @param newState{number}
+     */
+    changeState(newState) {
+        this._currentState = newState;
+    }
+
+    /**
      * @return {QuadItem||Rectangle}
      */
     getRangeRect() {
@@ -237,15 +244,13 @@ class Game_Character extends GameEntity {
      * @param pEntity {GameEntity||Game_Character}
      */
     onCollision(pEntity) {
-
-
-        if (this.getTeam() === pEntity.getTeam()) {
-            return;
-        }
-        if (this._currentState !== BattlerState.TYPES.ATTACKING) {
-            this._currentState = BattlerState.TYPES.ATTACKING;
-            console.debug(this.id + " Halt " + pEntity.id);
-        }
+        // if (this.getTeam() === pEntity.getTeam()) {
+        //     return;
+        // }
+        // if (this._currentState !== BattlerState.TYPES.ATTACKING) {
+        //     this._currentState = BattlerState.TYPES.ATTACKING;
+        //     console.debug(this.id + " Halt " + pEntity.id);
+        // }
     }
 
     /**

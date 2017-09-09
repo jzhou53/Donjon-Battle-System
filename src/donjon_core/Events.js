@@ -120,3 +120,24 @@ class Evnt_CharacterPerformAttack extends BasicEvent {
         return this._atkType;
     }
 }
+
+class Evnt_SpawnEntity extends BasicEvent {
+
+    /**
+     * @para timeStamp{number}
+     * @para entity{GameEntity}
+     */
+    constructor(timeStamp, entity) {
+        super(timeStamp);
+        this._entity = entity;
+
+    }
+
+    /**
+     * @return {GameEntity}
+     */
+    getEntity() {
+        return this._entity;
+    }
+
+}

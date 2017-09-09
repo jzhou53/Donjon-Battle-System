@@ -157,25 +157,29 @@ class Manager_DynamicEntity {
      * DEBUG USE
      */
     debugCreateEntity() {
-        let x, y;
-        let entity;
+        let x = Math.randomInt(15);
+        let y = Math.randomInt(15);
+        let num = Math.randomInt(15);
+        for (let i = 0; i < num; ++i)
+            this.spawnEntity(1, x + i, y, 0);
         x = Math.randomInt(15);
         y = Math.randomInt(15);
-        for (let i = 0; i < 5; ++i) {
-            entity = this.createBattler(1, x + i, y);
-            this.addEntity(entity);
-            entity.setTeam(0);
-        }
-        x = Math.randomInt(15);
-        y = Math.randomInt(15);
-        for (let i = 0; i < 5; ++i) {
-            entity = this.createBattler(2, x + i, y);
-            this.addEntity(entity);
-            entity.setTeam(1);
-        }
+        num = Math.randomInt(15);
+        for (let i = 0; i < num; ++i)
+            this.spawnEntity(2, x + i, y, 1);
+    }
 
-
-        //spawn event should send out..
+    /**
+     * @param entity_id{number}
+     * @param x{number}
+     * @param y{number}
+     * @param team_id{number}
+     */
+    spawnEntity(entity_id, x, y, team_id = 0) {
+        let entity = this.createBattler(entity_id, x, y);
+        this.addEntity(entity);
+        entity.setTeam(team_id);
+        EventsManager.queueEvent(new Evnt_SpawnEntity(performance.now(), entity));
     }
 
     /**

@@ -10,10 +10,10 @@ class Manager_BattleField {
 
         this._dynamicEntity = null;
         /**
-         * @type {[Array,Array]}
+         * @type {Array}
          * @private
          */
-        this._battlers = [[], []];
+        this._battlers = [];
 
         this._setupBattleField(dynamic_manager);
 
@@ -26,7 +26,6 @@ class Manager_BattleField {
      * @param second{Component_BattleCore} Defender
      */
     static handleTurn(first, second) {
-
         //temp
         const chanceHit = 50;
         let critical_flag = false;
@@ -56,12 +55,9 @@ class Manager_BattleField {
                 this._debugBattleEnded = true;
             }
 
-
         } else {
             // defend
-
         }
-
     }
 
     /**
@@ -70,49 +66,86 @@ class Manager_BattleField {
      */
     _setupBattleField(dynamic_manager) {
         this._dynamicEntity = dynamic_manager;
+        //-----------
         this._dynamicEntity.debugCreateEntity();
+        //-----------
         const entities = this._dynamicEntity.getAllEntities();
         entities.forEach(entity => {
-            this._battlers[entity.getTeam()].push(entity);
+            this._battlers.push(entity);
         }, this);
 
     }
 
     update() {
 
-        // if (this._debugBattleEnded) {
-        //     //battle ended.....
-        // } else {
-        //     const tempA = this._battlers[0][0].getBattleComp(),
-        //         tempB = this._battlers[1][0].getBattleComp();
-        //
-        //     this._handleTurn_Text(tempA, tempB);
-        //     if (this._debugBattleEnded)
-        //         return;
-        //     this._handleTurn_Text(tempB, tempA);
-        //
-        // }
-        for (let j = 0; j < 2; ++j) {
-            for (let i = 0; i < this._battlers[0].length; i++) {
-                let first = this._battlers[j][i];
-                if (!first.getTransform().isMoving() && first.getState() !== BattlerState.TYPES.ATTACKING) {
-                    let leastTarget = this.findNearestTarget(first);
-                    this.moveBattlerToward(first, leastTarget);
-                }
+        for (let i = 0; i < this._battlers.length; i++) {
+            let first = this._battlers[i];
+            //find nearest and move
+            if (!first.getTransform().isMoving() && first.getState() !== BattlerState.TYPES.ATTACKING) {
+                let leastTarget = this.findNearestTarget(first);
+                this.moveBattlerToward(first, leastTarget);
             }
         }
-
-
+        this._handleBattlerEncounter()
 
     }
 
+    _handleBattlerEncounter() {
+        for (let i = 0; i < this._battlers.length; i++) {
+            let first = this._battlers[i],
+                targets = this._dynamicEntity.getEntitiesAt(first.getRangeRect());
+            targets = this.getOpponents(first, targets);
+            for (let j = 0; j < targets.length; j++) {
+                this._handleEncounter(first, targets[j])
+            }
+        }
+    }
 
+    /**
+     * @param first {Game_Character} performer
+     * @param second {Game_Character}
+     * @private
+     */
+    _handleEncounter(first, second) {
+        if (first.inMeleeRange(second) &&
+            first.getState() !== BattlerState.TYPES.ATTACKING) {
+            first.changeState(BattlerState.TYPES.ATTACKING);
+            console.debug(first.id + " Engaged with " + second.id);
+        }
+    }
+
+    /**
+     * @param pBattler {Game_Character}
+     * @return {Array}
+     */
+    findTargets(pBattler) {
+        let arr = this._dynamicEntity.getEntitiesAt(pBattler.getRangeRect());
+        return this.getOpponents(pBattler, arr);
+    }
+
+    /**
+     * @param first {Game_Character}
+     * @param others {Array.<Game_Character>}
+     * @return {Array.<Game_Character>}
+     */
+    getOpponents(first, others) {
+        return others.filter(battler =>
+            battler.getTeam() !== first.getTeam()
+        );
+    }
+
+    /**
+     * @param first {Game_Character}
+     * @return {Game_Character}
+     */
     findNearestTarget(first) {
         let targets = this.findTargets(first);
 
         let least = Number.MAX_VALUE, leastTarget = targets[0];
         for (let i = 1; i < targets.length; i++) {
-            let distance = Transform.squaredDistanceTo(first.getTransform(), targets[i].getTransform());
+            let distance = Transform.squaredDistanceTo(
+                first.getTransform(), targets[i].getTransform()
+            );
             //distance = Math.round(distance);
             if (distance < least) {
                 least = distance;
@@ -122,6 +155,11 @@ class Manager_BattleField {
         return leastTarget;
     }
 
+    /**
+     *
+     * @param first {Game_Character}
+     * @param second {Game_Character}
+     */
     moveBattlerToward(first, second) {
         let d0 = first.getTransform().getPosition(),
             d1 = second.getTransform().getPosition();
@@ -238,15 +276,5 @@ class Manager_BattleField {
         return pArmor.getFleshDamage();
     }
 
-    /**
-     * @param pBattler {Game_Character}
-     * @return {Array}
-     */
-    findTargets(pBattler) {
-        let arr = this._dynamicEntity.getEntitiesAt(pBattler.getRangeRect());
-        return arr.filter(battler =>
-            battler.getTeam() !== pBattler.getTeam()
-        );
-    }
 
 }
