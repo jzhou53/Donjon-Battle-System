@@ -67,7 +67,7 @@ class Manager_BattleField {
     _setupBattleField(dynamic_manager) {
         this._dynamicEntity = dynamic_manager;
         //-----------
-        this._dynamicEntity.debugCreateEntity();
+        //this._dynamicEntity.debugCreateEntity();
         //-----------
         const entities = this._dynamicEntity.getAllEntities();
         entities.forEach(entity => {

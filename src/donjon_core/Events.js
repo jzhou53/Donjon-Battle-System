@@ -5,6 +5,7 @@ const EVENT_TYPES = {
     SpritesetMapCreated: 1,
     RequestSpriteRefresh: 2,
     CharacterPerformAttack: 3,
+    SpawnEntity: 4
 };
 
 /**
@@ -103,6 +104,7 @@ class Evnt_CharacterPerformAttack extends BasicEvent {
      */
     constructor(timeStamp, pPerformer, pTarget, attackType) {
         super(timeStamp);
+        this._evtType = EVENT_TYPES.CharacterPerformAttack;
         this._performer = pPerformer;
         this._target = pTarget;
         this._atkType = attackType;
@@ -129,6 +131,7 @@ class Evnt_SpawnEntity extends BasicEvent {
      */
     constructor(timeStamp, entity) {
         super(timeStamp);
+        this._evtType = EVENT_TYPES.SpawnEntity;
         this._entity = entity;
 
     }

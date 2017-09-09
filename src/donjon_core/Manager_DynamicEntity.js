@@ -55,7 +55,7 @@ class Manager_DynamicEntity {
             throw new Error('The map data is not available');
         }
         //load data from $dataMap (get map info, entities, graphics)
-
+        this.debugCreateEntity();
         //setup entities (both static and dynamic)
 
         //setup scroll and parallax (all the additional graphic layers)
@@ -162,6 +162,7 @@ class Manager_DynamicEntity {
         let num = Math.randomInt(15);
         for (let i = 0; i < num; ++i)
             this.spawnEntity(1, x + i, y, 0);
+
         x = Math.randomInt(15);
         y = Math.randomInt(15);
         num = Math.randomInt(15);
