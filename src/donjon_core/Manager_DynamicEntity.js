@@ -72,7 +72,7 @@ class Manager_DynamicEntity {
 
         this._updateAllEntities();
         this._updateQuadtree();
-        this._handleEntityCollisions();
+        //this._handleEntityCollisions();
 
         delta_time = performance.now() - delta_time;
         //console.debug("logic tick: " + delta_time + " ms.");

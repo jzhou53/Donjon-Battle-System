@@ -58,7 +58,7 @@ class GameEntity {
          * @type {RMMV_Transform} transform class stores entity's position
          * @protected
          */
-        this._transform = new RMMV_Transform(new Victor(0, 0), 0, new Victor(1.0, 1.0), 1);
+        this._transform = new RMMV_Transform(this, new Victor(0, 0), 0, new Victor(1.0, 1.0), 1);
 
     }
 

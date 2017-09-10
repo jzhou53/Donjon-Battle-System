@@ -1,9 +1,9 @@
-class Collider {
+class Collider extends Component {
 
-    constructor() {
+    constructor(owner) {
+        super(owner);
         this._attachedRigidbody = null;
         this._offset = 0;
-
     }
 
     /**
@@ -49,8 +49,8 @@ class Collider {
 
 class BoxCollider extends Collider {
 
-    constructor() {
-        super();
+    constructor(owner) {
+        super(owner);
         this._autoTiling = false;
         this._size = 0;
     }
@@ -79,8 +79,8 @@ class BoxCollider extends Collider {
 
 class CircleCollider extends Collider {
 
-    constructor() {
-        super();
+    constructor(owner) {
+        super(owner);
         this._radius = 0;
     }
 

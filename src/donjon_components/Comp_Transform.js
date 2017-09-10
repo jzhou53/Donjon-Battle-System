@@ -1,17 +1,14 @@
-class Transform {
+class Transform extends Component {
 
     /**
-     *
+     * @param owner
      * @param pos{Victor}
      * @param z{number}
      * @param scale{Victor}
      * @param r{number}
      */
-    constructor(pos = new Victor(0, 0),
-                z = 0,
-                scale = new Victor(1.0, 1.0),
-                r = 0) {
-
+    constructor(owner, pos = new Victor(0, 0), z = 0, scale = new Victor(1.0, 1.0), r = 0) {
+        super(owner);
         /**
          * @type {Transform}
          * @private
@@ -190,7 +187,7 @@ class Transform {
 
 }
 
-class RMMV_Transform {
+class RMMV_Transform extends Component {
 
     get x() {
         return this._realPosition.x;
@@ -201,12 +198,14 @@ class RMMV_Transform {
     }
 
     /**
+     * @param owner
      * @param pos {Victor}
      * @param z {number}
      * @param scale {Victor}
      * @param r {number}
      */
-    constructor(pos, z, scale, r) {
+    constructor(owner, pos, z, scale, r) {
+        super(owner);
         this._position = pos;
         this._realPosition = pos.clone();
         this._scale = scale;
@@ -282,14 +281,16 @@ class RMMV_Transform {
     }
 }
 
-class Unity_Transform {
+class Unity_Transform extends Component {
 
     /**
+     * @param owner
      * @param pos {Victor}
      * @param z {number}
      * @param scale {Victor}
      */
-    constructor(pos, z, scale) {
+    constructor(owner, pos, z, scale) {
+        super(owner);
         /**
          * @type {Victor}
          * @private

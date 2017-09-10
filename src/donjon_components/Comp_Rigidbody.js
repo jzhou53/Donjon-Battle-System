@@ -1,7 +1,8 @@
-class Rigidbody {
+class Rigidbody extends Component {
 
+    constructor(owner) {
+        super(owner);
 
-    constructor() {
         /**
          * @type {number}
          */
@@ -32,7 +33,38 @@ class Rigidbody {
      */
     isTouching(collider) {
         //TODO: handle algorithm
+
     }
 
+    /**
+     * Moves the rigidbody to position.
+     * @param position{Victor} The new position for the Rigidbody object.
+     */
+    movePosition(position) {
+        /*
+           It is important to understand that the actual position change will only occur during the
+           next physics update therefore calling this method repeatedly without waiting for the next
+           physics update will result in the last call being used. For this reason, it is recommended
+           that it is called during the FixedUpdate callback.
+         */
+    }
+
+    /*
+        public Vector2 velocity;
+        public Rigidbody2D rb2D;
+        void Start() {
+            rb2D = GetComponent<Rigidbody2D>();
+        }
+        void FixedUpdate() {
+            rb2D.MovePosition(rb2D.position + velocity * Time.fixedDeltaTime);
+        }
+     */
+    /**
+     * Rotates the rigidbody to angle (given in degrees).
+     * @param angle {number}    The new rotation angle for the Rigidbody object.
+     */
+    moveRotation(angle) {
+
+    }
 
 }
