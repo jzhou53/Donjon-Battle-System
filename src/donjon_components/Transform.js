@@ -1,12 +1,3 @@
-/**
- * Position, rotation and scale of an object.
- *
- * Every object in a scene has a Transform.
- * It's used to store and manipulate the position,
- * rotation and scale of the object. Every Transform
- * can have a parent, which allows you to apply position,
- * rotation and scale hierarchically.
- */
 class Transform {
 
     /**
@@ -202,6 +193,14 @@ class Transform {
 
 class RMMV_Transform {
 
+    get x() {
+        return this._realPosition.x;
+    }
+
+    get y() {
+        return this._realPosition.y;
+    }
+
     /**
      * @param pos {Victor}
      * @param z {number}
@@ -212,14 +211,6 @@ class RMMV_Transform {
         this._position = pos;
         this._realPosition = pos.clone();
         this._scale = scale;
-    }
-
-    get x() {
-        return this._realPosition.x;
-    }
-
-    get y() {
-        return this._realPosition.y;
     }
 
     /**
@@ -263,7 +254,8 @@ class RMMV_Transform {
      * @param deltaPos{Victor}
      */
     kinematicMove(deltaPos) {
-        this._position.add(deltaPos)
+        //this._position = this._realPosition.clone();
+        this._position.add(deltaPos);
     }
 
     /**

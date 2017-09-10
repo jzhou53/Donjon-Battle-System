@@ -13,6 +13,100 @@ class PhysicsComponent extends Component {
      */
     constructor(owner) {
         super(owner);
+        this._mass = 1.0;
+        this._velocity = new Victor(0, 0);
+        this._forces = new Victor(0, 0);
+        this._impactForces = new Victor(0, 0);
+        this._speed = 0.0;
+    }
+
+    get mass() {
+        return this._mass;
+    }
+
+    get speed() {
+        return this._speed;
+    }
+
+    /**
+     * @override
+     */
+    update() {
+        this._calcLoads();
+        this._updateBodyEuler();
+    }
+
+    getRadius() {
+        return this._collisionRadius;
+    }
+
+    /**
+     * @protected
+     */
+    _calcLoads() {
+        this.resetForces();
+
+        //aggregate forces
+        if (this._collision) {
+            this._forces.add(this._impactForces);
+            this._collision = false;
+        } else {
+            //other forces
+        }
+
+        //reset impact forces
+        this.resetImpactForces();
+    }
+
+    resetForces() {
+        this._forces.x = 0;
+        this._forces.y = 0;
+    }
+
+    resetImpactForces() {
+        this._impactForces.x = 0;
+        this._impactForces.y = 0;
+    }
+
+    /**
+     * @protected
+     */
+    _updateBodyEuler() {
+        const transform = this.owner.getTransform();
+
+        //delta change in velocity
+        const dv = this._forces.clone().divide(new Victor(this._mass, this._mass));
+        this._velocity.add(dv);
+
+        //update the position
+        //transform._localPosition.add(this._velocity);
+
+        transform.kinematicMove(this._velocity);
+        this._speed = this._velocity.magnitude();
+
+        console.log(this._speed);
+
+    }
+
+    /**
+     * @param pForce{Victor}
+     */
+    addImpactForce(pForce) {
+        this._impactForces.add(pForce);
+        this._collision = true;
+    }
+
+}
+
+class VictorPhysicsComponent extends Component {
+
+    /**
+     * Constructor
+     * @param owner{GameEntity}
+     * @override
+     */
+    constructor(owner) {
+        super(owner);
         this._collisionRadius = 0;
         this._mass = 1.0;
         this._speed = 0;
@@ -100,11 +194,6 @@ class PhysicsComponent extends Component {
         this._collision = true;
         console.log("impact force applied " + pForce + "...");
     }
-
-}
-
-
-class Particle2DComponent extends PhysicsComponent {
 
 }
 

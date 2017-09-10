@@ -244,13 +244,11 @@ class Game_Character extends GameEntity {
      * @param pEntity {GameEntity||Game_Character}
      */
     onCollision(pEntity) {
-        // if (this.getTeam() === pEntity.getTeam()) {
-        //     return;
-        // }
-        // if (this._currentState !== BattlerState.TYPES.ATTACKING) {
-        //     this._currentState = BattlerState.TYPES.ATTACKING;
-        //     console.debug(this.id + " Halt " + pEntity.id);
-        // }
+        //should let physics handle collision
+
+        //this.getTransform().setPosition(this.getTransform()._realPosition);
+        //this.getPhysicsComp().addImpactForce(new Victor(0.0125,0));
+
     }
 
     /**

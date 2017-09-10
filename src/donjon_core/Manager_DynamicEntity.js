@@ -122,7 +122,6 @@ class Manager_DynamicEntity {
         return this._quadtree.retrieve(pRect);
     }
 
-
     /**
      * check if entity first will collide with entity second
      * if collides, then trigger events.
@@ -159,13 +158,13 @@ class Manager_DynamicEntity {
     debugCreateEntity() {
         let x = Math.randomInt(15);
         let y = Math.randomInt(15);
-        let num = Math.randomInt(15);
+        let num = Math.randomInt(10) + 5;
         for (let i = 0; i < num; ++i)
             this.spawnEntity(1, x + i, y, 0);
 
         x = Math.randomInt(15);
         y = Math.randomInt(15);
-        num = Math.randomInt(15);
+        num = Math.randomInt(10) + 5;
         for (let i = 0; i < num; ++i)
             this.spawnEntity(2, x + i, y, 1);
     }
