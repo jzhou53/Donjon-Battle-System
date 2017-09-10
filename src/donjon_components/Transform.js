@@ -190,7 +190,6 @@ class Transform {
 
 }
 
-
 class RMMV_Transform {
 
     get x() {
@@ -281,4 +280,79 @@ class RMMV_Transform {
     _realMoveSpeed() {
         return 3;
     }
+}
+
+class Unity_Transform {
+
+    /**
+     * @param pos {Victor}
+     * @param z {number}
+     * @param scale {Victor}
+     */
+    constructor(pos, z, scale) {
+        /**
+         * @type {Victor}
+         * @private
+         */
+        this._position = pos;
+        this._z = z;
+        this._rotation = 0;
+        this._scale = scale;
+    }
+
+    get position() {
+        return this._position;
+    }
+
+    get rotation() {
+        return this._rotation;
+    }
+
+    get scale() {
+        return this._scale;
+    }
+
+    /**
+     * calculate the distance from first transform to the second transform.
+     * @param first{Transform}
+     * @param second{Transform}
+     * @return {number}
+     */
+    static squaredDistanceTo(first, second) {
+        return first._position.distanceSq(second._position);
+    }
+
+    /**
+     * Moves the transform in the direction and distance of translation.
+     * @param translation {Victor} Victor with direction and distance.
+     */
+    translate(translation) {
+        this._position.add(translation);
+    }
+
+    /**
+     * Rotates the transform so the forward vector points at /target/'s current position.
+     * @param target{Unity_Transform} Object to point towards.
+     */
+    lookAt(target) {
+
+    }
+
+    /**
+     * Applies a rotation of eulerAngles to the transform.
+     * @param euler_angles{number} angle degrees .
+     */
+    rotate(euler_angles) {
+        this._rotation += euler_angles;
+    }
+
+    /**
+     * Rotates the transform about the point in world coordinates by angle degrees.
+     * @param point {Victor} point in world coordinates.
+     * @param angle {number} angle degrees.
+     */
+    rotateAround(point, angle) {
+
+    }
+
 }
