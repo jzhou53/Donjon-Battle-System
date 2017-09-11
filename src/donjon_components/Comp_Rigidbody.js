@@ -1,5 +1,13 @@
 class Rigidbody extends Component {
 
+    get velocity() {
+        return this._velocity;
+    }
+
+    set velocity(value) {
+        this._velocity = value;
+    }
+
     constructor(owner) {
         super(owner);
 

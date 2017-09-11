@@ -84,7 +84,7 @@ class PhysicsComponent extends Component {
         transform.kinematicMove(this._velocity);
         this._speed = this._velocity.magnitude();
 
-        console.log(this._speed);
+        //console.log(this._speed);
 
     }
 

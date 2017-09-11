@@ -29,9 +29,8 @@ class Game_BattleMap extends Game_Map{
         //set up static manager
 
         //set up dynamic entity manager
-        this._setupDynamicManager();
-
-        this._setupBattleField();
+        // this._setupDynamicManager();
+        // this._setupBattleField();
 
     }
 
@@ -48,7 +47,6 @@ class Game_BattleMap extends Game_Map{
 
     _setupBattleField() {
         this._battleField = new Manager_BattleField(this._dynamicEntities);
-
     }
 
     /**
@@ -56,8 +54,8 @@ class Game_BattleMap extends Game_Map{
      */
     update(sceneActive) {
         super.update(sceneActive);
-        this._dynamicEntities.update();
-        this._battleField.update();
+        // this._dynamicEntities.update();
+        // this._battleField.update();
     }
 
 }

@@ -15,9 +15,9 @@ class Game_Object {
 
     /**
      * @param name {String} The name that the Game_Object is created with.
-     * @param components {Array.<Component>} A list of Components to add to the Game_Object on creation.
+     * @param components {Object} A list of Components to add to the Game_Object on creation.
      */
-    constructor(name = '', components = []) {
+    constructor(name = '', components = {}) {
         /**
          * @type {Game_Object}
          * @protected
@@ -49,8 +49,8 @@ class Game_Object {
          */
         this._name = name;
         /**
-         * @type {Array.<Component>}
-         * @protected
+         * @type {Object}
+         * @private
          */
         this._components = components;
         /**
@@ -94,7 +94,8 @@ class Game_Object {
      * @param componentType {Component}
      */
     addComponent(componentType) {
-        this._components.push(new componentType());
+        //this._components.push(new componentType());
+        //this._components[componentType] = new componentType();
     }
 
     /**
@@ -113,9 +114,7 @@ class Game_Object {
         //todo: test if correct
         methodName.apply(this, parameter);
         //for each transform and child
-        for (let i = 0; i < this._components.length; i++) {
-            methodName.apply(this._components[i], parameter)
-        }
+
     }
 
     /**
