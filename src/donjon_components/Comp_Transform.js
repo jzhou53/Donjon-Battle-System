@@ -289,7 +289,7 @@ class Unity_Transform extends Component {
      * @param z {number}
      * @param scale {Victor}
      */
-    constructor(owner, pos, z, scale) {
+    constructor(owner, pos = new Victor(0, 0), z = 0, scale = new Victor(0, 0)) {
         super(owner);
         /**
          * @type {Victor}

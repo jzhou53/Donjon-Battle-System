@@ -14,6 +14,10 @@ class SceneManager {
      * @private
      */
     static _nextScene = null;
+    /**
+     * @type {Array.<Scene_Base>}
+     * @private
+     */
     static _stack = [];
     static _stopped = false;
     static _sceneStarted = false;
@@ -30,7 +34,7 @@ class SceneManager {
     static _boxWidth = 1280;
     static _boxHeight = 720;
     static _deltaTime = 1.0 / 60.0;
-    static _currentTime = SceneManager._getTimeInMs();
+    static _currentTime = SceneManager.getTimeInMs();
     static _accumulator = 0.0;
 
     /**
@@ -43,9 +47,8 @@ class SceneManager {
     /**
      * Gets the current time in ms.
      * @return {number|*}
-     * @private
      */
-    static _getTimeInMs() {
+    static getTimeInMs() {
         return performance.now();
     }
 
@@ -191,16 +194,13 @@ class SceneManager {
      *  CHANGED The frame update
      */
     static update() {
-
         try {
             this.tickStart();
-            // this.updateInputData(); REMOVED - We need to fetch input on scene update instead, in the new rewritten updateMain()
             this.updateMain();
             this.tickEnd();
         } catch (e) {
             this.catchException(e);
         }
-
     }
 
     static terminate() {
@@ -274,7 +274,7 @@ class SceneManager {
 
     static updateMain() {
 
-        let newTime = this._getTimeInMs();
+        let newTime = this.getTimeInMs();
         let fTime = (newTime - this._currentTime) / 1000;
         if (fTime > 0.25) fTime = 0.25;
         this._currentTime = newTime;
@@ -382,7 +382,6 @@ class SceneManager {
     }
 
     /**
-     *
      * @param sceneClass {Scene_Base}
      */
     static goto(sceneClass) {

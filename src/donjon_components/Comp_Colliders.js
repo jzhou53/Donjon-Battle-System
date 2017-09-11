@@ -7,7 +7,6 @@ class Collider extends Component {
     }
 
     /**
-     * @abstract
      * @param collider{Collider} The collider to check if it is touching this collider.
      * @return {boolean} Whether this collider is touching the collider or not.
      */
@@ -25,10 +24,27 @@ class Collider extends Component {
     }
 
     /**
+     *  Checks whether this collider is touching any colliders on the specified layerMask or not.
+     * @param layerMask {number} Any colliders on any of these layers count as touching.
+     * @return {boolean} Whether this collider is touching any collider on the specified layerMask or not.
+     */
+    isTouchingLayers(layerMask) {
+
+        return false;
+    }
+
+    /**
      * @abstract
      * @param other{Collider} The Collision data associated with this collision.
      */
     onCollisionEnter(other) {
+    }
+
+    /**
+     * @abstract
+     * @param other{Collider} The Collision data associated with this collision.
+     */
+    onCollisionStay(other) {
     }
 
     /**
@@ -40,10 +56,25 @@ class Collider extends Component {
 
     /**
      * @abstract
-     * @param other{Collider} The Collision data associated with this collision.
+     * @param other{Collider} The other Collider2D involved in this collision.
      */
-    onCollisionStay(other) {
+    onTriggerEnter(other) {
     }
+
+    /**
+     * @abstract
+     * @param other{Collider} The other Collider2D involved in this collision.
+     */
+    onTriggerStay(other) {
+    }
+
+    /**
+     * @abstract
+     * @param other{Collider} The other Collider2D involved in this collision.
+     */
+    onTriggerExit(other) {
+    }
+
 
 }
 
@@ -67,12 +98,21 @@ class BoxCollider extends Collider {
 
     }
 
+    onCollisionStay(other) {
+
+    }
+
     onCollisionExit(other) {
 
     }
 
-    onCollisionStay(other) {
+    onTriggerEnter(other) {
+    }
 
+    onTriggerStay(other) {
+    }
+
+    onTriggerExit(other) {
     }
 
 }
@@ -96,13 +136,24 @@ class CircleCollider extends Collider {
 
     }
 
-    onCollisionExit(other) {
-
-    }
-
     onCollisionStay(other) {
 
     }
 
+    onCollisionExit(other) {
+
+    }
+
+    onTriggerEnter(other) {
+
+    }
+
+    onTriggerStay(other) {
+
+    }
+
+    onTriggerExit(other) {
+
+    }
 }
 
