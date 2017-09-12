@@ -101,7 +101,7 @@ class SceneManager {
         this.initAudio();
         this.initInput();
         this.initNwjs();
-        this.checkPluginErrors();
+        //this.checkPluginErrors();
         this.setupErrorHandlers();
     }
 
@@ -195,12 +195,31 @@ class SceneManager {
      */
     static update() {
         try {
+
+
             this.tickStart();
             this.updateMain();
             this.tickEnd();
+
+
         } catch (e) {
             this.catchException(e);
         }
+
+
+        /*
+            try {
+                this.tickStart();
+                if (Utils.isMobileSafari()) {
+                    this.updateInputData();
+                }
+                this.updateManagers();
+                this.updateMain();
+                this.tickEnd();
+            } catch (e) {
+                this.catchException(e);
+            }
+         */
     }
 
     static terminate() {
@@ -280,15 +299,43 @@ class SceneManager {
         this._currentTime = newTime;
         this._accumulator += fTime;
 
+        //console.log("Updating.....");
         while (this._accumulator >= this._deltaTime) {
             this.updateInputData();
             this.changeScene();
             this.updateScene();
             this._accumulator -= this._deltaTime;
+            //console.log("Fixed Updating.....");
         }
 
+
         this.renderScene();
+        //this.renderGizmo;
+        //this.renderGUI();
+
         this.requestUpdate();
+
+
+        /*
+            if (Utils.isMobileSafari()) {
+                this.changeScene();
+                this.updateScene();
+            } else {
+                var newTime = this._getTimeInMsWithoutMobileSafari();
+                var fTime = (newTime - this._currentTime) / 1000;
+                if (fTime > 0.25) fTime = 0.25;
+                this._currentTime = newTime;
+                this._accumulator += fTime;
+                while (this._accumulator >= this._deltaTime) {
+                    this.updateInputData();
+                    this.changeScene();
+                    this.updateScene();
+                    this._accumulator -= this._deltaTime;
+                }
+            }
+            this.renderScene();
+            this.requestUpdate();
+         */
     }
 
     /**
