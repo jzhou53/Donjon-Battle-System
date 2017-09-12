@@ -37,6 +37,25 @@ class Scene_Base extends Stage {
          */
         this._fadeSprite = null;
 
+        /**
+         * @type {number}
+         * @protected
+         */
+        this._imageReservationId = Utils.generateRuntimeId();
+    }
+
+    /**
+     * Attach a reservation to the reserve queue.
+     */
+    attachReservation() {
+        ImageManager.setDefaultReservationId(this._imageReservationId);
+    }
+
+    /**
+     * Remove the reservation from the Reserve queue.
+     */
+    detachReservation() {
+        ImageManager.releaseReservation(this._imageReservationId);
     }
 
     /**

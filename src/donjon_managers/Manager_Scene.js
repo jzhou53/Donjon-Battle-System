@@ -28,7 +28,6 @@ class SceneManager {
      * @private
      */
     static _backgroundBitmap = null;
-    //TODO: use config file to handle
     static _screenWidth = 1280;
     static _screenHeight = 720;
     static _boxWidth = 1280;
@@ -64,21 +63,19 @@ class SceneManager {
         } catch (e) {
             this.catchException(e);
         }
+
+        //Yep Core
         if (Utils.isMobileDevice() ||
             Utils.isMobileSafari() ||
             Utils.isAndroidChrome())
             return;
-
         let resizeWidth = Graphics.boxWidth - window.innerWidth;
         let resizeHeight = Graphics.boxHeight - window.innerHeight;
-
         // debug console
         this._openConsole();
         //resize
         window.moveBy(-1 * resizeWidth / 2, -1 * resizeHeight / 2);
         window.resizeBy(resizeWidth, resizeHeight);
-
-
     }
 
     static _openConsole() {
@@ -101,7 +98,7 @@ class SceneManager {
         this.initAudio();
         this.initInput();
         this.initNwjs();
-        //this.checkPluginErrors();
+        // this.checkPluginErrors();
         this.setupErrorHandlers();
     }
 
@@ -124,13 +121,10 @@ class SceneManager {
             return 'canvas';
         } else if (Utils.isOptionValid('webgl')) {
             return 'webgl';
-        } else if (this.shouldUseCanvasRenderer()) {
-            return 'canvas';
         } else {
             return 'auto';
         }
     }
-
 
     static shouldUseCanvasRenderer() {
         return Utils.isMobileDevice();
@@ -141,7 +135,6 @@ class SceneManager {
             throw new Error('Your browser does not support WebGL.');
         }
     }
-
 
     static checkFileAccess() {
         if (!Utils.canReadGameFiles()) {
@@ -164,7 +157,6 @@ class SceneManager {
     static initNwjs() {
         if (Utils.isNwjs()) {
             let gui = require('nw.gui');
-            //let gui = import('nw.gui');
             let win = gui.Window.get();
             if (process.platform === 'darwin' && !win.menu) {
                 let menubar = new gui.Menu({type: 'menubar'});
@@ -195,18 +187,14 @@ class SceneManager {
      */
     static update() {
         try {
-
-
             this.tickStart();
-
             if (Utils.isMobileSafari()) {
                 this.updateInputData();
             }
-            //this.updateManagers();
+            this.updateManagers();
             this.updateMain();
+
             this.tickEnd();
-
-
         } catch (e) {
             this.catchException(e);
         }
@@ -219,7 +207,6 @@ class SceneManager {
     }
 
     /**
-     *
      * @param e {Error}
      */
     static onError(e) {
@@ -234,7 +221,6 @@ class SceneManager {
     }
 
     /**
-     *
      * @param event
      */
     static onKeyDown(event) {
@@ -282,7 +268,9 @@ class SceneManager {
         TouchInput.update();
     }
 
-
+    /**
+     * TODO: Make unity still update
+     */
     static updateMain() {
         if (Utils.isMobileSafari()) {
             this.changeScene();
@@ -308,6 +296,10 @@ class SceneManager {
         }
     }
 
+    static updateManagers() {
+        ImageManager.update();
+    }
+
     /**
      * @static
      * check if can change scene, create the new scene
@@ -316,10 +308,12 @@ class SceneManager {
         if (this.isSceneChanging() && !this.isCurrentSceneBusy()) {
             if (this._scene) {
                 this._scene.terminate();
+                this._scene.detachReservation();
                 this._previousClass = this._scene.constructor;
             }
             this._scene = this._nextScene;
             if (this._scene) {
+                this._scene.attachReservation();
                 this._scene.create();
                 this._nextScene = null;
                 this._sceneStarted = false;
@@ -461,5 +455,13 @@ class SceneManager {
         return this._backgroundBitmap;
     }
 
+    static resume() {
+        this._stopped = false;
+        this.requestUpdate();
+        if (!Utils.isMobileSafari()) {
+            this._currentTime = this.getTimeInMs();
+            this._accumulator = 0;
+        }
+    }
 
 }
