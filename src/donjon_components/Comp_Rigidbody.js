@@ -1,5 +1,31 @@
 class Rigidbody extends Component {
 
+    /**
+     * @type {{DYNAMIC: number, KINEMATIC: number, STATIC: number}}
+     */
+    static BODY_TYPE = {
+        DYNAMIC: 0,
+        KINEMATIC: 1,
+        STATIC: 2,
+    };
+
+    /**
+     * @type {{DISCRETE: number, CONTINUOUS: number}}
+     */
+    static COLLISION_DETECTION_MODE = {
+        DISCRETE: 0,
+        CONTINUOUS: 1,
+    };
+
+    /**
+     * @type {{NEVER_SLEEP: number, START_AWAKE: number, START_ASLEEP: number}}
+     */
+    static SLEEP_MODE = {
+        NEVER_SLEEP: 0,
+        START_AWAKE: 1,
+        START_ASLEEP: 2,
+    };
+
     get velocity() {
         return this._velocity;
     }
@@ -11,16 +37,19 @@ class Rigidbody extends Component {
     constructor(owner) {
         super(owner);
 
-        /**
-         * @type {number}
-         */
-        this._angularDrag = 0;
-        this._angularVelocity = 0;
-        this._drag = 0;
-        this._mass = 1.0;
-        this._velocity = new Victor(0, 0);
-        this._forces = new Victor(0, 0);
+        this._bodyType = Rigidbody.BODY_TYPE.DYNAMIC;
+        this._detectionMode = Rigidbody.COLLISION_DETECTION_MODE.DISCRETE;
+        this._sleepMode = Rigidbody.SLEEP_MODE.START_AWAKE;
 
+        this._drag = 0;
+        this._angularDrag = 0;
+        this._mass = 1.0;
+
+        this._forces = new Victor(0, 0);
+        this._velocity = new Victor(0, 0);
+        this._angularVelocity = 0;
+
+        //Ivan: should I add interpolation?
     }
 
     /**
@@ -44,6 +73,31 @@ class Rigidbody extends Component {
 
     }
 
+    isKinematic() {
+
+    }
+
+    isAwake() {
+
+    }
+
+    isSleeping() {
+
+    }
+
+    wakeUp() {
+
+    }
+
+    sleep() {
+        /*
+          Sleeping is an optimisation that is used to temporarily remove an object from physics
+          simulation when it is at rest. This function makes the rigidbody sleep - it is sometimes
+          desirable to enable this manually rather than allowing automatic sleeping with the
+          sleepMode property.
+        */
+    }
+
     /**
      * Moves the rigidbody to position.
      * @param position{Victor} The new position for the Rigidbody object.
@@ -56,6 +110,7 @@ class Rigidbody extends Component {
            that it is called during the FixedUpdate callback.
          */
     }
+
     /*
         void FixedUpdate() {
             rb2D.MovePosition(rb2D.position + velocity * Time.fixedDeltaTime);
@@ -67,6 +122,26 @@ class Rigidbody extends Component {
      * @param angle {number}    The new rotation angle for the Rigidbody object.
      */
     moveRotation(angle) {
+
+    }
+
+    /**
+     *
+     */
+    resetForces() {
+        this._forces.zero();
+    }
+
+    calcLoads() {
+        this.resetForces();
+        //aggregate forces
+
+    }
+
+    /**
+     * @param d_t {number}
+     */
+    updateBodyEuler(d_t) {
 
     }
 

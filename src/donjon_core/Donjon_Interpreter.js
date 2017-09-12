@@ -35,12 +35,50 @@ class Donjon_Interpreter {
          */
         this._documents = [];
 
+
         this._setupParser();
         this._checkDataJson(this._dataMap);
 
         this.createXMLObjects(this._dataMap);
 
+        this._documents.forEach(doc => {
+            //console.log(
+            this.constructEntity(doc)
+            //)
+        }, this);
+
     }
+
+    /**
+     *
+     * @param docXML {Document}
+     * @return {Game_Object}
+     */
+    constructEntity(docXML) {
+        //Ivan: I think we can assume there is only 'entity' node as first child.
+        //const entity = docXML.;
+        //console.log(entity);
+        // //iterate pages
+        // for (let i = 0; i < entity.childNodes.length; i++) {
+        //     const page = entity.childNodes[i];
+        //
+        //     for (let j = 0; j < page.length; j++) {
+        //         const components = page[j];
+        //
+        //     }
+        //
+        //
+        // }
+
+        return null;
+    }
+
+
+    constructComponent(compXML) {
+
+    }
+
+
 
     /**
      * @param data {{events: *[]}}
@@ -49,7 +87,7 @@ class Donjon_Interpreter {
         const rawEvnts = data.events;
         for (let i = 1; i < rawEvnts.length; i++) {
             if (rawEvnts[i] !== null) {
-                let XMLString = this.extractXMLString(rawEvnts[i]);
+                let XMLString = this._extractXMLString(rawEvnts[i]);
                 let doc = this._parser.parseFromString(XMLString, "text/xml");
                 this._documents.push(doc);
                 console.log(doc);
@@ -77,7 +115,7 @@ class Donjon_Interpreter {
      * @param event {{pages:Array}}
      * @return {String}
      */
-    extractXMLString(event) {
+    _extractXMLString(event) {
         let str = "<Entity ";
         str += this._extractIdentity(event);
         str += " >";
@@ -116,7 +154,6 @@ class Donjon_Interpreter {
             x = event.x || "0",
             y = event.y || "0";
         return "name = \"" + name + "\" tag = \"" + tag + "\" x = \"" + x + "\" y = \"" + y + "\"";
-        //return "<event_data name = \"" + name + "\" tag = \"" + tag + "\" x = \"" + x + "\" y = \"" + y + "\"/>\n";
     }
 
     /**

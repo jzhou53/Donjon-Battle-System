@@ -286,17 +286,17 @@ class Unity_Transform extends Component {
     /**
      * @param owner
      * @param pos {Victor}
-     * @param z {number}
+     * @param height {number}
      * @param scale {Victor}
      */
-    constructor(owner, pos = new Victor(0, 0), z = 0, scale = new Victor(0, 0)) {
+    constructor(owner, pos = new Victor(0, 0), height = 0, scale = new Victor(0, 0)) {
         super(owner);
         /**
          * @type {Victor}
          * @private
          */
         this._position = pos;
-        this._z = z;
+        this._height = height;
         this._rotation = 0;
         this._scale = scale;
     }
@@ -305,22 +305,16 @@ class Unity_Transform extends Component {
         return this._position;
     }
 
+    get height() {
+        return this._height;
+    }
+
     get rotation() {
         return this._rotation;
     }
 
     get scale() {
         return this._scale;
-    }
-
-    /**
-     * calculate the distance from first transform to the second transform.
-     * @param first{Transform}
-     * @param second{Transform}
-     * @return {number}
-     */
-    static squaredDistanceTo(first, second) {
-        return first._position.distanceSq(second._position);
     }
 
     /**
@@ -355,5 +349,17 @@ class Unity_Transform extends Component {
     rotateAround(point, angle) {
 
     }
+
+    /**
+     * calculate the distance from first transform to the second transform.
+     * @param first{Transform}
+     * @param second{Transform}
+     * @return {number}
+     */
+    static squaredDistanceTo(first, second) {
+        return first._position.distanceSq(second._position);
+    }
+
+
 
 }

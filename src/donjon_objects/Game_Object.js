@@ -107,13 +107,21 @@ class Game_Object {
     }
 
     /**
+     *    Calls the method named methodName on every MonoBehaviour in this game object or any of its children.
      * @param methodName {Function}
      * @param parameter {Array}
      */
     broadcastMessage(methodName, parameter = []) {
-        //todo: test if correct
-        methodName.apply(this, parameter);
+        //methodName.apply(this, parameter);
         //for each transform and child
+
+    }
+
+    sendMessage(methodName, value) {
+
+    }
+
+    sendMessageUpwards(methodName, value) {
 
     }
 

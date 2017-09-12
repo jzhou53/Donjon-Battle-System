@@ -32,6 +32,12 @@ class Game_BattleMap extends Game_Map{
         // this._setupDynamicManager();
         // this._setupBattleField();
 
+        //temp==================================================
+        this._interpreter = new Donjon_Interpreter($dataMap);
+
+
+        //======================================================
+
     }
 
     /**
