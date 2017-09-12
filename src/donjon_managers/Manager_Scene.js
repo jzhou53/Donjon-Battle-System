@@ -198,6 +198,11 @@ class SceneManager {
 
 
             this.tickStart();
+
+            if (Utils.isMobileSafari()) {
+                this.updateInputData();
+            }
+            //this.updateManagers();
             this.updateMain();
             this.tickEnd();
 
@@ -207,19 +212,6 @@ class SceneManager {
         }
 
 
-        /*
-            try {
-                this.tickStart();
-                if (Utils.isMobileSafari()) {
-                    this.updateInputData();
-                }
-                this.updateManagers();
-                this.updateMain();
-                this.tickEnd();
-            } catch (e) {
-                this.catchException(e);
-            }
-         */
     }
 
     static terminate() {
@@ -292,50 +284,28 @@ class SceneManager {
 
 
     static updateMain() {
-
-        let newTime = this.getTimeInMs();
-        let fTime = (newTime - this._currentTime) / 1000;
-        if (fTime > 0.25) fTime = 0.25;
-        this._currentTime = newTime;
-        this._accumulator += fTime;
-
-        //console.log("Updating.....");
-        while (this._accumulator >= this._deltaTime) {
-            this.updateInputData();
+        if (Utils.isMobileSafari()) {
             this.changeScene();
             this.updateScene();
-            this._accumulator -= this._deltaTime;
-            //console.log("Fixed Updating.....");
-        }
+        } else {
+            let newTime = this.getTimeInMs();
+            let fTime = (newTime - this._currentTime) / 1000;
+            if (fTime > 0.25) fTime = 0.25;
+            this._currentTime = newTime;
+            this._accumulator += fTime;
 
-
-        this.renderScene();
-        //this.renderGizmo;
-        //this.renderGUI();
-
-        this.requestUpdate();
-
-
-        /*
-            if (Utils.isMobileSafari()) {
+            while (this._accumulator >= this._deltaTime) {
+                this.updateInputData();
                 this.changeScene();
                 this.updateScene();
-            } else {
-                var newTime = this._getTimeInMsWithoutMobileSafari();
-                var fTime = (newTime - this._currentTime) / 1000;
-                if (fTime > 0.25) fTime = 0.25;
-                this._currentTime = newTime;
-                this._accumulator += fTime;
-                while (this._accumulator >= this._deltaTime) {
-                    this.updateInputData();
-                    this.changeScene();
-                    this.updateScene();
-                    this._accumulator -= this._deltaTime;
-                }
+                this._accumulator -= this._deltaTime;
             }
+
             this.renderScene();
+            //this.renderGizmo;
+            //this.renderGUI();
             this.requestUpdate();
-         */
+        }
     }
 
     /**

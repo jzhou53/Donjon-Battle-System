@@ -70,7 +70,7 @@ class DataManager {
                 DataManager.onLoad(window[name]);
             }
         };
-        xhr.onerror = function () {
+        xhr.onerror = this._mapLoader || function () {
             DataManager._errorUrl = DataManager._errorUrl || url;
         };
         window[name] = null;
@@ -96,6 +96,7 @@ class DataManager {
     static loadMapData(mapId) {
         if (mapId > 0) {
             const filename = 'Map%1.json'.format(mapId.padZero(3));
+            this._mapLoader = ResourceHandler.createLoader('data/' + filename, this._loadDataFile.bind(this, '$dataMap', filename));
             this._loadDataFile('$dataMap', filename);
         } else {
             this._makeEmptyMap();

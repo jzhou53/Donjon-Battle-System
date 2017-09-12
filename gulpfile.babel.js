@@ -24,7 +24,6 @@ gulp.task('build', function() {
      * @type {Array}
      */
     var folders = [
-        'rmmv_core',
         'donjon_core',
         'donjon_managers',
         'donjon_scenes',

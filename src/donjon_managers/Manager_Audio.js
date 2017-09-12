@@ -81,7 +81,6 @@ class AudioManager {
         return this._seVolume;
     }
 
-    // noinspection JSAnnotator
     /**
      * @param value{number}
      */
@@ -89,10 +88,6 @@ class AudioManager {
         this._seVolume = value;
     }
 
-    /**
-     * @param bgm
-     * @param pos
-     */
     static playBgm(bgm, pos) {
         if (this.isCurrentBgm(bgm)) {
             this.updateBgmParameters(bgm);
@@ -114,10 +109,6 @@ class AudioManager {
         this.updateCurrentBgm(bgm, pos);
     }
 
-    /**
-     * @param bgm
-     * @param pos
-     */
     static playEncryptedBgm(bgm, pos) {
         let ext = this.audioFileExt();
         let url = this._path + 'bgm/' + encodeURIComponent(bgm.name) + ext;
@@ -125,11 +116,6 @@ class AudioManager {
         Decrypter.decryptHTML5Audio(url, bgm, pos);
     }
 
-    /**
-     * @param url
-     * @param bgm
-     * @param pos
-     */
     static createDecryptBuffer(url, bgm, pos) {
         this._blobUrl = url;
         this._bgmBuffer = this.createBuffer('bgm', bgm.name);
@@ -140,9 +126,6 @@ class AudioManager {
         this.updateCurrentBgm(bgm, pos);
     }
 
-    /**
-     * @param bgm
-     */
     static replayBgm(bgm) {
         if (this.isCurrentBgm(bgm)) {
             this.updateBgmParameters(bgm);
@@ -154,26 +137,15 @@ class AudioManager {
         }
     }
 
-    /**
-     * @param bgm
-     * @return {{name, volume, pitch: (Number|*|number), pan: (Number|*), pos: *}|null|*|boolean}
-     */
     static isCurrentBgm(bgm) {
         return (this._currentBgm && this._bgmBuffer &&
             this._currentBgm.name === bgm.name);
     }
 
-    /**
-     * @param bgm
-     */
     static updateBgmParameters(bgm) {
         this.updateBufferParameters(this._bgmBuffer, this._bgmVolume, bgm);
     }
 
-    /**
-     * @param bgm
-     * @param pos
-     */
     static updateCurrentBgm(bgm, pos) {
         this._currentBgm = {
             name: bgm.name,
@@ -181,7 +153,7 @@ class AudioManager {
             pitch: bgm.pitch,
             pan: bgm.pan,
             pos: pos
-        };
+        }
     }
 
     static stopBgm() {
@@ -192,9 +164,6 @@ class AudioManager {
         }
     }
 
-    /**
-     * @param duration int
-     */
     static fadeOutBgm(duration) {
         if (this._bgmBuffer && this._currentBgm) {
             this._bgmBuffer.fadeOut(duration);
@@ -202,19 +171,12 @@ class AudioManager {
         }
     }
 
-    /**
-     * @param duration int
-     */
     static fadeInBgm(duration) {
         if (this._bgmBuffer && this._currentBgm) {
             this._bgmBuffer.fadeIn(duration);
         }
     }
 
-    /**
-     * @param bgs
-     * @param pos
-     */
     static playBgs(bgs, pos) {
         if (this.isCurrentBgs(bgs)) {
             this.updateBgsParameters(bgs);
@@ -229,9 +191,6 @@ class AudioManager {
         this.updateCurrentBgs(bgs, pos);
     }
 
-    /**
-     * @param bgs
-     */
     static replayBgs(bgs) {
         if (this.isCurrentBgs(bgs)) {
             this.updateBgsParameters(bgs);
@@ -243,26 +202,15 @@ class AudioManager {
         }
     }
 
-    /**
-     * @param bgs
-     * @return {boolean}
-     */
     static isCurrentBgs(bgs) {
         return (this._currentBgs && this._bgsBuffer &&
             this._currentBgs.name === bgs.name);
     }
 
-    /**
-     * @param bgs
-     */
     static updateBgsParameters(bgs) {
         this.updateBufferParameters(this._bgsBuffer, this._bgsVolume, bgs);
     }
 
-    /**
-     * @param bgs
-     * @param pos
-     */
     static updateCurrentBgs(bgs, pos) {
         this._currentBgs = {
             name: bgs.name,
@@ -270,7 +218,7 @@ class AudioManager {
             pitch: bgs.pitch,
             pan: bgs.pan,
             pos: pos
-        };
+        }
     }
 
     static stopBgs() {
@@ -281,9 +229,6 @@ class AudioManager {
         }
     }
 
-    /**
-     * @param duration int
-     */
     static fadeOutBgs(duration) {
         if (this._bgsBuffer && this._currentBgs) {
             this._bgsBuffer.fadeOut(duration);
@@ -291,18 +236,12 @@ class AudioManager {
         }
     }
 
-    /**
-     * @param duration int
-     */
     static fadeInBgs(duration) {
         if (this._bgsBuffer && this._currentBgs) {
             this._bgsBuffer.fadeIn(duration);
         }
     }
 
-    /**
-     * @param me
-     */
     static playMe(me) {
         this.stopMe();
         if (me.name) {
@@ -317,16 +256,10 @@ class AudioManager {
         }
     }
 
-    /**
-     * @param me
-     */
     static updateMeParameters(me) {
         this.updateBufferParameters(this._meBuffer, this._meVolume, me);
     }
 
-    /**
-     * @param duration int
-     */
     static fadeOutMe(duration) {
         if (this._meBuffer) {
             this._meBuffer.fadeOut(duration);
@@ -344,9 +277,6 @@ class AudioManager {
         }
     }
 
-    /**
-     * @param se
-     */
     static playSe(se) {
         if (se.name) {
             this._seBuffers = this._seBuffers.filter(function (audio) {
@@ -359,10 +289,6 @@ class AudioManager {
         }
     }
 
-    /**
-     * @param buffer
-     * @param se
-     */
     static updateSeParameters(buffer, se) {
         this.updateBufferParameters(buffer, this._seVolume, se);
     }
@@ -374,9 +300,6 @@ class AudioManager {
         this._seBuffers = [];
     }
 
-    /**
-     * @param se
-     */
     static playStaticSe(se) {
         if (se.name) {
             this.loadStaticSe(se);
@@ -392,9 +315,6 @@ class AudioManager {
         }
     }
 
-    /**
-     * @param se
-     */
     static loadStaticSe(se) {
         if (se.name && !this.isStaticSe(se)) {
             let buffer = this.createBuffer('se', se.name);
@@ -406,10 +326,6 @@ class AudioManager {
         }
     }
 
-    /**
-     * @param se
-     * @return {boolean}
-     */
     static isStaticSe(se) {
         for (let i = 0; i < this._staticBuffers.length; i++) {
             let buffer = this._staticBuffers[i];
@@ -436,7 +352,7 @@ class AudioManager {
                 pitch: bgm.pitch,
                 pan: bgm.pan,
                 pos: this._bgmBuffer ? this._bgmBuffer.seek() : 0
-            };
+            }
         } else {
             return this.makeEmptyAudioObject();
         }
@@ -451,15 +367,12 @@ class AudioManager {
                 pitch: bgs.pitch,
                 pan: bgs.pan,
                 pos: this._bgsBuffer ? this._bgsBuffer.seek() : 0
-            };
+            }
         } else {
             return this.makeEmptyAudioObject();
         }
     }
 
-    /**
-     * @return {{name: string, volume: number, pitch: number}}
-     */
     static makeEmptyAudioObject() {
         return {name: '', volume: 0, pitch: 0};
     }
@@ -476,11 +389,6 @@ class AudioManager {
         }
     }
 
-    /**
-     * @param buffer
-     * @param configVolume
-     * @param audio
-     */
     static updateBufferParameters(buffer, configVolume, audio) {
         if (buffer && audio) {
             buffer.volume = configVolume * (audio.volume || 0) / 10000;
@@ -489,9 +397,6 @@ class AudioManager {
         }
     }
 
-    /**
-     * @return {*}
-     */
     static audioFileExt() {
         if (WebAudio.canPlayOgg() && !Utils.isMobileDevice()) {
             return '.ogg';
@@ -500,13 +405,10 @@ class AudioManager {
         }
     }
 
-    /**
-     * @return {Boolean|boolean}
-     */
     static shouldUseHtml5Audio() {
-        // We use HTML5 Audio to play BGM instead of Web Audio API
-        // because decodeAudioData() is very slow on Android Chrome.
-        return Utils.isAndroidChrome() && !Decrypter.hasEncryptedAudio;
+        // The only case where we wanted html5audio was android/ no encrypt
+        // Atsuma-ru asked to force webaudio there too, so just return false for ALL    // return Utils.isAndroidChrome() && !Decrypter.hasEncryptedAudio;
+        return false;
     }
 
     static checkErrors() {
@@ -521,9 +423,6 @@ class AudioManager {
         }.bind(this));
     }
 
-    /**
-     * @param webAudio {WebAudio}
-     */
     static checkWebAudioError(webAudio) {
         if (webAudio && webAudio.isError()) {
             throw new Error('Failed to load: ' + webAudio.url);
