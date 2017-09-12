@@ -43,25 +43,18 @@ class DataManager {
         throw new Error("This is a static class");
     }
 
-    /**
-     * @static
-     */
+
     static loadDatabase() {
         for (let i = 0; i < this._databaseFiles.length; i++) {
             let name = this._databaseFiles[i].name;
             let src = this._databaseFiles[i].src;
-            this._loadDataFile(name, src);
+            this.loadDataFile(name, src);
         }
     }
 
-    /**
-     * @param name {String} global letiable name
-     * @param src {String} name of the source json file
-     * @private
-     */
-    static _loadDataFile(name, src) {
-        const xhr = new XMLHttpRequest();
-        const url = 'data/' + src;
+    static loadDataFile(name, src) {
+        let xhr = new XMLHttpRequest();
+        let url = 'data/' + src;
         xhr.open('GET', url);
         xhr.overrideMimeType('application/json');
         xhr.onload = function () {
@@ -77,11 +70,8 @@ class DataManager {
         xhr.send();
     }
 
-    /**
-     * @return {boolean}
-     */
     static isDatabaseLoaded() {
-        this._checkError();
+        this.checkError();
         for (let i = 0; i < this._databaseFiles.length; i++) {
             if (!window[this._databaseFiles[i].name]) {
                 return false;
@@ -90,23 +80,17 @@ class DataManager {
         return true;
     }
 
-    /**
-     * @param mapId {Number}
-     */
     static loadMapData(mapId) {
         if (mapId > 0) {
-            const filename = 'Map%1.json'.format(mapId.padZero(3));
-            this._mapLoader = ResourceHandler.createLoader('data/' + filename, this._loadDataFile.bind(this, '$dataMap', filename));
-            this._loadDataFile('$dataMap', filename);
+            let filename = 'Map%1.json'.format(mapId.padZero(3));
+            this._mapLoader = ResourceHandler.createLoader('data/' + filename, this.loadDataFile.bind(this, '$dataMap', filename));
+            this.loadDataFile('$dataMap', filename);
         } else {
-            this._makeEmptyMap();
+            this.makeEmptyMap();
         }
     }
 
-    /**
-     * @private
-     */
-    static _makeEmptyMap() {
+    static makeEmptyMap() {
         $dataMap = {};
         $dataMap.data = [];
         $dataMap.events = [];
@@ -116,13 +100,10 @@ class DataManager {
     }
 
     static isMapLoaded() {
-        this._checkError();
+        this.checkError();
         return !!$dataMap;
     }
 
-    /**
-     * @param object {object}
-     */
     static onLoad(object) {
         let array;
         if (object === $dataMap) {
@@ -146,9 +127,6 @@ class DataManager {
         }
     }
 
-    /**
-     * @param data{Object}
-     */
     static extractMetadata(data) {
         let re = /<([^<>:]+)(:?)([^>]*)>/g;
         data.meta = {};
@@ -166,42 +144,25 @@ class DataManager {
         }
     }
 
-    /**
-     * @private
-     */
-    static _checkError() {
+    static checkError() {
         if (DataManager._errorUrl) {
             throw new Error('Failed to load: ' + DataManager._errorUrl);
         }
     }
 
-    /**
-     * @param item
-     * @return {*|boolean|{enumerable, value}|Boolean}
-     */
-    // static isArmor(item) {
-    //     return item && $dataArmors.contains(item);
-    // }
-
-    /**
-     * @private
-     */
-    static _createGameObjects() {
+    static createGameObjects() {
         //$gameTemp = new Game_Temp();
         $gameSystem = new Game_System();
         $gameScreen = new Game_Screen();
-
         /**
          * @type {Game_Map}
          */
         $gameMap = new Game_BattleMap();
     }
 
-    /**
-     * @public
-     */
+
     static setupNewGame() {
-        this._createGameObjects();
+        this.createGameObjects();
         this.selectSavefileForNewGame();
         // $gameParty.setupStartingMembers();
         // $gamePlayer.reserveTransfer($dataSystem.startMapId,
@@ -209,9 +170,6 @@ class DataManager {
         Graphics.frameCount = 0;
     }
 
-    /**
-     * @return {Array}
-     */
     static loadGlobalInfo() {
         let json;
         try {
@@ -233,17 +191,10 @@ class DataManager {
         }
     }
 
-    /**
-     * @param info {json}
-     */
     static saveGlobalInfo(info) {
         StorageManager.save(0, JSON.stringify(info));
     }
 
-    /**
-     * @param savefileId {Number}
-     * @return {boolean}
-     */
     static isThisGameFile(savefileId) {
         let globalInfo = this.loadGlobalInfo();
         if (globalInfo && globalInfo[savefileId]) {
@@ -259,9 +210,6 @@ class DataManager {
         }
     }
 
-    /**
-     * @return {boolean}
-     */
     static isAnySavefileExists() {
         let globalInfo = this.loadGlobalInfo();
         if (globalInfo) {
@@ -274,9 +222,6 @@ class DataManager {
         return false;
     }
 
-    /**
-     * @return {number}
-     */
     static latestSavefileId() {
         let globalInfo = this.loadGlobalInfo();
         let savefileId = 1;
@@ -304,30 +249,23 @@ class DataManager {
         }
     }
 
-    static loadSavefileImages() {
+    static loadSavefileImages(info) {
         if (info.characters) {
             for (let i = 0; i < info.characters.length; i++) {
-                ImageManager.loadCharacter(info.characters[i][0]);
+                ImageManager.reserveCharacter(info.characters[i][0]);
             }
         }
         if (info.faces) {
             for (let j = 0; j < info.faces.length; j++) {
-                ImageManager.loadFace(info.faces[j][0]);
+                ImageManager.reserveFace(info.faces[j][0]);
             }
         }
     }
 
-    /**
-     * @return {number}
-     */
     static maxSavefiles() {
         return 20;
     }
 
-    /**
-     * @param savefileId {number}
-     * @return {boolean}
-     */
     static saveGame(savefileId) {
         try {
             StorageManager.backup(savefileId);
@@ -343,10 +281,6 @@ class DataManager {
         }
     }
 
-    /**
-     * @param savefileId {Number}
-     * @return {boolean}
-     */
     static loadGame(savefileId) {
         try {
             return this.loadGameWithoutRescue(savefileId);
@@ -356,26 +290,15 @@ class DataManager {
         }
     }
 
-    /**
-     * @param savefileId {number}
-     * @return {null}
-     */
     static loadSavefileInfo(savefileId) {
         let globalInfo = this.loadGlobalInfo();
         return (globalInfo && globalInfo[savefileId]) ? globalInfo[savefileId] : null;
     }
 
-    /**
-     * @return {number}
-     */
     static lastAccessedSavefileId() {
         return this._lastAccessedId;
     }
 
-    /**
-     * @param savefileId {number}
-     * @return {boolean}
-     */
     static saveGameWithoutRescue(savefileId) {
         let json = JsonEx.stringify(this.makeSaveContents());
         if (json.length >= 200000) {
@@ -389,15 +312,11 @@ class DataManager {
         return true;
     }
 
-    /**
-     * @param savefileId
-     * @return {boolean}
-     */
     static loadGameWithoutRescue(savefileId) {
         let globalInfo = this.loadGlobalInfo();
         if (this.isThisGameFile(savefileId)) {
             let json = StorageManager.load(savefileId);
-            this._createGameObjects();
+            this.createGameObjects();
             this.extractSaveContents(JsonEx.parse(json));
             this._lastAccessedId = savefileId;
             return true;
@@ -462,8 +381,6 @@ class DataManager {
         $gameSystem = contents.system;
         $gameScreen = contents.screen;
         $gameMap = contents.map;
-
     }
-
 
 }
