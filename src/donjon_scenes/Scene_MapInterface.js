@@ -116,6 +116,16 @@ class Scene_MapInterface extends Scene_Base {
      * @override
      */
     terminate() {
+
+        //if (SceneManager.isNextScene(Scene_Map)) {
+            ImageManager.clearRequest();
+        //}
+
+        $gameScreen.clearZoom();
+
+        this.removeChild(this._fadeSprite);
+        //this.removeChild(this._mapNameWindow);
+        this.removeChild(this._windowLayer);
         this.removeChild(this._spriteset);
     }
 
