@@ -1,5 +1,13 @@
 class Collider extends Component {
 
+    get attachedRigidbody() {
+        return this._attachedRigidbody;
+    }
+
+    set attachedRigidbody(value) {
+        this._attachedRigidbody = value;
+    }
+
     constructor(owner) {
         super(owner);
         this._attachedRigidbody = null;

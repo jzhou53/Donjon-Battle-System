@@ -34,19 +34,42 @@ class Game_BattleMap extends Game_Map {
 
         //temp==================================================
         //this._interpreter = new Donjon_Interpreter($dataMap);
+        this._debugObjects = [];
+        this._debugObjects.push(this.createDebugObject(8, 5));
+        this._debugObjects.push(this.createDebugObject(10, 6));
 
+        this._tempPhysics = new Simple_Physics();
+        let colliders = [];
 
+        //collecting collider components
+        for (const object of this._debugObjects) {
+            for (const c of object.getComponents(CircleCollider)) {
+                colliders.push(c);
+            }
+        }
 
-        let t0 = performance.now();
-        //for (let i = 0; i < 1000; i++){
+        //======================================================
+        this._tempPhysics.setup(colliders);
+
+    }
+
+    /**
+     * @param x
+     * @param y
+     * @return {Game_Object}
+     */
+    createDebugObject(x, y) {
         let actor = new Game_Object();
         actor.addComponent(Rigidbody);
         actor.addComponent(CircleCollider);
-        //}
-        let t1 = performance.now();
-        console.log("time took: " + (t1 - t0));
-        //======================================================
+        actor.getComponent(CircleCollider).attachedRigidbody = actor.getComponent(Rigidbody);
 
+        //identity
+        actor.tag = "character";
+        //transform
+        actor.transform.position.x = x;
+        actor.transform.position.y = y;
+        return actor;
     }
 
     /**

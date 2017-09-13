@@ -17,8 +17,15 @@ class Game_Object {
         return this._id;
     }
 
+    /**
+     * @return {Unity_Transform}
+     */
     get transform() {
         return this._transform;
+    }
+
+    get layer() {
+        return this._layer;
     }
 
     get tag() {
@@ -33,7 +40,7 @@ class Game_Object {
      * @param name {String} The name that the Game_Object is created with.
      * @param components {Object} A list of Components to add to the Game_Object on creation.
      */
-    constructor(name = '', components = {}) {
+    constructor(name = 'unnamed', components = {}) {
         /**
          * @type{number}
          * @protected
@@ -68,7 +75,7 @@ class Game_Object {
          * @type {String}
          * @protected
          */
-        this._name = name;
+        this._name = name === 'unnamed' ? 'unnamed' + this.id : name;
         /**
          * @type {Object}
          * @private
@@ -117,7 +124,12 @@ class Game_Object {
      * @return {Array.<Component>}
      */
     getComponents(type) {
-        return this._components[type.name] ? this._components[type.name] : [];
+        let component = this._components[type.name];
+        if (component) {
+            return Array.isArray(component) ? component : new Array(component);
+        } else {
+            return [];
+        }
     }
 
     /**
