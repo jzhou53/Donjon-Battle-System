@@ -429,8 +429,8 @@ class Game_Map {
             //this.updateInterpreter();
         }
         this._updateScroll();
-        //this.updateEvents();
         this._updateParallax();
+        //this.updateEvents();
     };
 
     _updateScroll() {

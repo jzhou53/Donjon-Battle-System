@@ -13,11 +13,32 @@ class Game_Object {
         PLAYER: 2,
     };
 
+    get id() {
+        return this._id;
+    }
+
+    get transform() {
+        return this._transform;
+    }
+
+    get tag() {
+        return this._tag;
+    }
+
+    set tag(value) {
+        this._tag = value;
+    }
+
     /**
      * @param name {String} The name that the Game_Object is created with.
      * @param components {Object} A list of Components to add to the Game_Object on creation.
      */
     constructor(name = '', components = {}) {
+        /**
+         * @type{number}
+         * @protected
+         */
+        this._id = Utils.generateRuntimeId();
         /**
          * @type {Game_Object}
          * @protected
@@ -25,7 +46,7 @@ class Game_Object {
         this._parent = null;
         /**
          * @type {Array.<Game_Object>}
-         * @private
+         * @protected
          */
         this._children = [];
         /**
@@ -60,8 +81,42 @@ class Game_Object {
         this._active = true;
     }
 
-    get transform() {
-        return this._transform;
+    /**
+     * Adds a component class of type componentType to the game object
+     * @param type {Function}
+     */
+    addComponent(type) {
+        let comp = this._components[type.name];
+        if (typeof comp === 'object') {
+            if (!Array.isArray(comp)) {
+                let temp = comp;
+                this._components[type.name] = [];
+                this._components[type.name].push(temp);
+            }
+            this._components[type.name].push(new type(this));
+        } else {
+            this._components[type.name] = new type(this);
+        }
+    }
+
+    /**
+     * @param type
+     * @return {Component}
+     */
+    getComponent(type) {
+        let comp = this._components[type.name];
+        if (!comp) {
+            throw new Error("Attempted to get a Component that does not exist.");
+        }
+        return Array.isArray(comp) ? comp[0] : comp;
+    }
+
+    /**
+     * @param type {Function}
+     * @return {Array.<Component>}
+     */
+    getComponents(type) {
+        return this._components[type.name] ? this._components[type.name] : [];
     }
 
     /**
@@ -89,13 +144,8 @@ class Game_Object {
 
     }
 
-    /**
-     * Adds a component class of type componentType to the game object
-     * @param componentType {Component}
-     */
-    addComponent(componentType) {
-        //this._components.push(new componentType());
-        //this._components[componentType] = new componentType();
+    setActive(active) {
+        this._active = active;
     }
 
     /**
@@ -125,22 +175,4 @@ class Game_Object {
 
     }
 
-    /**
-     * @param type {Component}
-     * @return {Component}
-     */
-    getComponent(type) {
-
-    }
-
-    /**
-     * @return {Array.<Component>}
-     */
-    getComponents() {
-        return this._components;
-    }
-
-    setActive(active) {
-        this._active = active;
-    }
 }

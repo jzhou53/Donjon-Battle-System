@@ -283,6 +283,22 @@ class RMMV_Transform extends Component {
 
 class Unity_Transform extends Component {
 
+    get position() {
+        return this._position;
+    }
+
+    get height() {
+        return this._height;
+    }
+
+    get rotation() {
+        return this._rotation;
+    }
+
+    get scale() {
+        return this._scale;
+    }
+
     /**
      * @param owner
      * @param pos {Victor}
@@ -299,22 +315,6 @@ class Unity_Transform extends Component {
         this._height = height;
         this._rotation = 0;
         this._scale = scale;
-    }
-
-    get position() {
-        return this._position;
-    }
-
-    get height() {
-        return this._height;
-    }
-
-    get rotation() {
-        return this._rotation;
-    }
-
-    get scale() {
-        return this._scale;
     }
 
     /**
@@ -359,7 +359,6 @@ class Unity_Transform extends Component {
     static squaredDistanceTo(first, second) {
         return first._position.distanceSq(second._position);
     }
-
 
 
 }
