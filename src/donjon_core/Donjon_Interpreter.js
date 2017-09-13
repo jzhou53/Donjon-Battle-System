@@ -83,7 +83,7 @@ class Donjon_Interpreter {
     /**
      * @param entity
      * @param evnt_attributes{{name,tag,x,y}}
-     * @return {Array.<Component>}
+     * @return {Game_Object}
      * @private
      */
     _constructObject(entity, evnt_attributes) {
@@ -123,10 +123,14 @@ class Donjon_Interpreter {
 
         for (let i = 0; i < components.length; i++) {
             /* Bad Smell */
-            components[i] = eval("new " + Donjon_Interpreter.COMP_STRING_MAP[components[i]] + "(obj)")
-        }
+            //components[i] = eval("new " + Donjon_Interpreter.COMP_STRING_MAP[components[i]] + "(obj)")
 
-        return components;
+
+            let a = new Unity_Transform;
+            // obj.addComponent();
+        }
+        
+        return obj;
     }
 
     /**

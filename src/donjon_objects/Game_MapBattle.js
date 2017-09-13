@@ -33,7 +33,7 @@ class Game_BattleMap extends Game_Map {
         // this._setupBattleField();
 
         //temp==================================================
-        this._interpreter = new Donjon_Interpreter($dataMap);
+        //this._interpreter = new Donjon_Interpreter($dataMap);
 
 
 
@@ -42,11 +42,6 @@ class Game_BattleMap extends Game_Map {
         let actor = new Game_Object();
         actor.addComponent(Rigidbody);
         actor.addComponent(CircleCollider);
-        //}
-
-        //for (let i = 0; i < 1000; i++) {
-            actor.getComponent(Rigidbody);
-            //console.log(actor.getComponent(CircleCollider));
         //}
         let t1 = performance.now();
         console.log("time took: " + (t1 - t0));

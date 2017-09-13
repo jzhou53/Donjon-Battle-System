@@ -86,16 +86,17 @@ class Game_Object {
      * @param type {Function}
      */
     addComponent(type) {
-        let comp = this._components[type.name];
+        let type_name = type.name;
+        let comp = this._components[type_name];
         if (typeof comp === 'object') {
             if (!Array.isArray(comp)) {
                 let temp = comp;
-                this._components[type.name] = [];
-                this._components[type.name].push(temp);
+                this._components[type_name] = [];
+                this._components[type_name].push(temp);
             }
-            this._components[type.name].push(new type(this));
+            this._components[type_name].push(new type(this));
         } else {
-            this._components[type.name] = new type(this);
+            this._components[type_name] = new type(this);
         }
     }
 
