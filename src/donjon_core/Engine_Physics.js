@@ -2,10 +2,10 @@ class Simple_Physics {
 
     constructor() {
         /**
-         * @type {Set}
+         * @type {Array.<Rigidbody>}
          * @private
          */
-        this._rigidbodies = new Set();
+        this._rigidbodies = [];
         this._colliders = [];
     }
 
@@ -16,16 +16,14 @@ class Simple_Physics {
     setup(colliders){
         //reset
         this._colliders = [];
-        this._rigidbodies.clear();
+        this._rigidbodies = [];
         //assign
         for (let col of colliders) {
             this._colliders.push(col);
-            this._rigidbodies.add(col.attachedRigidbody);
+            if (this._rigidbodies.indexOf(col.attachedRigidbody) === -1){
+                this._rigidbodies.push(col.attachedRigidbody);
+            }
         }
-
-        console.log(this._colliders);
-        console.log(this._rigidbodies);
-
     }
 
     /**
@@ -33,7 +31,29 @@ class Simple_Physics {
      * @param d_t {number} The time to advance physics by.
      */
     simulate(d_t) {
+        // update all rigidbody's velocity, and update the position(transform)
+        for (let i = 0; i < this._rigidbodies.length; i++) {
+            this._rigidbodies[i].calcLoads();
+            this._rigidbodies[i].updateBodyEuler(d_t);
+        }
+
+        //collision detection
+
+        //collision resolution
 
     }
 
+    /**
+     * @param first {Collider}
+     * @param second {Collider}
+     * @private
+     */
+    _handleCollision(first, second) {
+        // if (first === second){
+        //     return;
+        // }
+        // if(first.isTouching(second)){
+        //     first.attachedRigidbody.
+        // }
+    }
 }

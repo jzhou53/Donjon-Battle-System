@@ -281,7 +281,7 @@ Utils.rgbToCssColor = function(r, g, b) {
 };
 
 Utils._id = 1;
-Utils.generateRuntimeId = function () {
+Utils.generateRuntimeId = function(){
     return Utils._id++;
 };
 
@@ -293,7 +293,7 @@ Utils._supportPassiveEvent = null;
  * @method isSupportPassiveEvent
  * @return {Boolean} this browser support passive event or not
  */
-Utils.isSupportPassiveEvent = function () {
+Utils.isSupportPassiveEvent = function() {
     if (typeof Utils._supportPassiveEvent === "boolean") {
         return Utils._supportPassiveEvent;
     }
@@ -301,14 +301,12 @@ Utils.isSupportPassiveEvent = function () {
     // https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md#feature-detection
     var passive = false;
     var options = Object.defineProperty({}, "passive", {
-        get: function () {
-            passive = true;
-        }
+        get: function() { passive = true; }
     });
     window.addEventListener("test", null, options);
     Utils._supportPassiveEvent = passive;
     return passive;
-};
+}
 
 //-----------------------------------------------------------------------------
 /**
@@ -461,17 +459,17 @@ CacheMap.prototype.update = function(ticks, delta) {
     }
 };
 
-function ImageCache() {
+function ImageCache(){
     this.initialize.apply(this, arguments);
 }
 
 ImageCache.limit = 10 * 1000 * 1000;
 
-ImageCache.prototype.initialize = function () {
+ImageCache.prototype.initialize = function(){
     this._items = {};
 };
 
-ImageCache.prototype.add = function (key, value) {
+ImageCache.prototype.add = function(key, value){
     this._items[key] = {
         bitmap: value,
         touch: Date.now(),
@@ -481,8 +479,8 @@ ImageCache.prototype.add = function (key, value) {
     this._truncateCache();
 };
 
-ImageCache.prototype.get = function (key) {
-    if (this._items[key]) {
+ImageCache.prototype.get = function(key){
+    if(this._items[key]){
         var item = this._items[key];
         item.touch = Date.now();
         return item.bitmap;
@@ -491,8 +489,8 @@ ImageCache.prototype.get = function (key) {
     return null;
 };
 
-ImageCache.prototype.reserve = function (key, value, reservationId) {
-    if (!this._items[key]) {
+ImageCache.prototype.reserve = function(key, value, reservationId){
+    if(!this._items[key]){
         this._items[key] = {
             bitmap: value,
             touch: Date.now(),
@@ -503,61 +501,59 @@ ImageCache.prototype.reserve = function (key, value, reservationId) {
     this._items[key].reservationId = reservationId;
 };
 
-ImageCache.prototype.releaseReservation = function (reservationId) {
+ImageCache.prototype.releaseReservation = function(reservationId){
     var items = this._items;
 
     Object.keys(items)
-        .map(function (key) {
-            return items[key];
-        })
-        .forEach(function (item) {
-            if (item.reservationId === reservationId) {
+        .map(function(key){return items[key];})
+        .forEach(function(item){
+            if(item.reservationId === reservationId){
                 delete item.reservationId;
             }
         });
 };
 
-ImageCache.prototype._truncateCache = function () {
+ImageCache.prototype._truncateCache = function(){
     var items = this._items;
     var sizeLeft = ImageCache.limit;
 
-    Object.keys(items).map(function (key) {
+    Object.keys(items).map(function(key){
         return items[key];
-    }).sort(function (a, b) {
+    }).sort(function(a, b){
         return b.touch - a.touch;
-    }).forEach(function (item) {
-        if (sizeLeft > 0 || this._mustBeHeld(item)) {
+    }).forEach(function(item){
+        if(sizeLeft > 0 || this._mustBeHeld(item)){
             var bitmap = item.bitmap;
             sizeLeft -= bitmap.width * bitmap.height;
-        } else {
+        }else{
             delete items[item.key];
         }
     }.bind(this));
 };
 
-ImageCache.prototype._mustBeHeld = function (item) {
+ImageCache.prototype._mustBeHeld = function(item){
     // request only is weak so It's purgeable
-    if (item.bitmap.isRequestOnly()) return false;
+    if(item.bitmap.isRequestOnly()) return false;
     // reserved item must be held
-    if (item.reservationId) return true;
+    if(item.reservationId) return true;
     // not ready bitmap must be held (because of checking isReady())
-    if (!item.bitmap.isReady()) return true;
+    if(!item.bitmap.isReady()) return true;
     // then the item may purgeable
     return false;
 };
 
-ImageCache.prototype.isReady = function () {
+ImageCache.prototype.isReady = function(){
     var items = this._items;
-    return !Object.keys(items).some(function (key) {
+    return !Object.keys(items).some(function(key){
         return !items[key].bitmap.isRequestOnly() && !items[key].bitmap.isReady();
     });
 };
 
-ImageCache.prototype.getErrorBitmap = function () {
+ImageCache.prototype.getErrorBitmap = function(){
     var items = this._items;
     var bitmap = null;
-    if (Object.keys(items).some(function (key) {
-            if (items[key].bitmap.isError()) {
+    if(Object.keys(items).some(function(key){
+            if(items[key].bitmap.isError()){
                 bitmap = items[key].bitmap;
                 return true;
             }
@@ -568,40 +564,39 @@ ImageCache.prototype.getErrorBitmap = function () {
 
     return null;
 };
-
-function RequestQueue() {
+function RequestQueue(){
     this.initialize.apply(this, arguments);
 }
 
-RequestQueue.prototype.initialize = function () {
+RequestQueue.prototype.initialize = function(){
     this._queue = [];
 };
 
-RequestQueue.prototype.enqueue = function (key, value) {
+RequestQueue.prototype.enqueue = function(key, value){
     this._queue.push({
         key: key,
         value: value,
     });
 };
 
-RequestQueue.prototype.update = function () {
-    if (this._queue.length === 0) return;
+RequestQueue.prototype.update = function(){
+    if(this._queue.length === 0) return;
 
     var top = this._queue[0];
-    if (top.value.isRequestReady()) {
+    if(top.value.isRequestReady()){
         this._queue.shift();
-        if (this._queue.length !== 0) {
+        if(this._queue.length !== 0){
             this._queue[0].value.startRequest();
         }
-    } else {
+    }else{
         top.value.startRequest();
     }
 };
 
-RequestQueue.prototype.raisePriority = function (key) {
-    for (var n = 0; n < this._queue.length; n++) {
+RequestQueue.prototype.raisePriority = function(key){
+    for(var n = 0; n < this._queue.length; n++){
         var item = this._queue[n];
-        if (item.key === key) {
+        if(item.key === key){
             this._queue.splice(n, 1);
             this._queue.unshift(item);
             break;
@@ -609,7 +604,7 @@ RequestQueue.prototype.raisePriority = function (key) {
     }
 };
 
-RequestQueue.prototype.clear = function () {
+RequestQueue.prototype.clear = function(){
     this._queue.splice(0);
 };
 //-----------------------------------------------------------------------------
@@ -753,14 +748,14 @@ Bitmap._reuseImages = [];
  */
 
 
-Bitmap.prototype._createCanvas = function (width, height) {
+Bitmap.prototype._createCanvas = function(width, height){
     this.__canvas = this.__canvas || document.createElement('canvas');
     this.__context = this.__canvas.getContext('2d');
 
     this.__canvas.width = Math.max(width || 0, 1);
     this.__canvas.height = Math.max(height || 0, 1);
 
-    if (this._image) {
+    if(this._image){
         var w = Math.max(this._image.width || 0, 1);
         var h = Math.max(this._image.height || 0, 1);
         this.__canvas.width = w;
@@ -773,7 +768,7 @@ Bitmap.prototype._createCanvas = function (width, height) {
     this._setDirty();
 };
 
-Bitmap.prototype._createBaseTexture = function (source) {
+Bitmap.prototype._createBaseTexture = function(source){
     this.__baseTexture = new PIXI.BaseTexture(source);
     this.__baseTexture.mipmap = false;
     this.__baseTexture.width = source.width;
@@ -786,7 +781,7 @@ Bitmap.prototype._createBaseTexture = function (source) {
     }
 };
 
-Bitmap.prototype._clearImgInstance = function () {
+Bitmap.prototype._clearImgInstance = function(){
     this._image.src = "";
     this._image.onload = null;
     this._image.onerror = null;
@@ -802,35 +797,35 @@ Bitmap.prototype._clearImgInstance = function () {
 //
 Object.defineProperties(Bitmap.prototype, {
     _canvas: {
-        get: function () {
-            if (!this.__canvas) this._createCanvas();
+        get: function(){
+            if(!this.__canvas)this._createCanvas();
             return this.__canvas;
         }
     },
     _context: {
-        get: function () {
-            if (!this.__context) this._createCanvas();
+        get: function(){
+            if(!this.__context)this._createCanvas();
             return this.__context;
         }
     },
 
     _baseTexture: {
-        get: function () {
-            if (!this.__baseTexture) this._createBaseTexture(this._image || this.__canvas);
+        get: function(){
+            if(!this.__baseTexture) this._createBaseTexture(this._image || this.__canvas);
             return this.__baseTexture;
         }
     }
 });
 
-Bitmap.prototype._renewCanvas = function () {
+Bitmap.prototype._renewCanvas = function(){
     var newImage = this._image;
-    if (newImage && this.__canvas && (this.__canvas.width < newImage.width || this.__canvas.height < newImage.height)) {
+    if(newImage && this.__canvas && (this.__canvas.width < newImage.width || this.__canvas.height < newImage.height)){
         this._createCanvas();
     }
 };
 
-Bitmap.prototype.initialize = function (width, height) {
-    if (!this._defer) {
+Bitmap.prototype.initialize = function(width, height) {
+    if(!this._defer){
         this._createCanvas(width, height);
     }
 
@@ -1038,8 +1033,8 @@ Object.defineProperty(Bitmap.prototype, 'context', {
  */
 Object.defineProperty(Bitmap.prototype, 'width', {
     get: function() {
-        if (this.isReady()) {
-            return this._image ? this._image.width : this._canvas.width;
+        if(this.isReady()){
+            return this._image? this._image.width: this._canvas.width;
         }
 
         return 0;
@@ -1055,8 +1050,8 @@ Object.defineProperty(Bitmap.prototype, 'width', {
  */
 Object.defineProperty(Bitmap.prototype, 'height', {
     get: function() {
-        if (this.isReady()) {
-            return this._image ? this._image.height : this._canvas.height;
+        if(this.isReady()){
+            return this._image? this._image.height: this._canvas.height;
         }
 
         return 0;
@@ -1090,7 +1085,7 @@ Object.defineProperty(Bitmap.prototype, 'smooth', {
     set: function(value) {
         if (this._smooth !== value) {
             this._smooth = value;
-            if (this.__baseTexture) {
+            if(this.__baseTexture){
                 if (this._smooth) {
                     this._baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
                 } else {
@@ -1565,12 +1560,12 @@ Bitmap.prototype._onLoad = function() {
 
     this._renewCanvas();
 
-    switch (this._loadingState) {
+    switch(this._loadingState){
         case 'requesting':
             this._loadingState = 'requestCompleted';
-            if (this._decodeAfterRequest) {
+            if(this._decodeAfterRequest){
                 this.decode();
-            } else {
+            }else{
                 this._loadingState = 'purged';
                 this._clearImgInstance();
             }
@@ -1579,9 +1574,9 @@ Bitmap.prototype._onLoad = function() {
         case 'decrypting':
             window.URL.revokeObjectURL(this._image.src);
             this._loadingState = 'decryptCompleted';
-            if (this._decodeAfterRequest) {
+            if(this._decodeAfterRequest){
                 this.decode();
-            } else {
+            }else{
                 this._loadingState = 'purged';
                 this._clearImgInstance();
             }
@@ -1589,33 +1584,29 @@ Bitmap.prototype._onLoad = function() {
     }
 };
 
-Bitmap.prototype.decode = function () {
-    switch (this._loadingState) {
-        case 'requestCompleted':
-        case 'decryptCompleted':
-            this._loadingState = 'loaded';
+Bitmap.prototype.decode = function(){
+    switch(this._loadingState){
+        case 'requestCompleted': case 'decryptCompleted':
+        this._loadingState = 'loaded';
 
-            if (!this.__canvas) this._createBaseTexture(this._image);
-            this._setDirty();
-            this._callLoadListeners();
-            break;
+        if(!this.__canvas) this._createBaseTexture(this._image);
+        this._setDirty();
+        this._callLoadListeners();
+        break;
 
-        case 'requesting':
-        case 'decrypting':
-            this._decodeAfterRequest = true;
-            if (!this._loader) {
-                this._loader = ResourceHandler.createLoader(this._url, this._requestImage.bind(this, this._url), this._onError.bind(this));
-                this._image.removeEventListener('error', this._errorListener);
-                this._image.addEventListener('error', this._errorListener = this._loader);
-            }
-            break;
+        case 'requesting': case 'decrypting':
+        this._decodeAfterRequest = true;
+        if (!this._loader) {
+            this._loader = ResourceHandler.createLoader(this._url, this._requestImage.bind(this, this._url), this._onError.bind(this));
+            this._image.removeEventListener('error', this._errorListener);
+            this._image.addEventListener('error', this._errorListener = this._loader);
+        }
+        break;
 
-        case 'pending':
-        case 'purged':
-        case 'error':
-            this._decodeAfterRequest = true;
-            this._requestImage(this._url);
-            break;
+        case 'pending': case 'purged': case 'error':
+        this._decodeAfterRequest = true;
+        this._requestImage(this._url);
+        break;
     }
 };
 
@@ -1659,7 +1650,7 @@ Bitmap.prototype.checkDirty = function() {
     }
 };
 
-Bitmap.request = function (url) {
+Bitmap.request = function(url){
     var bitmap = Object.create(Bitmap.prototype);
     bitmap._defer = true;
     bitmap.initialize();
@@ -1670,10 +1661,10 @@ Bitmap.request = function (url) {
     return bitmap;
 };
 
-Bitmap.prototype._requestImage = function (url) {
-    if (Bitmap._reuseImages.length !== 0) {
+Bitmap.prototype._requestImage = function(url){
+    if(Bitmap._reuseImages.length !== 0){
         this._image = Bitmap._reuseImages.pop();
-    } else {
+    }else{
         this._image = new Image();
     }
 
@@ -1685,7 +1676,7 @@ Bitmap.prototype._requestImage = function (url) {
     this._url = url;
     this._loadingState = 'requesting';
 
-    if (!Decrypter.checkImgIgnore(url) && Decrypter.hasEncryptedImages) {
+    if(!Decrypter.checkImgIgnore(url) && Decrypter.hasEncryptedImages) {
         this._loadingState = 'decrypting';
         Decrypter.decryptImg(url, this);
     } else {
@@ -1696,18 +1687,18 @@ Bitmap.prototype._requestImage = function (url) {
     }
 };
 
-Bitmap.prototype.isRequestOnly = function () {
+Bitmap.prototype.isRequestOnly = function(){
     return !(this._decodeAfterRequest || this.isReady());
 };
 
-Bitmap.prototype.isRequestReady = function () {
+Bitmap.prototype.isRequestReady = function(){
     return this._loadingState !== 'pending' &&
         this._loadingState !== 'requesting' &&
         this._loadingState !== 'decrypting';
 };
 
-Bitmap.prototype.startRequest = function () {
-    if (this._loadingState === 'pending') {
+Bitmap.prototype.startRequest = function(){
+    if(this._loadingState === 'pending'){
         this._decodeAfterRequest = false;
         this._requestImage(this._url);
     }
@@ -1723,7 +1714,7 @@ function Graphics() {
     throw new Error('This is a static class');
 }
 
-Graphics._cssFontLoading = document.fonts && document.fonts.ready;
+Graphics._cssFontLoading =  document.fonts && document.fonts.ready;
 Graphics._fontLoaded = null;
 Graphics._videoVolume = 1;
 
@@ -1780,17 +1771,17 @@ Graphics.initialize = function(width, height, type) {
 };
 
 
-Graphics._setupCssFontLoading = function () {
-    if (Graphics._cssFontLoading) {
-        document.fonts.ready.then(function (fonts) {
+Graphics._setupCssFontLoading = function(){
+    if(Graphics._cssFontLoading){
+        document.fonts.ready.then(function(fonts){
             Graphics._fontLoaded = fonts;
-        }).catch(function (error) {
+        }).catch(function(error){
             SceneManager.onError(error);
         });
     }
 };
 
-Graphics.canUseCssFontLoading = function () {
+Graphics.canUseCssFontLoading = function(){
     return !!this._cssFontLoading;
 };
 
@@ -1994,7 +1985,7 @@ Graphics.endLoading = function() {
  * @method printLoadingError
  * @param {String} url The url of the resource failed to load
  */
-Graphics.printLoadingError = function (url) {
+Graphics.printLoadingError = function(url) {
     if (this._errorPrinter && !this._errorShowed) {
         this._errorPrinter.innerHTML = this._makeErrorHtml('Loading Error', 'Failed to load: ' + url);
         var button = document.createElement('button');
@@ -2002,7 +1993,7 @@ Graphics.printLoadingError = function (url) {
         button.style.fontSize = '24px';
         button.style.color = '#ffffff';
         button.style.backgroundColor = '#000000';
-        button.onmousedown = button.ontouchstart = function (event) {
+        button.onmousedown = button.ontouchstart = function(event) {
             ResourceHandler.retry();
             event.stopPropagation();
         };
@@ -2017,7 +2008,7 @@ Graphics.printLoadingError = function (url) {
  * @static
  * @method eraseLoadingError
  */
-Graphics.eraseLoadingError = function () {
+Graphics.eraseLoadingError = function() {
     if (this._errorPrinter && !this._errorShowed) {
         this._errorPrinter.innerHTML = '';
         this.startLoading();
@@ -2095,8 +2086,8 @@ Graphics.loadFont = function(name, url) {
  */
 Graphics.isFontLoaded = function(name) {
     if (Graphics._cssFontLoading) {
-        if (Graphics._fontLoaded) {
-            return Graphics._fontLoaded.check('10px "' + name + '"');
+        if(Graphics._fontLoaded){
+            return Graphics._fontLoaded.check('10px "'+name+'"');
         }
 
         return false;
@@ -2133,7 +2124,7 @@ Graphics.playVideo = function(src) {
  * @param {String} src
  * @private
  */
-Graphics._playVideo = function (src) {
+Graphics._playVideo = function(src) {
     this._video.src = src;
     this._video.onloadeddata = this._onVideoLoad.bind(this);
     this._video.onerror = this._videoLoader;
@@ -2172,7 +2163,7 @@ Graphics.canPlayVideoType = function(type) {
  * @method setVideoVolume
  * @param {Number} value
  */
-Graphics.setVideoVolume = function (value) {
+Graphics.setVideoVolume = function(value) {
     this._videoVolume = value;
     if (this._video) {
         this._video.volume = this._videoVolume;
@@ -2598,7 +2589,7 @@ Graphics._createRenderer = function() {
                 break;
         }
 
-        if (this._renderer && this._renderer.textureGC)
+        if(this._renderer && this._renderer.textureGC)
             this._renderer.textureGC.maxIdle = 1;
 
     } catch (e) {
@@ -2855,7 +2846,7 @@ Graphics._onKeyDown = function(event) {
  * @param {TouchEvent} event
  * @private
  */
-Graphics._onTouchEnd = function (event) {
+Graphics._onTouchEnd = function(event) {
     if (!this._videoUnlocked) {
         this._video.play();
         this._videoUnlocked = true;
@@ -2954,987 +2945,6 @@ Graphics._cancelFullScreen = function() {
     }
 };
 
-//-----------------------------------------------------------------------------
-/**
- * The static class that handles input data from the keyboard and gamepads.
- *
- * @class Input
- */
-function Input() {
-    throw new Error('This is a static class');
-}
-
-/**
- * Initializes the input system.
- *
- * @static
- * @method initialize
- */
-Input.initialize = function() {
-    this.clear();
-    this._wrapNwjsAlert();
-    this._setupEventHandlers();
-};
-
-/**
- * The wait time of the key repeat in frames.
- *
- * @static
- * @property keyRepeatWait
- * @type Number
- */
-Input.keyRepeatWait = 24;
-
-/**
- * The interval of the key repeat in frames.
- *
- * @static
- * @property keyRepeatInterval
- * @type Number
- */
-Input.keyRepeatInterval = 6;
-
-/**
- * A hash table to convert from a virtual key code to a mapped key name.
- *
- * @static
- * @property keyMapper
- * @type Object
- */
-Input.keyMapper = {
-    9: 'tab',       // tab
-    13: 'ok',       // enter
-    16: 'shift',    // shift
-    17: 'control',  // control
-    18: 'control',  // alt
-    27: 'escape',   // escape
-    32: 'ok',       // space
-    33: 'pageup',   // pageup
-    34: 'pagedown', // pagedown
-    37: 'left',     // left arrow
-    38: 'up',       // up arrow
-    39: 'right',    // right arrow
-    40: 'down',     // down arrow
-    45: 'escape',   // insert
-    81: 'pageup',   // Q
-    87: 'pagedown', // W
-    88: 'escape',   // X
-    90: 'ok',       // Z
-    96: 'escape',   // numpad 0
-    98: 'down',     // numpad 2
-    100: 'left',    // numpad 4
-    102: 'right',   // numpad 6
-    104: 'up',      // numpad 8
-    120: 'debug'    // F9
-};
-
-/**
- * A hash table to convert from a gamepad button to a mapped key name.
- *
- * @static
- * @property gamepadMapper
- * @type Object
- */
-Input.gamepadMapper = {
-    0: 'ok',        // A
-    1: 'cancel',    // B
-    2: 'shift',     // X
-    3: 'menu',      // Y
-    4: 'pageup',    // LB
-    5: 'pagedown',  // RB
-    12: 'up',       // D-pad up
-    13: 'down',     // D-pad down
-    14: 'left',     // D-pad left
-    15: 'right',    // D-pad right
-};
-
-/**
- * Clears all the input data.
- *
- * @static
- * @method clear
- */
-Input.clear = function() {
-    this._currentState = {};
-    this._previousState = {};
-    this._gamepadStates = [];
-    this._latestButton = null;
-    this._pressedTime = 0;
-    this._dir4 = 0;
-    this._dir8 = 0;
-    this._preferredAxis = '';
-    this._date = 0;
-};
-
-/**
- * Updates the input data.
- *
- * @static
- * @method update
- */
-Input.update = function() {
-    this._pollGamepads();
-    if (this._currentState[this._latestButton]) {
-        this._pressedTime++;
-    } else {
-        this._latestButton = null;
-    }
-    for (var name in this._currentState) {
-        if (this._currentState[name] && !this._previousState[name]) {
-            this._latestButton = name;
-            this._pressedTime = 0;
-            this._date = Date.now();
-        }
-        this._previousState[name] = this._currentState[name];
-    }
-    this._updateDirection();
-};
-
-/**
- * Checks whether a key is currently pressed down.
- *
- * @static
- * @method isPressed
- * @param {String} keyName The mapped name of the key
- * @return {Boolean} True if the key is pressed
- */
-Input.isPressed = function(keyName) {
-    if (this._isEscapeCompatible(keyName) && this.isPressed('escape')) {
-        return true;
-    } else {
-        return !!this._currentState[keyName];
-    }
-};
-
-/**
- * Checks whether a key is just pressed.
- *
- * @static
- * @method isTriggered
- * @param {String} keyName The mapped name of the key
- * @return {Boolean} True if the key is triggered
- */
-Input.isTriggered = function(keyName) {
-    if (this._isEscapeCompatible(keyName) && this.isTriggered('escape')) {
-        return true;
-    } else {
-        return this._latestButton === keyName && this._pressedTime === 0;
-    }
-};
-
-/**
- * Checks whether a key is just pressed or a key repeat occurred.
- *
- * @static
- * @method isRepeated
- * @param {String} keyName The mapped name of the key
- * @return {Boolean} True if the key is repeated
- */
-Input.isRepeated = function(keyName) {
-    if (this._isEscapeCompatible(keyName) && this.isRepeated('escape')) {
-        return true;
-    } else {
-        return (this._latestButton === keyName &&
-            (this._pressedTime === 0 ||
-                (this._pressedTime >= this.keyRepeatWait &&
-                    this._pressedTime % this.keyRepeatInterval === 0)));
-    }
-};
-
-/**
- * Checks whether a key is kept depressed.
- *
- * @static
- * @method isLongPressed
- * @param {String} keyName The mapped name of the key
- * @return {Boolean} True if the key is long-pressed
- */
-Input.isLongPressed = function(keyName) {
-    if (this._isEscapeCompatible(keyName) && this.isLongPressed('escape')) {
-        return true;
-    } else {
-        return (this._latestButton === keyName &&
-            this._pressedTime >= this.keyRepeatWait);
-    }
-};
-
-/**
- * [read-only] The four direction value as a number of the numpad, or 0 for neutral.
- *
- * @static
- * @property dir4
- * @type Number
- */
-Object.defineProperty(Input, 'dir4', {
-    get: function() {
-        return this._dir4;
-    },
-    configurable: true
-});
-
-/**
- * [read-only] The eight direction value as a number of the numpad, or 0 for neutral.
- *
- * @static
- * @property dir8
- * @type Number
- */
-Object.defineProperty(Input, 'dir8', {
-    get: function() {
-        return this._dir8;
-    },
-    configurable: true
-});
-
-/**
- * [read-only] The time of the last input in milliseconds.
- *
- * @static
- * @property date
- * @type Number
- */
-Object.defineProperty(Input, 'date', {
-    get: function() {
-        return this._date;
-    },
-    configurable: true
-});
-
-/**
- * @static
- * @method _wrapNwjsAlert
- * @private
- */
-Input._wrapNwjsAlert = function() {
-    if (Utils.isNwjs()) {
-        var _alert = window.alert;
-        window.alert = function() {
-            var gui = require('nw.gui');
-            var win = gui.Window.get();
-            _alert.apply(this, arguments);
-            win.focus();
-            Input.clear();
-        };
-    }
-};
-
-/**
- * @static
- * @method _setupEventHandlers
- * @private
- */
-Input._setupEventHandlers = function() {
-    document.addEventListener('keydown', this._onKeyDown.bind(this));
-    document.addEventListener('keyup', this._onKeyUp.bind(this));
-    window.addEventListener('blur', this._onLostFocus.bind(this));
-};
-
-/**
- * @static
- * @method _onKeyDown
- * @param {KeyboardEvent} event
- * @private
- */
-Input._onKeyDown = function(event) {
-    if (this._shouldPreventDefault(event.keyCode)) {
-        event.preventDefault();
-    }
-    if (event.keyCode === 144) {    // Numlock
-        this.clear();
-    }
-    var buttonName = this.keyMapper[event.keyCode];
-    if (ResourceHandler.exists() && buttonName === 'ok') {
-        ResourceHandler.retry();
-    } else if (buttonName) {
-        this._currentState[buttonName] = true;
-    }
-};
-
-/**
- * @static
- * @method _shouldPreventDefault
- * @param {Number} keyCode
- * @private
- */
-Input._shouldPreventDefault = function(keyCode) {
-    switch (keyCode) {
-        case 8:     // backspace
-        case 33:    // pageup
-        case 34:    // pagedown
-        case 37:    // left arrow
-        case 38:    // up arrow
-        case 39:    // right arrow
-        case 40:    // down arrow
-            return true;
-    }
-    return false;
-};
-
-/**
- * @static
- * @method _onKeyUp
- * @param {KeyboardEvent} event
- * @private
- */
-Input._onKeyUp = function(event) {
-    var buttonName = this.keyMapper[event.keyCode];
-    if (buttonName) {
-        this._currentState[buttonName] = false;
-    }
-    if (event.keyCode === 0) {  // For QtWebEngine on OS X
-        this.clear();
-    }
-};
-
-/**
- * @static
- * @method _onLostFocus
- * @private
- */
-Input._onLostFocus = function() {
-    this.clear();
-};
-
-/**
- * @static
- * @method _pollGamepads
- * @private
- */
-Input._pollGamepads = function() {
-    if (navigator.getGamepads) {
-        var gamepads = navigator.getGamepads();
-        if (gamepads) {
-            for (var i = 0; i < gamepads.length; i++) {
-                var gamepad = gamepads[i];
-                if (gamepad && gamepad.connected) {
-                    this._updateGamepadState(gamepad);
-                }
-            }
-        }
-    }
-};
-
-/**
- * @static
- * @method _updateGamepadState
- * @param {Gamepad} gamepad
- * @param {Number} index
- * @private
- */
-Input._updateGamepadState = function(gamepad) {
-    var lastState = this._gamepadStates[gamepad.index] || [];
-    var newState = [];
-    var buttons = gamepad.buttons;
-    var axes = gamepad.axes;
-    var threshold = 0.5;
-    newState[12] = false;
-    newState[13] = false;
-    newState[14] = false;
-    newState[15] = false;
-    for (var i = 0; i < buttons.length; i++) {
-        newState[i] = buttons[i].pressed;
-    }
-    if (axes[1] < -threshold) {
-        newState[12] = true;    // up
-    } else if (axes[1] > threshold) {
-        newState[13] = true;    // down
-    }
-    if (axes[0] < -threshold) {
-        newState[14] = true;    // left
-    } else if (axes[0] > threshold) {
-        newState[15] = true;    // right
-    }
-    for (var j = 0; j < newState.length; j++) {
-        if (newState[j] !== lastState[j]) {
-            var buttonName = this.gamepadMapper[j];
-            if (buttonName) {
-                this._currentState[buttonName] = newState[j];
-            }
-        }
-    }
-    this._gamepadStates[gamepad.index] = newState;
-};
-
-/**
- * @static
- * @method _updateDirection
- * @private
- */
-Input._updateDirection = function() {
-    var x = this._signX();
-    var y = this._signY();
-
-    this._dir8 = this._makeNumpadDirection(x, y);
-
-    if (x !== 0 && y !== 0) {
-        if (this._preferredAxis === 'x') {
-            y = 0;
-        } else {
-            x = 0;
-        }
-    } else if (x !== 0) {
-        this._preferredAxis = 'y';
-    } else if (y !== 0) {
-        this._preferredAxis = 'x';
-    }
-
-    this._dir4 = this._makeNumpadDirection(x, y);
-};
-
-/**
- * @static
- * @method _signX
- * @private
- */
-Input._signX = function() {
-    var x = 0;
-
-    if (this.isPressed('left')) {
-        x--;
-    }
-    if (this.isPressed('right')) {
-        x++;
-    }
-    return x;
-};
-
-/**
- * @static
- * @method _signY
- * @private
- */
-Input._signY = function() {
-    var y = 0;
-
-    if (this.isPressed('up')) {
-        y--;
-    }
-    if (this.isPressed('down')) {
-        y++;
-    }
-    return y;
-};
-
-/**
- * @static
- * @method _makeNumpadDirection
- * @param {Number} x
- * @param {Number} y
- * @return {Number}
- * @private
- */
-Input._makeNumpadDirection = function(x, y) {
-    if (x !== 0 || y !== 0) {
-        return  5 - y * 3 + x;
-    }
-    return 0;
-};
-
-/**
- * @static
- * @method _isEscapeCompatible
- * @param {String} keyName
- * @return {Boolean}
- * @private
- */
-Input._isEscapeCompatible = function(keyName) {
-    return keyName === 'cancel' || keyName === 'menu';
-};
-
-//-----------------------------------------------------------------------------
-/**
- * The static class that handles input data from the mouse and touchscreen.
- *
- * @class TouchInput
- */
-function TouchInput() {
-    throw new Error('This is a static class');
-}
-
-/**
- * Initializes the touch system.
- *
- * @static
- * @method initialize
- */
-TouchInput.initialize = function() {
-    this.clear();
-    this._setupEventHandlers();
-};
-
-/**
- * The wait time of the pseudo key repeat in frames.
- *
- * @static
- * @property keyRepeatWait
- * @type Number
- */
-TouchInput.keyRepeatWait = 24;
-
-/**
- * The interval of the pseudo key repeat in frames.
- *
- * @static
- * @property keyRepeatInterval
- * @type Number
- */
-TouchInput.keyRepeatInterval = 6;
-
-/**
- * Clears all the touch data.
- *
- * @static
- * @method clear
- */
-TouchInput.clear = function() {
-    this._mousePressed = false;
-    this._screenPressed = false;
-    this._pressedTime = 0;
-    this._events = {};
-    this._events.triggered = false;
-    this._events.cancelled = false;
-    this._events.moved = false;
-    this._events.released = false;
-    this._events.wheelX = 0;
-    this._events.wheelY = 0;
-    this._triggered = false;
-    this._cancelled = false;
-    this._moved = false;
-    this._released = false;
-    this._wheelX = 0;
-    this._wheelY = 0;
-    this._x = 0;
-    this._y = 0;
-    this._date = 0;
-};
-
-/**
- * Updates the touch data.
- *
- * @static
- * @method update
- */
-TouchInput.update = function() {
-    this._triggered = this._events.triggered;
-    this._cancelled = this._events.cancelled;
-    this._moved = this._events.moved;
-    this._released = this._events.released;
-    this._wheelX = this._events.wheelX;
-    this._wheelY = this._events.wheelY;
-    this._events.triggered = false;
-    this._events.cancelled = false;
-    this._events.moved = false;
-    this._events.released = false;
-    this._events.wheelX = 0;
-    this._events.wheelY = 0;
-    if (this.isPressed()) {
-        this._pressedTime++;
-    }
-};
-
-/**
- * Checks whether the mouse button or touchscreen is currently pressed down.
- *
- * @static
- * @method isPressed
- * @return {Boolean} True if the mouse button or touchscreen is pressed
- */
-TouchInput.isPressed = function() {
-    return this._mousePressed || this._screenPressed;
-};
-
-/**
- * Checks whether the left mouse button or touchscreen is just pressed.
- *
- * @static
- * @method isTriggered
- * @return {Boolean} True if the mouse button or touchscreen is triggered
- */
-TouchInput.isTriggered = function() {
-    return this._triggered;
-};
-
-/**
- * Checks whether the left mouse button or touchscreen is just pressed
- * or a pseudo key repeat occurred.
- *
- * @static
- * @method isRepeated
- * @return {Boolean} True if the mouse button or touchscreen is repeated
- */
-TouchInput.isRepeated = function() {
-    return (this.isPressed() &&
-        (this._triggered ||
-            (this._pressedTime >= this.keyRepeatWait &&
-                this._pressedTime % this.keyRepeatInterval === 0)));
-};
-
-/**
- * Checks whether the left mouse button or touchscreen is kept depressed.
- *
- * @static
- * @method isLongPressed
- * @return {Boolean} True if the left mouse button or touchscreen is long-pressed
- */
-TouchInput.isLongPressed = function() {
-    return this.isPressed() && this._pressedTime >= this.keyRepeatWait;
-};
-
-/**
- * Checks whether the right mouse button is just pressed.
- *
- * @static
- * @method isCancelled
- * @return {Boolean} True if the right mouse button is just pressed
- */
-TouchInput.isCancelled = function() {
-    return this._cancelled;
-};
-
-/**
- * Checks whether the mouse or a finger on the touchscreen is moved.
- *
- * @static
- * @method isMoved
- * @return {Boolean} True if the mouse or a finger on the touchscreen is moved
- */
-TouchInput.isMoved = function() {
-    return this._moved;
-};
-
-/**
- * Checks whether the left mouse button or touchscreen is released.
- *
- * @static
- * @method isReleased
- * @return {Boolean} True if the mouse button or touchscreen is released
- */
-TouchInput.isReleased = function() {
-    return this._released;
-};
-
-/**
- * [read-only] The horizontal scroll amount.
- *
- * @static
- * @property wheelX
- * @type Number
- */
-Object.defineProperty(TouchInput, 'wheelX', {
-    get: function() {
-        return this._wheelX;
-    },
-    configurable: true
-});
-
-/**
- * [read-only] The vertical scroll amount.
- *
- * @static
- * @property wheelY
- * @type Number
- */
-Object.defineProperty(TouchInput, 'wheelY', {
-    get: function() {
-        return this._wheelY;
-    },
-    configurable: true
-});
-
-/**
- * [read-only] The x coordinate on the canvas area of the latest touch event.
- *
- * @static
- * @property x
- * @type Number
- */
-Object.defineProperty(TouchInput, 'x', {
-    get: function() {
-        return this._x;
-    },
-    configurable: true
-});
-
-/**
- * [read-only] The y coordinate on the canvas area of the latest touch event.
- *
- * @static
- * @property y
- * @type Number
- */
-Object.defineProperty(TouchInput, 'y', {
-    get: function() {
-        return this._y;
-    },
-    configurable: true
-});
-
-/**
- * [read-only] The time of the last input in milliseconds.
- *
- * @static
- * @property date
- * @type Number
- */
-Object.defineProperty(TouchInput, 'date', {
-    get: function() {
-        return this._date;
-    },
-    configurable: true
-});
-
-/**
- * @static
- * @method _setupEventHandlers
- * @private
- */
-TouchInput._setupEventHandlers = function() {
-    var isSupportPassive = Utils.isSupportPassiveEvent();
-    document.addEventListener('mousedown', this._onMouseDown.bind(this));
-    document.addEventListener('mousemove', this._onMouseMove.bind(this));
-    document.addEventListener('mouseup', this._onMouseUp.bind(this));
-    document.addEventListener('wheel', this._onWheel.bind(this));
-    document.addEventListener('touchstart', this._onTouchStart.bind(this), isSupportPassive ? {passive: false} : false);
-    document.addEventListener('touchmove', this._onTouchMove.bind(this), isSupportPassive ? {passive: false} : false);
-    document.addEventListener('touchend', this._onTouchEnd.bind(this));
-    document.addEventListener('touchcancel', this._onTouchCancel.bind(this));
-    document.addEventListener('pointerdown', this._onPointerDown.bind(this));
-};
-
-/**
- * @static
- * @method _onMouseDown
- * @param {MouseEvent} event
- * @private
- */
-TouchInput._onMouseDown = function(event) {
-    if (event.button === 0) {
-        this._onLeftButtonDown(event);
-    } else if (event.button === 1) {
-        this._onMiddleButtonDown(event);
-    } else if (event.button === 2) {
-        this._onRightButtonDown(event);
-    }
-};
-
-/**
- * @static
- * @method _onLeftButtonDown
- * @param {MouseEvent} event
- * @private
- */
-TouchInput._onLeftButtonDown = function(event) {
-    var x = Graphics.pageToCanvasX(event.pageX);
-    var y = Graphics.pageToCanvasY(event.pageY);
-    if (Graphics.isInsideCanvas(x, y)) {
-        this._mousePressed = true;
-        this._pressedTime = 0;
-        this._onTrigger(x, y);
-    }
-};
-
-/**
- * @static
- * @method _onMiddleButtonDown
- * @param {MouseEvent} event
- * @private
- */
-TouchInput._onMiddleButtonDown = function(event) {
-};
-
-/**
- * @static
- * @method _onRightButtonDown
- * @param {MouseEvent} event
- * @private
- */
-TouchInput._onRightButtonDown = function(event) {
-    var x = Graphics.pageToCanvasX(event.pageX);
-    var y = Graphics.pageToCanvasY(event.pageY);
-    if (Graphics.isInsideCanvas(x, y)) {
-        this._onCancel(x, y);
-    }
-};
-
-/**
- * @static
- * @method _onMouseMove
- * @param {MouseEvent} event
- * @private
- */
-TouchInput._onMouseMove = function(event) {
-    if (this._mousePressed) {
-        var x = Graphics.pageToCanvasX(event.pageX);
-        var y = Graphics.pageToCanvasY(event.pageY);
-        this._onMove(x, y);
-    }
-};
-
-/**
- * @static
- * @method _onMouseUp
- * @param {MouseEvent} event
- * @private
- */
-TouchInput._onMouseUp = function(event) {
-    if (event.button === 0) {
-        var x = Graphics.pageToCanvasX(event.pageX);
-        var y = Graphics.pageToCanvasY(event.pageY);
-        this._mousePressed = false;
-        this._onRelease(x, y);
-    }
-};
-
-/**
- * @static
- * @method _onWheel
- * @param {WheelEvent} event
- * @private
- */
-TouchInput._onWheel = function(event) {
-    this._events.wheelX += event.deltaX;
-    this._events.wheelY += event.deltaY;
-    event.preventDefault();
-};
-
-/**
- * @static
- * @method _onTouchStart
- * @param {TouchEvent} event
- * @private
- */
-TouchInput._onTouchStart = function(event) {
-    for (var i = 0; i < event.changedTouches.length; i++) {
-        var touch = event.changedTouches[i];
-        var x = Graphics.pageToCanvasX(touch.pageX);
-        var y = Graphics.pageToCanvasY(touch.pageY);
-        if (Graphics.isInsideCanvas(x, y)) {
-            this._screenPressed = true;
-            this._pressedTime = 0;
-            if (event.touches.length >= 2) {
-                this._onCancel(x, y);
-            } else {
-                this._onTrigger(x, y);
-            }
-            event.preventDefault();
-        }
-    }
-    if (window.cordova || window.navigator.standalone) {
-        event.preventDefault();
-    }
-};
-
-/**
- * @static
- * @method _onTouchMove
- * @param {TouchEvent} event
- * @private
- */
-TouchInput._onTouchMove = function(event) {
-    for (var i = 0; i < event.changedTouches.length; i++) {
-        var touch = event.changedTouches[i];
-        var x = Graphics.pageToCanvasX(touch.pageX);
-        var y = Graphics.pageToCanvasY(touch.pageY);
-        this._onMove(x, y);
-    }
-};
-
-/**
- * @static
- * @method _onTouchEnd
- * @param {TouchEvent} event
- * @private
- */
-TouchInput._onTouchEnd = function(event) {
-    for (var i = 0; i < event.changedTouches.length; i++) {
-        var touch = event.changedTouches[i];
-        var x = Graphics.pageToCanvasX(touch.pageX);
-        var y = Graphics.pageToCanvasY(touch.pageY);
-        this._screenPressed = false;
-        this._onRelease(x, y);
-    }
-};
-
-/**
- * @static
- * @method _onTouchCancel
- * @param {TouchEvent} event
- * @private
- */
-TouchInput._onTouchCancel = function(event) {
-    this._screenPressed = false;
-};
-
-/**
- * @static
- * @method _onPointerDown
- * @param {PointerEvent} event
- * @private
- */
-TouchInput._onPointerDown = function(event) {
-    if (event.pointerType === 'touch' && !event.isPrimary) {
-        var x = Graphics.pageToCanvasX(event.pageX);
-        var y = Graphics.pageToCanvasY(event.pageY);
-        if (Graphics.isInsideCanvas(x, y)) {
-            // For Microsoft Edge
-            this._onCancel(x, y);
-            event.preventDefault();
-        }
-    }
-};
-
-/**
- * @static
- * @method _onTrigger
- * @param {Number} x
- * @param {Number} y
- * @private
- */
-TouchInput._onTrigger = function(x, y) {
-    this._events.triggered = true;
-    this._x = x;
-    this._y = y;
-    this._date = Date.now();
-};
-
-/**
- * @static
- * @method _onCancel
- * @param {Number} x
- * @param {Number} y
- * @private
- */
-TouchInput._onCancel = function(x, y) {
-    this._events.cancelled = true;
-    this._x = x;
-    this._y = y;
-};
-
-/**
- * @static
- * @method _onMove
- * @param {Number} x
- * @param {Number} y
- * @private
- */
-TouchInput._onMove = function(x, y) {
-    this._events.moved = true;
-    this._x = x;
-    this._y = y;
-};
-
-/**
- * @static
- * @method _onRelease
- * @param {Number} x
- * @param {Number} y
- * @private
- */
-TouchInput._onRelease = function(x, y) {
-    this._events.released = true;
-    this._x = x;
-    this._y = y;
-};
 
 //-----------------------------------------------------------------------------
 /**
@@ -3997,10 +3007,10 @@ Object.defineProperty(Sprite.prototype, 'bitmap', {
         if (this._bitmap !== value) {
             this._bitmap = value;
 
-            if (value) {
+            if(value){
                 this._refreshFrame = true;
                 value.addLoadListener(this._onBitmapLoad.bind(this));
-            } else {
+            }else{
                 this._refreshFrame = false;
                 this.texture.frame = Rectangle.emptyRectangle;
             }
@@ -4162,8 +3172,8 @@ Sprite.prototype.setColorTone = function(tone) {
  * @method _onBitmapLoad
  * @private
  */
-Sprite.prototype._onBitmapLoad = function (bitmapLoaded) {
-    if (bitmapLoaded === this._bitmap) {
+Sprite.prototype._onBitmapLoad = function(bitmapLoaded) {
+    if(bitmapLoaded === this._bitmap){
         if (this._refreshFrame && this._bitmap) {
             this._refreshFrame = false;
             this._frame.width = this._bitmap.width;
@@ -4341,7 +3351,7 @@ Sprite.prototype._renderCanvas = function(renderer) {
     if (this.bitmap) {
         this.bitmap.touch();
     }
-    if (this.bitmap && !this.bitmap.isReady()) {
+    if(this.bitmap && !this.bitmap.isReady()){
         return;
     }
 
@@ -4384,7 +3394,7 @@ Sprite.prototype._renderWebGL = function(renderer) {
     if (this.bitmap) {
         this.bitmap.touch();
     }
-    if (this.bitmap && !this.bitmap.isReady()) {
+    if(this.bitmap && !this.bitmap.isReady()){
         return;
     }
     if (this.texture.frame.width > 0 && this.texture.frame.height > 0) {
@@ -5546,7 +4556,7 @@ ShaderTilemap.prototype.refresh = function() {
     if (this._lastBitmapLength !== this.bitmaps.length) {
         this._lastBitmapLength = this.bitmaps.length;
         this.refreshTileset();
-    }
+    };
     this._needsRepaint = true;
 };
 
@@ -6974,7 +5984,7 @@ WindowLayer.prototype.initialize = function() {
 
 WindowLayer.prototype.onRemoveAsAChild = function() {
     this.removeChildren();
-};
+}
 
 WindowLayer.voidFilter = new PIXI.filters.VoidFilter();
 
@@ -7117,7 +6127,7 @@ WindowLayer.prototype.renderWebGL = function(renderer) {
         return;
     }
 
-    if (this.children.length == 0) {
+    if (this.children.length==0) {
         return;
     }
 
@@ -7673,7 +6683,7 @@ function WebAudio() {
     this.initialize.apply(this, arguments);
 }
 
-WebAudio._standAlone = (function (top) {
+WebAudio._standAlone = (function(top){
     return !top.ResourceHandler;
 })(this);
 
@@ -7683,8 +6693,8 @@ WebAudio.prototype.initialize = function(url) {
     }
     this.clear();
 
-    if (!WebAudio._standAlone) {
-        this._loader = ResourceHandler.createLoader(url, this._load.bind(this, url), function () {
+    if(!WebAudio._standAlone){
+        this._loader = ResourceHandler.createLoader(url, this._load.bind(this, url), function() {
             this._hasError = true;
         }.bind(this));
     }
@@ -7692,7 +6702,7 @@ WebAudio.prototype.initialize = function(url) {
     this._url = url;
 };
 
-WebAudio._masterVolume = 1;
+WebAudio._masterVolume   = 1;
 WebAudio._context        = null;
 WebAudio._masterGainNode = null;
 WebAudio._initialized    = false;
@@ -7754,7 +6764,7 @@ WebAudio.canPlayM4a = function() {
  * @method setMasterVolume
  * @param {Number} value Master volume (min: 0, max: 1)
  */
-WebAudio.setMasterVolume = function (value) {
+WebAudio.setMasterVolume = function(value) {
     this._masterVolume = value;
     if (this._masterGainNode) {
         this._masterGainNode.gain.setValueAtTime(this._masterVolume, this._context.currentTime);
@@ -7811,10 +6821,10 @@ WebAudio._createMasterGainNode = function() {
  * @private
  */
 WebAudio._setupEventHandlers = function() {
-    document.addEventListener("touchend", function () {
+    document.addEventListener("touchend", function() {
         var context = WebAudio._context;
         if (context && context.state === "suspended" && typeof context.resume === "function") {
-            context.resume().then(function () {
+            context.resume().then(function() {
                 WebAudio._onTouchStart();
             })
         } else {
@@ -8170,9 +7180,7 @@ WebAudio.prototype._load = function(url) {
                 this._onXhrLoad(xhr);
             }
         }.bind(this);
-        xhr.onerror = this._loader || function () {
-            this._hasError = true;
-        }.bind(this);
+        xhr.onerror = this._loader || function(){this._hasError = true;}.bind(this);
         xhr.send();
     }
 };
@@ -8921,7 +7929,7 @@ function JsonEx() {
 JsonEx.maxDepth = 100;
 
 JsonEx._id = 1;
-JsonEx._generateId = function () {
+JsonEx._generateId = function(){
     return JsonEx._id++;
 };
 
@@ -8943,8 +7951,8 @@ JsonEx.stringify = function(object) {
     return json;
 };
 
-JsonEx._restoreCircularReference = function (circulars) {
-    circulars.forEach(function (circular) {
+JsonEx._restoreCircularReference = function(circulars){
+    circulars.forEach(function(circular){
         var key = circular[0];
         var value = circular[1];
         var content = circular[2];
@@ -8971,8 +7979,8 @@ JsonEx.parse = function(json) {
     return contents;
 };
 
-JsonEx._linkCircularReference = function (contents, circulars, registry) {
-    circulars.forEach(function (circular) {
+JsonEx._linkCircularReference = function(contents, circulars, registry){
+    circulars.forEach(function(circular){
         var key = circular[0];
         var value = circular[1];
         var id = circular[2];
@@ -8981,16 +7989,16 @@ JsonEx._linkCircularReference = function (contents, circulars, registry) {
     });
 };
 
-JsonEx._cleanMetadata = function (object) {
-    if (!object) return;
+JsonEx._cleanMetadata = function(object){
+    if(!object) return;
 
     delete object['@'];
     delete object['@c'];
 
-    if (typeof object === 'object') {
-        Object.keys(object).forEach(function (key) {
+    if(typeof object === 'object'){
+        Object.keys(object).forEach(function(key){
             var value = object[key];
-            if (typeof value === 'object') {
+            if(typeof value === 'object'){
                 JsonEx._cleanMetadata(value);
             }
         });
@@ -9019,7 +8027,7 @@ JsonEx.makeDeepCopy = function(object) {
  * @return {Object}
  * @private
  */
-JsonEx._encode = function (value, circular, depth) {
+JsonEx._encode = function(value, circular, depth) {
     depth = depth || 0;
     if (++depth >= this.maxDepth) {
         throw new Error('Object too deep');
@@ -9034,14 +8042,14 @@ JsonEx._encode = function (value, circular, depth) {
         }
         for (var key in value) {
             if (value.hasOwnProperty(key) && !key.match(/^@./)) {
-                if (value[key] && typeof value[key] === 'object') {
-                    if (value[key]['@c']) {
+                if(value[key] && typeof value[key] === 'object'){
+                    if(value[key]['@c']){
                         circular.push([key, value, value[key]]);
                         value[key] = {'@r': value[key]['@c']};
-                    } else {
+                    }else{
                         value[key] = this._encode(value[key], circular, depth + 1);
 
-                        if (value[key] instanceof Array) {
+                        if(value[key] instanceof Array){
                             //wrap array
                             circular.push([key, value, value[key]]);
 
@@ -9051,7 +8059,7 @@ JsonEx._encode = function (value, circular, depth) {
                             };
                         }
                     }
-                } else {
+                }else{
                     value[key] = this._encode(value[key], circular, depth + 1);
                 }
             }
@@ -9070,7 +8078,7 @@ JsonEx._encode = function (value, circular, depth) {
  * @return {Object}
  * @private
  */
-JsonEx._decode = function (value, circular, registry) {
+JsonEx._decode = function(value, circular, registry) {
     var type = Object.prototype.toString.call(value);
     if (type === '[object Object]' || type === '[object Array]') {
         registry[value['@c']] = value;
@@ -9083,13 +8091,13 @@ JsonEx._decode = function (value, circular, registry) {
         }
         for (var key in value) {
             if (value.hasOwnProperty(key)) {
-                if (value[key] && value[key]['@a']) {
+                if(value[key] && value[key]['@a']){
                     //object is array wrapper
                     var body = value[key]['@a'];
                     body['@c'] = value[key]['@c'];
                     value[key] = body;
                 }
-                if (value[key] && value[key]['@r']) {
+                if(value[key] && value[key]['@r']){
                     //object is reference
                     circular.push([key, value, value[key]['@r']])
                 }
@@ -9275,11 +8283,11 @@ function ResourceHandler() {
 ResourceHandler._reloaders = [];
 ResourceHandler._defaultRetryInterval = [500, 1000, 3000];
 
-ResourceHandler.createLoader = function (url, retryMethod, resignMethod, retryInterval) {
+ResourceHandler.createLoader = function(url, retryMethod, resignMethod, retryInterval) {
     retryInterval = retryInterval || this._defaultRetryInterval;
     var reloaders = this._reloaders;
     var retryCount = 0;
-    return function () {
+    return function() {
         if (retryCount < retryInterval.length) {
             setTimeout(retryMethod, retryInterval[retryCount]);
             retryCount++;
@@ -9292,7 +8300,7 @@ ResourceHandler.createLoader = function (url, retryMethod, resignMethod, retryIn
                     Graphics.printLoadingError(url);
                     SceneManager.stop();
                 }
-                reloaders.push(function () {
+                reloaders.push(function() {
                     retryCount = 0;
                     retryMethod();
                 });
@@ -9301,15 +8309,15 @@ ResourceHandler.createLoader = function (url, retryMethod, resignMethod, retryIn
     };
 };
 
-ResourceHandler.exists = function () {
+ResourceHandler.exists = function() {
     return this._reloaders.length > 0;
 };
 
-ResourceHandler.retry = function () {
+ResourceHandler.retry = function() {
     if (this._reloaders.length > 0) {
         Graphics.eraseLoadingError();
         SceneManager.resume();
-        this._reloaders.forEach(function (reloader) {
+        this._reloaders.forEach(function(reloader) {
             reloader();
         });
         this._reloaders.length = 0;

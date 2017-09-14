@@ -4,6 +4,22 @@
  */
 class RenderComponent extends Component {
 
+    get blendMode() {
+        return this._blendMode;
+    }
+
+    set blendMode(value) {
+        this._blendMode = value;
+    }
+
+    get opacity() {
+        return this._opacity;
+    }
+
+    set opacity(value) {
+        this._opacity = value;
+    }
+
     /**
      * constructor for render
      * @param owner
@@ -68,22 +84,6 @@ class RenderComponent extends Component {
         }
     }
 
-    get blendMode() {
-        return this._blendMode;
-    }
-
-    set blendMode(value) {
-        this._blendMode = value;
-    }
-
-    get opacity() {
-        return this._opacity;
-    }
-
-    set opacity(value) {
-        this._opacity = value;
-    }
-
     /**
      * @return {boolean}
      */
@@ -132,11 +132,11 @@ class RenderComponent extends Component {
     }
 
     scrolledX() {
-        return this.owner.getTransform().x - $gameMap._displayX;
+        return this.owner.transform.position.x - $gameMap._displayX
     }
 
     scrolledY() {
-        return this.owner.getTransform().y - $gameMap._displayY;
+        return this.owner.transform.position.y - $gameMap._displayY
     }
 
     /**

@@ -45,8 +45,9 @@ class Rigidbody extends Component {
         this._angularDrag = 0;
         this._mass = 1.0;
 
-        this._forces = new Victor(0, 0);
-        this._velocity = new Victor(0, 0);
+        this._impactForces = new Victor();
+        this._forces = new Victor();
+        this._velocity = new Victor();
         this._angularVelocity = 0;
 
         //Ivan: should I add interpolation?
@@ -60,7 +61,7 @@ class Rigidbody extends Component {
      * @param force {Victor} Components of the force in the X and Y axes.
      */
     addForce(force) {
-        this._forces.add(force);
+        this._impactForces.add(force);
     }
 
     /**
@@ -109,6 +110,7 @@ class Rigidbody extends Component {
            physics update will result in the last call being used. For this reason, it is recommended
            that it is called during the FixedUpdate callback.
          */
+
     }
 
     /*
@@ -136,13 +138,25 @@ class Rigidbody extends Component {
         this.resetForces();
         //aggregate forces
 
+        //test force
+        this._forces.add(this._impactForces);
+
+
+        this._impactForces.zero();
     }
 
     /**
      * @param d_t {number}
      */
     updateBodyEuler(d_t) {
+        let dv = this._forces.clone().divideScalar(this._mass);
+        this._velocity.add(dv);
+        //update transform
+        let d = this._velocity.clone().multiplyScalar(d_t);
+        this.owner.transform.translate(d);
 
+        console.log("new position: "+this.owner.transform.position.toString());
+        //console.log((this.owner.transform.position.x - 9 < Number.EPSILON) + ", "+ Number.EPSILON);
     }
 
 }
