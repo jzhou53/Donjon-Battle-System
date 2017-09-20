@@ -36,7 +36,8 @@ class Game_BattleMap extends Game_Map {
         //this._interpreter = new Donjon_Interpreter($dataMap);
         this._debugObjects = [];
         this._debugObjects.push(this.createDebugObject(8, 5));
-        //this._debugObjects.push(this.createDebugObject(10, 6));
+        this._debugObjects.push(this.createDebugObject(10, 6));
+        this._debugObjects.push(this.createDebugObject(11, 6));
 
         this._tempPhysics = new Simple_Physics();
         let colliders = [];
@@ -51,11 +52,6 @@ class Game_BattleMap extends Game_Map {
         //======================================================
         this._tempPhysics.setup(colliders);
 
-        const delta_time = 1.0 / 60.0;
-
-        //for(let i = 0; i < 60; i++)
-        //this._tempPhysics.simulate(delta_time);
-        //this._tempPhysics.simulate(delta_time);
 
     }
 
@@ -98,36 +94,58 @@ class Game_BattleMap extends Game_Map {
     /**
      * @param sceneActive
      */
-    update(sceneActive) {
+    update(sceneActive){
         super.update(sceneActive);
+
         // this._dynamicEntities.update();
         // this._battleField.update();
+
+        //temp
+        const delta_time = 1.0 / 60.0;
+
+        this._tempPhysics.simulate(delta_time);
+
+
 
         //temp -----------------------------------
         //console.log(Input.dirVictor.toString());
         let player = this._debugObjects[0];
-        let test_speed = 3.0;
-        const delta_time = 1.0 / 60.0;
+        let test_speed = 4.0;
 
         let direction = Input.dirVictor.clone();
 
+        let delta_pos = new Victor();
+        let rigidbody = player.getComponent(Rigidbody);
+
+
         if (!direction.isZero()) {
             direction.normalize();
-            let delta_pos = direction.multiplyScalar(test_speed * delta_time);
-            player.transform.translate(delta_pos);
+            delta_pos = direction.multiplyScalar(test_speed);
+
+            //rigidbody._velocity.limit(3.0,0.9);
+
+            //rigidbody._velocity.add(delta_pos.multiplyScalar(delta_time));
+
+            rigidbody.movePosition(delta_pos.multiplyScalar(delta_time).add(player.transform.position));
+            //player.transform.translate(delta_pos.multiplyScalar(delta_time));
+        } else{
+          rigidbody.velocity.zero();
         }
+
+        // if (player.transform.position.x > 7){
+        //     let v = new Victor(-20,0);
+        //     rigidbody.addForce(v.multiplyScalar(delta_time));
+        // }else{
+        //     //let v = rigidbody._velocity.clone().invert().multiplyScalar(0.1);
+        //     //rigidbody._velocity.add(v);
+        // }
+
+        rigidbody.update(delta_time);
 
         //let pos = player.transform.position;
         //console.log(pos.toString() + ": "+ this.isEqual(pos.x, Math.round(pos.x)));
 
-
-
-
     }
 
-    //temp, check with 2^(-10)
-    isEqual(first, second){
-        return Math.abs(first - second) < 0.0009765625;
-    }
 
 }

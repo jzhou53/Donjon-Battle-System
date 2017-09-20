@@ -4,26 +4,26 @@ class Rigidbody extends Component {
      * @type {{DYNAMIC: number, KINEMATIC: number, STATIC: number}}
      */
     static BODY_TYPE = {
-        DYNAMIC: 0,
-        KINEMATIC: 1,
-        STATIC: 2,
+        DYNAMIC: 0x0001,
+        KINEMATIC: 0x0002,
+        STATIC: 0x0003,
     };
 
     /**
      * @type {{DISCRETE: number, CONTINUOUS: number}}
      */
     static COLLISION_DETECTION_MODE = {
-        DISCRETE: 0,
-        CONTINUOUS: 1,
+        DISCRETE: 0x0001,
+        CONTINUOUS: 0x0002,
     };
 
     /**
      * @type {{NEVER_SLEEP: number, START_AWAKE: number, START_ASLEEP: number}}
      */
     static SLEEP_MODE = {
-        NEVER_SLEEP: 0,
-        START_AWAKE: 1,
-        START_ASLEEP: 2,
+        NEVER_SLEEP: 0x0001,
+        START_AWAKE: 0x0002,
+        START_ASLEEP: 0x0003,
     };
 
     get velocity() {
@@ -41,16 +41,22 @@ class Rigidbody extends Component {
         this._detectionMode = Rigidbody.COLLISION_DETECTION_MODE.DISCRETE;
         this._sleepMode = Rigidbody.SLEEP_MODE.START_AWAKE;
 
-        this._drag = 0;
-        this._angularDrag = 0;
+
+        this._drag = 0.5;
+        //this._angularDrag = 0;
         this._mass = 1.0;
 
         this._impactForces = new Victor();
         this._forces = new Victor();
         this._velocity = new Victor();
-        this._angularVelocity = 0;
+
+        this._speed = 0.0;
+        //this._angularVelocity = 0;
+
 
         //Ivan: should I add interpolation?
+        this._deltaPos = new Victor();
+
     }
 
     /**
@@ -75,7 +81,7 @@ class Rigidbody extends Component {
     }
 
     isKinematic() {
-
+        return this._bodyType === Rigidbody.BODY_TYPE.KINEMATIC;
     }
 
     isAwake() {
@@ -104,13 +110,7 @@ class Rigidbody extends Component {
      * @param position{Victor} The new position for the Rigidbody object.
      */
     movePosition(position) {
-        /*
-           It is important to understand that the actual position change will only occur during the
-           next physics update therefore calling this method repeatedly without waiting for the next
-           physics update will result in the last call being used. For this reason, it is recommended
-           that it is called during the FixedUpdate callback.
-         */
-
+        this._deltaPos = position.clone().subtract(this.owner.transform.position);
     }
 
     /*
@@ -134,13 +134,21 @@ class Rigidbody extends Component {
         this._forces.zero();
     }
 
-    calcLoads() {
-        this.resetForces();
+
+    update(d_t) {
+        this.calcLoads(d_t);
+        this.updateBodyEuler(d_t);
+    }
+
+    /**
+     * @param d_t {number}
+     */
+    calcLoads(d_t) {
         //aggregate forces
+        this.resetForces();
 
         //test force
         this._forces.add(this._impactForces);
-
 
         this._impactForces.zero();
     }
@@ -149,14 +157,21 @@ class Rigidbody extends Component {
      * @param d_t {number}
      */
     updateBodyEuler(d_t) {
-        let dv = this._forces.clone().divideScalar(this._mass);
-        this._velocity.add(dv);
-        //update transform
-        let d = this._velocity.clone().multiplyScalar(d_t);
-        this.owner.transform.translate(d);
+        let a = this._forces.clone().divideScalar(this._mass);
 
-        console.log("new position: "+this.owner.transform.position.toString());
-        //console.log((this.owner.transform.position.x - 9 < Number.EPSILON) + ", "+ Number.EPSILON);
+        let dv = a.multiplyScalar(d_t);
+        this._velocity.add(dv);
+
+        let ds = this._velocity.clone().multiplyScalar(d_t);
+        this.owner.transform.translate(ds);
+
+        //Misc. calculation
+        //this._speed = this._velocity.magnitude();
+        //console.log(this._speed);
+
+        //maybe
+        this.owner.transform.translate(this._deltaPos);
+        this._deltaPos.zero();
     }
 
 }
