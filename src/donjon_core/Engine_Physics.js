@@ -33,7 +33,7 @@ class Simple_Physics {
     simulate(d_t) {
         // update all rigidbody's velocity, and update the position(transform)
         for (let i = 0; i < this._rigidbodies.length; i++) {
-            this._rigidbodies[i].calcLoads();
+            this._rigidbodies[i].calcLoads(d_t);
             this._rigidbodies[i].updateBodyEuler(d_t);
         }
 

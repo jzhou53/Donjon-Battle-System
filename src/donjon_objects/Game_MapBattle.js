@@ -119,7 +119,7 @@ class Game_BattleMap extends Game_Map {
 
 
         if (!direction.isZero()) {
-            direction.normalize();
+            //direction.normalize(); //this make sure player move at the same speed in all direction
             delta_pos = direction.multiplyScalar(test_speed);
 
             //rigidbody._velocity.limit(3.0,0.9);

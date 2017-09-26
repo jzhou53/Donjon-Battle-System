@@ -78,9 +78,15 @@ class Game_Object {
         this._name = name === 'unnamed' ? 'unnamed' + this.id : name;
         /**
          * @type {Object}
-         * @private
+         * @protected
          */
         this._components = components;
+        /**
+         * @type {Object}
+         * @protected
+         */
+        this._behaviours = [];
+
         /**
          * @type {boolean}
          * @protected
