@@ -4,13 +4,13 @@
 class Game_Object {
 
     static LAYERS = {
-        DEFAULT: 0,
+        DEFAULT: 0x0000,
     };
 
     static TAGS = {
-        UNTAGGED: 0,
-        RESPAWN: 1,
-        PLAYER: 2,
+        UNTAGGED: 0x0000,
+        RESPAWN: 0x0001,
+        PLAYER: 0x0002,
     };
 
     get id() {
@@ -38,9 +38,8 @@ class Game_Object {
 
     /**
      * @param name {String} The name that the Game_Object is created with.
-     * @param components {Object} A list of Components to add to the Game_Object on creation.
      */
-    constructor(name = 'unnamed', components = {}) {
+    constructor(name = 'unnamed') {
         /**
          * @type{number}
          * @protected
@@ -80,7 +79,7 @@ class Game_Object {
          * @type {Object}
          * @protected
          */
-        this._components = components;
+        this._components = {};
         /**
          * @type {Object}
          * @protected

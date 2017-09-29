@@ -13,14 +13,14 @@ class Simple_Physics {
      *
      * @param colliders {Array.<Collider>} collider components that will be simulated.
      */
-    setup(colliders){
+    setup(colliders) {
         //reset
         this._colliders = [];
         this._rigidbodies = [];
         //assign
         for (let col of colliders) {
             this._colliders.push(col);
-            if (this._rigidbodies.indexOf(col.attachedRigidbody) === -1){
+            if (this._rigidbodies.indexOf(col.attachedRigidbody) === -1) {
                 this._rigidbodies.push(col.attachedRigidbody);
             }
         }

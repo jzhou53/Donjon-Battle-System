@@ -55,11 +55,10 @@ class Manager_DynamicEntity {
             throw new Error('The map data is not available');
         }
         //load data from $dataMap (get map info, entities, graphics)
-        this.debugCreateEntity();
+
         //setup entities (both static and dynamic)
 
         //setup scroll and parallax (all the additional graphic layers)
-
 
     }
 

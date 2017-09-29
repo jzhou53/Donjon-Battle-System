@@ -94,7 +94,7 @@ class Game_BattleMap extends Game_Map {
     /**
      * @param sceneActive
      */
-    update(sceneActive){
+    update(sceneActive) {
         super.update(sceneActive);
 
         // this._dynamicEntities.update();
@@ -104,7 +104,6 @@ class Game_BattleMap extends Game_Map {
         const delta_time = 1.0 / 60.0;
 
         this._tempPhysics.simulate(delta_time);
-
 
 
         //temp -----------------------------------
@@ -128,8 +127,8 @@ class Game_BattleMap extends Game_Map {
 
             rigidbody.movePosition(delta_pos.multiplyScalar(delta_time).add(player.transform.position));
             //player.transform.translate(delta_pos.multiplyScalar(delta_time));
-        } else{
-          rigidbody.velocity.zero();
+        } else {
+            rigidbody.velocity.zero();
         }
 
         // if (player.transform.position.x > 7){

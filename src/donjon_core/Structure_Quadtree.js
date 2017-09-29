@@ -1,4 +1,4 @@
-/*
+/**
  * Javascript Quadtree
  * @version 1.1.1
  * @licence MIT
@@ -192,22 +192,14 @@ class Quadtree {
 }
 
 
-/**
- *  In addition to what a Rectangle has, a QuadRect has a pointer pointing to the game entity owing this.
- *  should only used in Quadtree data structure
- *  @interface QuadItem
- */
+/** @interface QuadItem should only used in Quadtree data structure */
 class QuadItem {
-    get x() {
-        throw new Error('x not implemented');
-    }
-    get y() {
-        throw new Error('y not implemented');
-    }
-    get width() {
-        throw new Error('y not implemented');
-    }
-    get height() {
-        throw new Error('y not implemented');
-    }
+    /** @return {number} */
+    get x() {}
+    /** @return {number} */
+    get y() {}
+    /** @return {number} */
+    get width() {}
+    /** @return {number} */
+    get height() {}
 }

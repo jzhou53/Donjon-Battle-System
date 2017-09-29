@@ -45,7 +45,7 @@ class BasicEvent {
     getTimeStamp() {
         return this._timeStamp;
     }
-
+    
     /**
      * @abstract
      */
