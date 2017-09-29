@@ -1,3 +1,10 @@
-/dist/
+/dist/audio/
+/dist/img/
+/dist/js/
+/dist/icon/
+/dist/movies/
+/dist/save/
+/dist/index.html
+dist/Game.rpgproject
 /node_modules/
 /.idea/
