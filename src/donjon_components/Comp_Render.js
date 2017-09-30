@@ -4,22 +4,6 @@
  */
 class RenderComponent extends Component {
 
-    get blendMode() {
-        return this._blendMode;
-    }
-
-    set blendMode(value) {
-        this._blendMode = value;
-    }
-
-    get opacity() {
-        return this._opacity;
-    }
-
-    set opacity(value) {
-        this._opacity = value;
-    }
-
     /**
      * constructor for render
      * @param owner
@@ -56,9 +40,25 @@ class RenderComponent extends Component {
 
     }
 
+    get blendMode() {
+        return this._blendMode;
+    }
+
+    set blendMode(value) {
+        this._blendMode = value;
+    }
+
+    get opacity() {
+        return this._opacity;
+    }
+
+    set opacity(value) {
+        this._opacity = value;
+    }
+
     /**
      * @override
-     * @protected
+     * @private
      */
     setupListeners_() {
         //add listener
