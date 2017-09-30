@@ -1,10 +1,10 @@
 /**
  * @extends Component
  */
-class Unity_Transform extends Component {
+class Transform extends Component {
 
     /**
-     * @param owner {Game_Object} The game object this component is attached
+     * @param owner {GameObject} The game object this component is attached
      *     to. A component is always attached to a game object.
      * @param pos {Victor=} The position of the transform.
      * @param height {number=} The Height of the transform.
@@ -40,12 +40,12 @@ class Unity_Transform extends Component {
 
     /**
      * calculate the distance from first transform to the second transform.
-     * @param first{Unity_Transform}
-     * @param second{Unity_Transform}
+     * @param first{Transform}
+     * @param second{Transform}
      * @return {number}
      */
     static squaredDistanceTo(first, second) {
-        return first.position_.distanceSq(second.position_);
+        return first.position_.distanceSq(second.position_)
     }
 
     /**
@@ -53,13 +53,13 @@ class Unity_Transform extends Component {
      * @param translation {Victor} Victor with direction and distance.
      */
     translate(translation) {
-        this.position_.add(translation);
+        this.position_.add(translation)
     }
 
     /**
      * Rotates the transform so the forward vector points at /target/'s current
      * position.
-     * @param target{Unity_Transform} Object to point towards.
+     * @param target{Transform} Object to point towards.
      */
     lookAt(target) {
 
@@ -70,7 +70,7 @@ class Unity_Transform extends Component {
      * @param euler_angles{number} angle degrees .
      */
     rotate(euler_angles) {
-        this.rotation_ += euler_angles;
+        this.rotation_ += euler_angles
     }
 
     /**

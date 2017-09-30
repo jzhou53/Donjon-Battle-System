@@ -4,11 +4,11 @@
  * XML structure that could be read by Donjon system.
  */``
 
-class Donjon_Interpreter {
+class DonjonInterpreter {
 
     /** @const @enum {string} */
     static CompStringMap = {
-        transform: "Unity_Transform",
+        transform: "Transform",
         rigidbody: "Rigidbody",
         circle_collider: "CircleCollider",
         box_collider: "BoxCollider"
@@ -16,9 +16,9 @@ class Donjon_Interpreter {
 
     /**
      * @param map_data {{events:[]}}
-     * @param extractor {Donjon_Extractor}
+     * @param extractor {DonjonExtractor}
      */
-    constructor(map_data, extractor = new Default_Extractor) {
+    constructor(map_data, extractor = new DefaultExtractor) {
         /**
          * @type {{events: *[]}}
          * @private
@@ -32,7 +32,7 @@ class Donjon_Interpreter {
         this._parser = null;
 
         /**
-         * @type {Donjon_Extractor}
+         * @type {DonjonExtractor}
          * @private
          */
         this._extracter = extractor;
@@ -93,7 +93,7 @@ class Donjon_Interpreter {
     /**
      *
      * @param docXML {Document}
-     * @return {Game_Object}
+     * @return {GameObject}
      */
     constructEntities(docXML) {
         /**
@@ -118,7 +118,7 @@ class Donjon_Interpreter {
     /**
      * @param entity
      * @param evnt_attributes{{name,tag,x,y}}
-     * @return {Game_Object}
+     * @return {GameObject}
      * @private
      */
     _constructObject(entity, evnt_attributes) {
@@ -127,21 +127,25 @@ class Donjon_Interpreter {
          */
         let identity = entity.identity.ATTRIBUTES;
         let obj_name, obj_tag, obj_x, obj_y;
-        obj_name = identity.name === 'auto' ? evnt_attributes.name : identity.name;
-        obj_tag = identity.tag === 'auto' ? evnt_attributes.tag : identity.tag;
+        obj_name = identity.name === 'auto' ?
+            evnt_attributes.name : identity.name;
+        obj_tag = identity.tag === 'auto' ?
+            evnt_attributes.tag : identity.tag;
 
         /**
          * @type {{position,rotation,scale}}
          */
         let transform = entity.transform;
-        obj_x = transform.position.ATTRIBUTES.x === 'auto' ? evnt_attributes.x : transform.position.ATTRIBUTES.x;
-        obj_y = transform.position.ATTRIBUTES.y === 'auto' ? evnt_attributes.y : transform.position.ATTRIBUTES.y;
+        obj_x = transform.position.ATTRIBUTES.x === 'auto' ?
+            evnt_attributes.x : transform.position.ATTRIBUTES.x;
+        obj_y = transform.position.ATTRIBUTES.y === 'auto' ?
+            evnt_attributes.y : transform.position.ATTRIBUTES.y;
 
 
         //--------process to create obj------------------------
         let compParameters = [];
 
-        let obj = new Game_Object(obj_name);
+        let obj = new GameObject(obj_name);
         obj.tag = obj_tag;
         obj.transform.position.x = obj_x;
         obj.transform.position.y = obj_y;
@@ -159,10 +163,10 @@ class Donjon_Interpreter {
         for (let i = 0; i < components.length; i++) {
             /* Bad Smell */
             //components[i] = eval("new " +
-            // Donjon_Interpreter.CompStringMap[components[i]] + "(obj)")
+            // DonjonInterpreter.CompStringMap[components[i]] + "(obj)")
 
 
-            let a = new Unity_Transform();
+            let a = new Transform();
             // obj.addComponent();
         }
 
@@ -195,7 +199,7 @@ class Donjon_Interpreter {
             // dom.async = false;
             // dom.loadXML(xml);
         } else {
-            throw new Error("Donjon_Interpreter:: Cannot parse XML string!");
+            throw new Error("DonjonInterpreter:: Cannot parse XML string!");
         }
 
     }
@@ -208,14 +212,14 @@ class Donjon_Interpreter {
     _checkDataJson(map_data) {
         if (map_data.events) {
             if (map_data.events.length < 2) {
-                console.warn("Donjon_Interpreter:: No default game entities on map");
+                console.warn("DonjonInterpreter:: No default game entities on map");
             }
             for (let i = 0; i < map_data.events.length; i++)
                 if (map_data.events[i] && !map_data.events[i].pages) {
-                    throw new Error("Donjon_Interpreter:: Map data incorrect.");
+                    throw new Error("DonjonInterpreter:: Map data incorrect.");
                 }
         } else {
-            throw new Error("Donjon_Interpreter:: Map data incorrect.");
+            throw new Error("DonjonInterpreter:: Map data incorrect.");
         }
         return true;
     }
@@ -224,9 +228,10 @@ class Donjon_Interpreter {
 /**
  * @abstract
  */
-class Donjon_Extractor {
+class DonjonExtractor {
 
-    static CODES = {
+    /** @enum {number} */
+    static Codes = {
         SCRIPT_BEGIN: 355,
         SCRIPT: 655,
         COMMENT_BEGIN: 108,
@@ -275,9 +280,9 @@ class Donjon_Extractor {
 }
 
 /**
- * @extends Donjon_Extractor
+ * @extends DonjonExtractor
  */
-class Default_Extractor extends Donjon_Extractor {
+class DefaultExtractor extends DonjonExtractor {
 
     constructor() {
         super();
@@ -317,10 +322,10 @@ class Default_Extractor extends Donjon_Extractor {
     _extractOneLine(cmd) {
         let str = '';
         //collecting string`
-        if (cmd.code === Donjon_Extractor.CODES.SCRIPT_BEGIN ||
-            cmd.code === Donjon_Extractor.CODES.SCRIPT ||
-            cmd.code === Donjon_Extractor.CODES.COMMENT_BEGIN ||
-            cmd.code === Donjon_Extractor.CODES.COMMENT) {
+        if (cmd.code === DonjonExtractor.Codes.SCRIPT_BEGIN ||
+            cmd.code === DonjonExtractor.Codes.SCRIPT ||
+            cmd.code === DonjonExtractor.Codes.COMMENT_BEGIN ||
+            cmd.code === DonjonExtractor.Codes.COMMENT) {
             str += cmd.parameters[0] + '\n';
         }
         return str;

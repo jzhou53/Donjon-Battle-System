@@ -25,7 +25,7 @@ class Game_BattleMap extends Game_Map {
         // this.setupBattleField_();
 
         //temp==================================================
-        //this._interpreter = new Donjon_Interpreter($dataMap);
+        //this._interpreter = new DonjonInterpreter($dataMap);
         this._debugObjects = [];
         this._debugObjects.push(this.createDebugObject(8, 5));
         this._debugObjects.push(this.createDebugObject(10, 6));
@@ -47,16 +47,16 @@ class Game_BattleMap extends Game_Map {
     /**
      * @param x
      * @param y
-     * @return {Game_Object}
+     * @return {GameObject}
      */
     createDebugObject(x, y) {
-        let actor = new Game_Object();
+        let actor = new GameObject();
         actor.addComponent(Rigidbody);
         actor.addComponent(CircleCollider);
         actor.getComponent(CircleCollider).attachedRigidbody = actor.getComponent(Rigidbody);
         actor.addComponent(CharacterRenderComponent);
         //identity
-        actor.tag = Game_Object.Tags.PLAYER;
+        actor.tag = GameObject.Tags.PLAYER;
         //transform
         actor.transform.position.x = x;
         actor.transform.position.y = y;

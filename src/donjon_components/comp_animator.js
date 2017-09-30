@@ -1,7 +1,7 @@
 /**
  * @extends Component
  */
-class Component_Animator extends Component {
+class Animator extends Component {
 
     constructor(owner) {
         super(owner);

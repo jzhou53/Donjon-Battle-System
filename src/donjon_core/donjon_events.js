@@ -94,8 +94,8 @@ class Evnt_RequestSpriteRefresh extends BasicEvent {
 class Evnt_CharacterPerformAttack extends BasicEvent {
     /**
      * @param timeStamp{number}
-     * @param pPerformer{Component_BattleCore}
-     * @param pTarget{Component_BattleCore}
+     * @param pPerformer{BattleCore}
+     * @param pTarget{BattleCore}
      * @param attackType{number}
      */
     constructor(timeStamp, pPerformer, pTarget, attackType) {
@@ -136,7 +136,7 @@ class Evnt_SpawnEntity extends BasicEvent {
     }
 
     /**
-     * @return {Game_Object}
+     * @return {GameObject}
      */
     getEntity() {
         return this._entity;

@@ -5,7 +5,7 @@ class Collider extends Component {
 
     /**
      * set the owner when construct the component
-     * @param owner {Game_Object}
+     * @param owner {GameObject}
      */
     constructor(owner) {
         super(owner);
@@ -109,12 +109,12 @@ class BoxCollider extends Collider {
 
     constructor(owner) {
         super(owner);
-        this._autoTiling = false;
-        this._size = 0;
+        this.autoTiling_ = false;
+        this.size_ = 0;
     }
 
     get size() {
-        return this._size;
+        return this.size_;
     }
 
     isTouching(collider) {
@@ -151,11 +151,11 @@ class CircleCollider extends Collider {
 
     constructor(owner) {
         super(owner);
-        this._radius = 0;
+        this.radius_ = 0;
     }
 
     get radius() {
-        return this._radius;
+        return this.radius_;
     }
 
     isTouching(collider) {

@@ -5,14 +5,13 @@
 class RenderComponent extends Component {
 
     /**
-     * constructor for render
-     * @param owner
-     * @override
+     * set the owner when construct the component
+     * @param owner {GameObject}
      */
     constructor(owner) {
         super(owner);
         /**
-         * @type {number} z order
+         * @type {number}
          * @protected
          */
         this._priorityType = 1;
@@ -36,8 +35,6 @@ class RenderComponent extends Component {
          * @protected
          */
         this._transparent = false;
-
-
     }
 
     get blendMode() {
@@ -61,7 +58,6 @@ class RenderComponent extends Component {
      * @private
      */
     setupListeners_() {
-        //add listener
         EventsManager.addListener(
             EventTypes.SPRITESET_MAP_CREATED,
             this._postMapLoaded.bind(this)
@@ -80,30 +76,18 @@ class RenderComponent extends Component {
 
     update() {
         for (let i = 0; i < this._sprites.length; i++) {
-            this._sprites[i].update();
+            this._sprites[i].update()
         }
     }
 
-    /**
-     * @return {boolean}
-     */
-    isTransparent() {
-        return this._transparent;
-    }
+    /** @return {boolean} */
+    isTransparent() { return this._transparent }
 
-    /**
-     * @param transparent{boolean}
-     */
-    setTransparent(transparent) {
-        this._transparent = transparent;
-    }
+    /** @param transparent{boolean} */
+    setTransparent(transparent) { this._transparent = transparent }
 
-    /**
-     * @return {Array.<Sprite>}
-     */
-    getSprites() {
-        return this._sprites;
-    }
+    /** @return {Array.<Sprite>} */
+    getSprites() { return this._sprites }
 
     /**
      * interface to display on canvas
@@ -128,7 +112,7 @@ class RenderComponent extends Component {
      * @return {number} z position on canvas to render
      */
     screenZ() {
-        return (this._priorityType << 1 ) + 1;
+        return (this._priorityType << 1 ) + 1
     }
 
     scrolledX() {
@@ -145,7 +129,7 @@ class RenderComponent extends Component {
      * @private
      */
     _postMapLoaded(evnt) {
-        this.initialSprites(evnt.getSpritesetMap());
+        this.initialSprites(evnt.getSpritesetMap())
     }
 
 
@@ -156,8 +140,8 @@ class RenderComponent extends Component {
  */
 class CharacterRenderComponent extends RenderComponent {
     /**
-     * @constructor
-     * @param owner{GameEntity}
+     * set the owner when construct the component
+     * @param owner {GameObject}
      */
     constructor(owner) {
         super(owner);

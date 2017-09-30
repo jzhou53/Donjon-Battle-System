@@ -22,8 +22,8 @@ class Manager_BattleField {
     }
 
     /**
-     * @param first{Component_BattleCore} Attacker
-     * @param second{Component_BattleCore} Defender
+     * @param first{BattleCore} Attacker
+     * @param second{BattleCore} Defender
      */
     static handleTurn(first, second) {
         //temp
@@ -197,8 +197,8 @@ class Manager_BattleField {
 
 
     /**
-     * @param firstComp{Component_BattleCore}
-     * @param secondComp{Component_BattleCore}
+     * @param firstComp{BattleCore}
+     * @param secondComp{BattleCore}
      * @private
      */
     _handleTurn_Text(firstComp, secondComp) {

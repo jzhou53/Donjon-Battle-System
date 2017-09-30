@@ -1,7 +1,7 @@
 /**
  * @extends Component
  */
-class Component_BattleCore extends Component {
+class BattleCore extends Component {
 
     static STATES = {
         WAIT: 0,
@@ -24,7 +24,7 @@ class Component_BattleCore extends Component {
          * @type {number}
          * @private
          */
-        this._currentState = Component_BattleCore.STATES.WAIT;
+        this._currentState = BattleCore.STATES.WAIT;
 
         this.displayName = pDataBattler.name;
 
@@ -130,7 +130,7 @@ class Component_BattleCore extends Component {
     }
 
     /**
-     * @param target{Component_BattleCore}
+     * @param target{BattleCore}
      */
     swing(target) {
         EventsManager.queueEvent(new Evnt_CharacterPerformAttack(

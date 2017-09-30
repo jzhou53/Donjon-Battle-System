@@ -1,7 +1,7 @@
 /**
  * Base class for all entities in Donjon scenes.
  */
-class Game_Object {
+class GameObject {
 
     /** @enum {number} */
     static Layers = {
@@ -16,26 +16,26 @@ class Game_Object {
     };
 
     /**
-     * @param name {String} The name that the Game_Object is created with.
+     * @param name {String} The name that the GameObject is created with.
      */
     constructor(name = 'unnamed') {
         /** @private @type{number} */
         this.id_ = Utils.generateRuntimeId();
 
-        /** @private @type {Game_Object} */
+        /** @private @type {GameObject} */
         this.parent_ = null;
 
-        /** @private @type {Array.<Game_Object>} */
+        /** @private @type {Array.<GameObject>} */
         this.children_ = [];
 
-        /** @private @type {Game_Object.Layers|number} */
-        this.layer_ = Game_Object.Layers.DEFAULT;
+        /** @private @type {GameObject.Layers|number} */
+        this.layer_ = GameObject.Layers.DEFAULT;
 
-        /** @private @type {Game_Object.Tags|number} */
-        this.tag_ = Game_Object.Tags.UNTAGGED;
+        /** @private @type {GameObject.Tags|number} */
+        this.tag_ = GameObject.Tags.UNTAGGED;
 
-        /** @private @type {Unity_Transform} */
-        this.transform_ = new Unity_Transform(this);
+        /** @private @type {Transform} */
+        this.transform_ = new Transform(this);
 
         /** @private @type {String} */
         this._name = name === 'unnamed' ? 'unnamed' + this.id : name;
@@ -53,36 +53,36 @@ class Game_Object {
     /** @return {number} */
     get id() { return this.id_ }
 
-    /** @return {Unity_Transform} */
+    /** @return {Transform} */
     get transform() { return this.transform_ }
 
-    /** @return {Game_Object.Layers|number} */
+    /** @return {GameObject.Layers|number} */
     get layer() { return this.layer_ }
 
-    /** @return {Game_Object.Tags|number} */
+    /** @return {GameObject.Tags|number} */
     get tag() { return this.tag_ }
 
-    /** @param value {Game_Object.Tags|number} */
+    /** @param value {GameObject.Tags|number} */
     set tag(value) { this.tag_ = value }
 
     /**
-     *  Finds a Game_Object by name and returns it.
+     *  Finds a GameObject by name and returns it.
      * @param name {string}
-     * @return {Game_Object}
+     * @return {GameObject}
      */
     static find(name) {
     }
 
     /**
      * @param tag {number}
-     * @return {Array.<Game_Object>}
+     * @return {Array.<GameObject>}
      */
     static findGameObjectsWithTag(tag) {
     }
 
     /**
      * @param tag {number}
-     * @return {Game_Object}
+     * @return {GameObject}
      */
     static findWithTag(tag) {
     }

@@ -8,7 +8,7 @@ class Component {
 
     /**
      * set the owner when construct the component
-     * @param owner {Game_Object}
+     * @param owner {GameObject}
      */
     constructor(owner) {
         if (!owner) {
@@ -16,14 +16,14 @@ class Component {
         }
         /**
          * A pointer to an game entity who owns this component.
-         * @type {Game_Object}
+         * @type {GameObject}
          * @protected
          */
         this.owner_ = owner;
         this.setupListeners_();
     }
 
-    /** @return {Game_Object} */
+    /** @return {GameObject} */
     get owner() { return this.owner_ }
 
     /** @abstract */

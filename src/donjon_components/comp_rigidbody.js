@@ -24,7 +24,7 @@ class Rigidbody extends Component {
     };
 
     /**
-     * @param owner {Game_Object}
+     * @param owner {GameObject}
      */
     constructor(owner) {
         super(owner);
