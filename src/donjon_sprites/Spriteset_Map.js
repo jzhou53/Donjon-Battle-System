@@ -117,18 +117,18 @@ class Spriteset_Map extends Spriteset_Base {
         this._baseSprite.removeChild(this._parallax);
         this._parallax = new TilingSprite();
         this._parallax.move(0, 0, Graphics.width, Graphics.height);
-        this._parallax.bitmap = ImageManager.loadParallax(this._parallaxName);
+        this._parallax.bitmap = ImageManager.loadParallax(this.parallaxName_);
         this._baseSprite.addChildAt(this._parallax, index);
     };
 
     _updateParallax() {
-        if (this._parallaxName !== $gameMap.parallaxName()) {
-            this._parallaxName = $gameMap.parallaxName();
+        if (this.parallaxName_ !== $gameMap.parallaxName()) {
+            this.parallaxName_ = $gameMap.parallaxName();
 
             if (this._parallax.bitmap && Graphics.isWebGL() !== true) {
                 this._canvasReAddParallax();
             } else {
-                this._parallax.bitmap = ImageManager.loadParallax(this._parallaxName);
+                this._parallax.bitmap = ImageManager.loadParallax(this.parallaxName_);
             }
         }
         if (this._parallax.bitmap) {

@@ -60,10 +60,10 @@ class RenderComponent extends Component {
      * @override
      * @protected
      */
-    _setupListeners() {
+    setupListeners_() {
         //add listener
         EventsManager.addListener(
-            EVENT_TYPES.SpritesetMapCreated,
+            EventTypes.SPRITESET_MAP_CREATED,
             this._postMapLoaded.bind(this)
         );
     }
@@ -132,11 +132,11 @@ class RenderComponent extends Component {
     }
 
     scrolledX() {
-        return this.owner.transform.position.x - $gameMap._displayX
+        return this.owner.transform.position.x - $gameMap.displayX_
     }
 
     scrolledY() {
-        return this.owner.transform.position.y - $gameMap._displayY
+        return this.owner.transform.position.y - $gameMap.displayY_
     }
 
     /**

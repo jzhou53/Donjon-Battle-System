@@ -11,7 +11,8 @@ class Simple_Physics {
 
     /**
      *
-     * @param colliders {Array.<Collider>} collider components that will be simulated.
+     * @param colliders {Array.<Collider>} collider components that will be
+     *     simulated.
      */
     setup(colliders) {
         //reset
@@ -27,7 +28,8 @@ class Simple_Physics {
     }
 
     /**
-     * Simulate physics in the scene. by default it tick with a fixed delta-time.
+     * Simulate physics in the scene. by default it tick with a fixed
+     * delta-time.
      * @param d_t {number} The time to advance physics by.
      */
     simulate(d_t) {

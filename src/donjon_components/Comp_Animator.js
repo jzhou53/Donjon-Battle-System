@@ -18,7 +18,7 @@ class Component_Animator extends Component {
         this._updateAnimation();
     }
 
-    _setupListeners() {
+    setupListeners_() {
 
     }
 
@@ -80,7 +80,7 @@ class Component_Animator extends Component {
 //         this._updateAnimation();
 //     }
 //
-//     _setupListeners() {
+//     setupListeners_() {
 //
 //     }
 //

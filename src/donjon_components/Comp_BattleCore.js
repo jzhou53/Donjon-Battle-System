@@ -1,6 +1,5 @@
 /**
  * @extends Component
- *
  */
 class Component_BattleCore extends Component {
 
@@ -81,7 +80,7 @@ class Component_BattleCore extends Component {
      * @override
      * @protected
      */
-    _setupListeners() {
+    setupListeners_() {
 
     }
 

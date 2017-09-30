@@ -1,21 +1,34 @@
+/**
+ * @extends {Component}
+ */
 class Collider extends Component {
 
-    get attachedRigidbody() {
-        return this._attachedRigidbody;
-    }
-
-    set attachedRigidbody(value) {
-        this._attachedRigidbody = value;
-    }
-
+    /**
+     * set the owner when construct the component
+     * @param owner {Game_Object}
+     */
     constructor(owner) {
         super(owner);
-        this._attachedRigidbody = null;
-        this._offset = 0;
+        /** @private @type{Rigidbody} */
+        this.attachedRigidbody_ = null;
+
+        /** @private @type{number} */
+        this.offset_ = 0;
+    }
+
+    /** @return {Rigidbody} */
+    get attachedRigidbody() {
+        return this.attachedRigidbody_;
+    }
+
+    /** @param value{Rigidbody} */
+    set attachedRigidbody(value) {
+        this.attachedRigidbody_ = value;
     }
 
     /**
-     * @param collider{Collider} The collider to check if it is touching this collider.
+     * @param collider{Collider} The collider to check if it is touching this
+     *     collider.
      * @return {boolean} Whether this collider is touching the collider or not.
      */
     isTouching(collider) {
@@ -32,9 +45,12 @@ class Collider extends Component {
     }
 
     /**
-     *  Checks whether this collider is touching any colliders on the specified layerMask or not.
-     * @param layerMask {number} Any colliders on any of these layers count as touching.
-     * @return {boolean} Whether this collider is touching any collider on the specified layerMask or not.
+     *  Checks whether this collider is touching any colliders on the specified
+     * layerMask or not.
+     * @param layerMask {number} Any colliders on any of these layers count as
+     *     touching.
+     * @return {boolean} Whether this collider is touching any collider on the
+     *     specified layerMask or not.
      */
     isTouchingLayers(layerMask) {
 
@@ -86,6 +102,9 @@ class Collider extends Component {
 
 }
 
+/**
+ * @extends Collider
+ */
 class BoxCollider extends Collider {
 
     constructor(owner) {
@@ -125,6 +144,9 @@ class BoxCollider extends Collider {
 
 }
 
+/**
+ * @extends Collider
+ */
 class CircleCollider extends Collider {
 
     constructor(owner) {

@@ -1,13 +1,14 @@
 /**
  *  Component Class
- *  Super abstract class for all components, provide basic owner to game entities,
+ *  Super abstract class for all components, provide basic owner to game
+ * entities,
  *  @abstract
  */
 class Component {
 
     /**
      * set the owner when construct the component
-     * @param owner {GameEntity}
+     * @param owner {Game_Object}
      */
     constructor(owner) {
         if (!owner) {
@@ -15,33 +16,20 @@ class Component {
         }
         /**
          * A pointer to an game entity who owns this component.
-         * @type {GameEntity}
+         * @type {Game_Object}
          * @protected
          */
-        this._owner = owner;
-
-        this._setupListeners();
+        this.owner_ = owner;
+        this.setupListeners_();
     }
 
-    /**
-     * @abstract
-     */
-    update() {
-        throw new Error("Component::update not implemented");
-    }
+    /** @return {Game_Object} */
+    get owner() { return this.owner_ }
 
-    /**
-     * @return {GameEntity}
-     */
-    get owner() {
-        return this._owner;
-    }
+    /** @abstract */
+    update() { throw new Error("Component::update not implemented") }
 
-    /**
-     * @abstract
-     */
-    _setupListeners() {
-    }
-
+    /** @protected @abstract */
+    setupListeners_() {}
 }
 

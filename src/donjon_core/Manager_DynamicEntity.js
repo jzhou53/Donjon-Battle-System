@@ -1,21 +1,17 @@
 /**
- * A manager class that store dynamic entities in the game map, and handle updates etc...
- * for example: characters are stored in a quadtree,
+ * A manager class that store dynamic entities in the game map, and handle
+ * updates etc... for example: characters are stored in a quadtree,
  *
  */
 class Manager_DynamicEntity {
 
     static nextId = 0;
 
-    static getNextEntityId() {
-        return ++Manager_DynamicEntity.nextId;
-    }
-
     /**
      * @param width {number}
      * @param height {number}
      */
-    constructor(width,height) {
+    constructor(width, height) {
 
         /**
          * the main data structure storing characters(collision) on map.
@@ -44,6 +40,10 @@ class Manager_DynamicEntity {
 
         //this._debugBoard = new Sprite();
 
+    }
+
+    static getNextEntityId() {
+        return ++Manager_DynamicEntity.nextId;
     }
 
     /**
@@ -98,8 +98,8 @@ class Manager_DynamicEntity {
     }
 
     /**
-     * clear the tree structure and insert all entities into the tree again, handle collisions
-     * the quadtree must be restructured every frame.
+     * clear the tree structure and insert all entities into the tree again,
+     * handle collisions the quadtree must be restructured every frame.
      * @private
      */
     _updateQuadtree() {
@@ -112,9 +112,11 @@ class Manager_DynamicEntity {
     }
 
     /**
-     * retrieve through the quadtree, return all possible targets that might collide with pRect.
-     * example: .findPossibleTarget(new Rectangle(0,0,24,24));
-     * @param pRect{QuadItem} any Object with QuadItem interface. typically just pass a Rect class
+     * retrieve through the quadtree, return all possible targets that might
+     * collide with pRect. example: .findPossibleTarget(new
+     * Rectangle(0,0,24,24));
+     * @param pRect{QuadItem} any Object with QuadItem interface. typically
+     *     just pass a Rect class
      * @return {Array} array with all detected objects
      */
     findPossibleTarget(pRect) {

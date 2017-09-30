@@ -1,79 +1,95 @@
+/**
+ * @extends Component
+ */
 class Rigidbody extends Component {
 
-    /**
-     * @type {{DYNAMIC: number, KINEMATIC: number, STATIC: number}}
-     */
-    static BODY_TYPE = {
+    /** @const @enum {number} */
+    static BodyTypes = {
         DYNAMIC: 0x0001,
         KINEMATIC: 0x0002,
         STATIC: 0x0003,
     };
 
-    /**
-     * @type {{DISCRETE: number, CONTINUOUS: number}}
-     */
-    static COLLISION_DETECTION_MODE = {
+    /** @const @enum {number} */
+    static CollisionDetectionModes = {
         DISCRETE: 0x0001,
         CONTINUOUS: 0x0002,
     };
 
-    /**
-     * @type {{NEVER_SLEEP: number, START_AWAKE: number, START_ASLEEP: number}}
-     */
-    static SLEEP_MODE = {
+    /** @const @enum {number} */
+    static SleepModes = {
         NEVER_SLEEP: 0x0001,
         START_AWAKE: 0x0002,
         START_ASLEEP: 0x0003,
     };
 
-    get velocity() {
-        return this._velocity;
-    }
-
-    set velocity(value) {
-        this._velocity = value;
-    }
-
+    /**
+     * @param owner {Game_Object}
+     */
     constructor(owner) {
         super(owner);
+        /** @private @type {number} */
+        this.bodyType_ = Rigidbody.BodyTypes.DYNAMIC;
 
-        this._bodyType = Rigidbody.BODY_TYPE.DYNAMIC;
-        this._detectionMode = Rigidbody.COLLISION_DETECTION_MODE.DISCRETE;
-        this._sleepMode = Rigidbody.SLEEP_MODE.START_AWAKE;
+        /** @private @type {number} */
+        this.detectionMode_ = Rigidbody.CollisionDetectionModes.DISCRETE;
 
+        /** @private @type {number} */
+        this.sleepMode_ = Rigidbody.SleepModes.START_AWAKE;
 
-        this._drag = 0.5;
+        /** @private @type {number} */
+        this.drag_ = 0.5;
         //this._angularDrag = 0;
-        this._mass = 1.0;
+        /** @private @type {number} */
+        this.mass_ = 1.0;
 
-        this._impactForces = new Victor();
-        this._forces = new Victor();
-        this._velocity = new Victor();
+        /** @private @type {Victor} */
+        this.impactForces_ = new Victor();
 
-        this._speed = 0.0;
+        /** @private @type {Victor} */
+        this.forces_ = new Victor();
+
+        /** @private @type {Victor} */
+        this.velocity_ = new Victor();
+
+        /** @private @type {number} */
+        this.speed_ = 0.0;
+
         //this._angularVelocity = 0;
 
-
         //Ivan: should I add interpolation?
-        this._deltaPos = new Victor();
+        this.deltaPos_ = new Victor();
+    }
 
+    /** @return {Victor} */
+    get velocity() {
+        return this.velocity_;
+    }
+
+    /** @param value {Victor} */
+    set velocity(value) {
+        this.velocity_ = value;
     }
 
     /**
      * Apply a force to the rigidbody.
-     * The force is specified as two separate components in the X and Y directions.
-     * The object will be accelerated by the force according to the law force = mass x acceleration,
-     * the larger the mass, the greater the force required to accelerate to a given speed.
+     * The force is specified as two separate components in the X and Y
+     * directions. The object will be accelerated by the force according to the
+     * law force = mass x acceleration, the larger the mass, the greater the
+     * force required to accelerate to a given speed.
      * @param force {Victor} Components of the force in the X and Y axes.
      */
     addForce(force) {
-        this._impactForces.add(force);
+        this.impactForces_.add(force);
     }
 
     /**
-     * Checks whether the collider is touching any of the collider(s) attached to this rigidbody or not.
-     * @param collider{Collider} The collider to check if it is touching any of the collider(s) attached to this rigidbody.
-     * @return {boolean} Whether the collider is touching any of the collider(s) attached to this rigidbody or not.
+     * Checks whether the collider is touching any of the collider(s) attached
+     * to this rigidbody or not.
+     * @param collider{Collider} The collider to check if it is touching any of
+     *     the collider(s) attached to this rigidbody.
+     * @return {boolean} Whether the collider is touching any of the
+     *     collider(s) attached to this rigidbody or not.
      */
     isTouching(collider) {
         //TODO: handle algorithm
@@ -81,7 +97,7 @@ class Rigidbody extends Component {
     }
 
     isKinematic() {
-        return this._bodyType === Rigidbody.BODY_TYPE.KINEMATIC;
+        return this.bodyType_ === Rigidbody.BodyTypes.KINEMATIC;
     }
 
     isAwake() {
@@ -110,7 +126,7 @@ class Rigidbody extends Component {
      * @param position{Victor} The new position for the Rigidbody object.
      */
     movePosition(position) {
-        this._deltaPos = position.clone().subtract(this.owner.transform.position);
+        this.deltaPos_ = position.clone().subtract(this.owner.transform.position);
     }
 
     /*
@@ -131,9 +147,8 @@ class Rigidbody extends Component {
      *
      */
     resetForces() {
-        this._forces.zero();
+        this.forces_.zero();
     }
-
 
     update(d_t) {
         this.calcLoads(d_t);
@@ -148,30 +163,30 @@ class Rigidbody extends Component {
         this.resetForces();
 
         //test force
-        this._forces.add(this._impactForces);
+        this.forces_.add(this.impactForces_);
 
-        this._impactForces.zero();
+        this.impactForces_.zero();
     }
 
     /**
      * @param d_t {number}
      */
     updateBodyEuler(d_t) {
-        let a = this._forces.clone().divideScalar(this._mass);
+        let a = this.forces_.clone().divideScalar(this.mass_);
 
         let dv = a.multiplyScalar(d_t);
-        this._velocity.add(dv);
+        this.velocity_.add(dv);
 
-        let ds = this._velocity.clone().multiplyScalar(d_t);
+        let ds = this.velocity_.clone().multiplyScalar(d_t);
         this.owner.transform.translate(ds);
 
         //Misc. calculation
-        //this._speed = this._velocity.magnitude();
-        //console.log(this._speed);
+        //this.speed_ = this.velocity_.magnitude();
+        //console.log(this.speed_);
 
         //maybe
-        this.owner.transform.translate(this._deltaPos);
-        this._deltaPos.zero();
+        this.owner.transform.translate(this.deltaPos_);
+        this.deltaPos_.zero();
     }
 
 }

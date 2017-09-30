@@ -7,25 +7,33 @@
  * @modified Yanwen Xu
  * for RPG Maker MV
  */
-
 class Quadtree {
 
     /**
      * Quadtree Constructor
      * @param {Rectangle} bounds with x, y, width, height
-     * @param  {Integer} max_objects @optional
-     * @param {Integer} max_level @optional
-     * @param {Integer} level @optional
+     * @param  {number} max_objects @optional
+     * @param {number} max_level @optional
+     * @param {number} level @optional
      */
     constructor(bounds, max_objects = 10, max_level = 4, level = 0) {
+        /** @private @type {number} */
+        this.maxObjects_ = max_objects;
 
-        this._maxObjects = max_objects;
-        this._maxLevel = max_level;
-        this._level = level;
-        this._bounds = bounds;
+        /** @private @type {number} */
+        this.maxLevel_ = max_level;
 
-        this._objects = [];
-        this._nodes = [];
+        /** @private @type {number} */
+        this.level_ = level;
+
+        /** @private @type {Rectangle} */
+        this.bounds_ = bounds;
+
+        /** @private @type {Array.<QuadItem>} */
+        this.objects_ = [];
+
+        /** @private @type {Array.<Quadtree>} */
+        this.nodes_ = [];
 
     }
 
@@ -33,141 +41,131 @@ class Quadtree {
      * Split the node into 4 sub-nodes
      * @private
      */
-    _split() {
-
-        const nextLevel = this._level + 1,
-            subWidth = Math.round(this._bounds.width / 2),
-            subHeight = Math.round(this._bounds.height / 2),
-            x = Math.round(this._bounds.x),
-            y = Math.round(this._bounds.y);
+    split_() {
+        let nextLevel = this.level_ + 1;
+        let subWidth = Math.round(this.bounds_.width / 2);
+        let subHeight = Math.round(this.bounds_.height / 2);
+        let x = Math.round(this.bounds_.x);
+        let y = Math.round(this.bounds_.y);
 
         //top right node
-        this._nodes[0] = new Quadtree(new Rectangle
-        (
+        this.nodes_[0] = new Quadtree(new Rectangle(
             x + subWidth,
             y,
             subWidth,
             subHeight
-        ), this._maxObjects, this._maxLevel, nextLevel);
+        ), this.maxObjects_, this.maxLevel_, nextLevel);
 
         //top left node
-        this._nodes[1] = new Quadtree(new Rectangle
-        (
+        this.nodes_[1] = new Quadtree(new Rectangle(
             x,
             y,
             subWidth,
             subHeight
-        ), this._maxObjects, this._maxLevel, nextLevel);
+        ), this.maxObjects_, this.maxLevel_, nextLevel);
 
         //bottom left node
-        this._nodes[2] = new Quadtree(new Rectangle
-        (
+        this.nodes_[2] = new Quadtree(new Rectangle(
             x,
             y + subHeight,
             subWidth,
             subHeight
-        ), this._maxObjects, this._maxLevel, nextLevel);
+        ), this.maxObjects_, this.maxLevel_, nextLevel);
 
         //bottom right node
-        this._nodes[3] = new Quadtree(new Rectangle
-        (
+        this.nodes_[3] = new Quadtree(new Rectangle(
             x + subWidth,
             y + subHeight,
             subWidth,
             subHeight
-        ), this._maxObjects, this._maxLevel, nextLevel);
+        ), this.maxObjects_, this.maxLevel_, nextLevel);
 
     }
 
     /**
      * Determine which node the object belongs to
-     * @param {QuadItem} pRect        bounds of the area to be checked, with x, y, width, height
-     * @return Integer        index of the sub-node (0-3), or -1 if pRect cannot completely fit within a sub-node and is part of the parent node
+     * @param {QuadItem} pRect        bounds of the area to be checked, with x,
+     *     y, width, height
+     * @return number        index of the sub-node (0-3), or -1 if pRect
+     *     cannot completely fit within a sub-node and is part of the parent
+     *     node
      */
     getIndex(pRect) {
         let index = -1;
-        const px = this._bounds.x + (this._bounds.width / 2),
-            py = this._bounds.y + (this._bounds.height / 2),
-            //{bool} pRect can completely fit within the top quadrants
-            topQuadrant = (pRect.y < py && pRect.y + pRect.height < py),
-            //{bool} pRect can completely fit within the bottom quadrants
-            bottomQuadrant = (pRect.y > py);
+        let px = this.bounds_.x + (this.bounds_.width / 2);
+        let py = this.bounds_.y + (this.bounds_.height / 2);
+        let topQuadrant = (pRect.y < py && pRect.y + pRect.height < py);
+        let bottomQuadrant = (pRect.y > py);
 
-        //pRect can completely fit within the left quadrants
         if (pRect.x < px && pRect.x + pRect.width < px) {
             if (topQuadrant) {
-                index = 1;
+                index = 1
             } else if (bottomQuadrant) {
-                index = 2;
+                index = 2
             }
-
-            //pRect can completely fit within the right quadrants
         } else if (pRect.x > px) {
             if (topQuadrant) {
-                index = 0;
+                index = 0
             } else if (bottomQuadrant) {
-                index = 3;
+                index = 3
             }
         }
-
-        return index;
-
+        return index
     }
 
     /**
      * Insert the object into the node. If the node
      * exceeds the capacity, it will split and add all
      * objects to their corresponding sub-nodes.
-     * @param {QuadItem} pRect        bounds of the object to be added, with x, y, width, height
+     * @param {QuadItem} pRect  - bounds of the object to be added, with x,y,
+     * width, height
      */
     insert(pRect) {
-        let i = 0,
-            index;
-
-        if (typeof this._nodes[0] !== 'undefined') {
+        let i = 0;
+        let index;
+        if (typeof this.nodes_[0] !== 'undefined') {
             index = this.getIndex(pRect);
             if (index !== -1) {
-                this._nodes[index].insert(pRect);
-                return;
+                this.nodes_[index].insert(pRect);
+                return
             }
         }
 
-        this._objects.push(pRect);
+        this.objects_.push(pRect);
 
-        if (this._objects.length > this._maxObjects && this._level < this._maxLevel) {
-
-            if (typeof this._nodes[0] === 'undefined') {
-                this._split();
+        if (this.objects_.length > this.maxObjects_
+            && this.level_ < this.maxLevel_) {
+            if (typeof this.nodes_[0] === 'undefined') {
+                this.split_()
             }
-
-            while (i < this._objects.length) {
-                index = this.getIndex(this._objects[i]);
+            while (i < this.objects_.length) {
+                index = this.getIndex(this.objects_[i]);
                 if (index !== -1) {
-                    this._nodes[index].insert(this._objects.splice(i, 1)[0]);
+                    this.nodes_[index].insert(this.objects_.splice(i, 1)[0])
                 } else {
-                    i = i + 1;
+                    i = i + 1
                 }
             }
-
         }
-
     }
 
     /**
      * Return all objects that could collide with the given object
-     * @param {QuadItem} pRect        bounds of the object to be checked, with x, y, width, height
+     * @param {QuadItem} pRect        bounds of the object to be checked, with
+     *     x, y, width, height
      * @Return {Array}        array with all detected objects
      */
     retrieve(pRect) {
         const index = this.getIndex(pRect);
-        let returnObjects = this._objects;
-        if (typeof this._nodes[0] !== 'undefined') {
+        let returnObjects = this.objects_;
+        if (typeof this.nodes_[0] !== 'undefined') {
             if (index !== -1) {
-                returnObjects = returnObjects.concat(this._nodes[index].retrieve(pRect));
-
+                returnObjects = returnObjects.concat(
+                    this.nodes_[index].retrieve(pRect))
             } else {
-                for (let i = 0; i < this._nodes.length; i = i + 1) {
-                    returnObjects = returnObjects.concat(this._nodes[i].retrieve(pRect));
+                for (let i = 0; i < this.nodes_.length; i = i + 1) {
+                    returnObjects = returnObjects.concat(
+                        this.nodes_[i].retrieve(pRect))
                 }
             }
         }
@@ -179,27 +177,28 @@ class Quadtree {
      */
     clear() {
         //console.log("clear Triggered");
-        this._objects = [];
-        for (let i = 0; i < this._nodes.length; ++i) {
-            if (typeof this._nodes[i] !== 'undefined') {
-                this._nodes[i].clear();
+        this.objects_ = [];
+        for (let i = 0; i < this.nodes_.length; ++i) {
+            if (typeof this.nodes_[i] !== 'undefined') {
+                this.nodes_[i].clear();
             }
         }
-        this._nodes = [];
+        this.nodes_ = [];
     }
-
-
 }
 
 
-/** @interface QuadItem should only used in Quadtree data structure */
+/** @interface QuadItem - should only used in Quadtree data structure */
 class QuadItem {
     /** @return {number} */
     get x() {}
+
     /** @return {number} */
     get y() {}
+
     /** @return {number} */
     get width() {}
+
     /** @return {number} */
     get height() {}
 }

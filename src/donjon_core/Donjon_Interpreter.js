@@ -1,13 +1,13 @@
 /**
- * Interpreter class convert raw data stored in default RMMV data.json files into
- * Donjon data objects.
- * For examples: Interpreter convert RMMV events into XML structure that could be read by
- * Donjon system.
+ * Interpreter class convert raw data stored in default RMMV data.json files
+ * into Donjon data objects. For examples: Interpreter convert RMMV events into
+ * XML structure that could be read by Donjon system.
  */``
 
 class Donjon_Interpreter {
 
-    static COMP_STRING_MAP = {
+    /** @const @enum {string} */
+    static CompStringMap = {
         transform: "Unity_Transform",
         rigidbody: "Rigidbody",
         circle_collider: "CircleCollider",
@@ -18,8 +18,7 @@ class Donjon_Interpreter {
      * @param map_data {{events:[]}}
      * @param extractor {Donjon_Extractor}
      */
-    constructor(map_data, extractor = new Default_Extractor,) {
-
+    constructor(map_data, extractor = new Default_Extractor) {
         /**
          * @type {{events: *[]}}
          * @private
@@ -56,6 +55,42 @@ class Donjon_Interpreter {
     }
 
     /**
+     * @param xml {Document}
+     * @return {JSON}
+     */
+    xmlToJson(xml) {
+        let obj = {};
+        if (xml.nodeType === 1) {
+            if (xml.attributes.length > 0) {
+                obj["ATTRIBUTES"] = {};
+                for (let j = 0; j < xml.attributes.length; j++) {
+                    let attribute = xml.attributes.item(j);
+                    obj["ATTRIBUTES"][attribute.nodeName] = attribute.nodeValue;
+                }
+            }
+        } else if (xml.nodeType === 3) {
+            obj = xml.nodeValue;
+        }
+        if (xml.hasChildNodes()) {
+            for (let i = 0; i < xml.childNodes.length; i++) {
+                let item = xml.childNodes.item(i);
+                let nodeName = item.nodeName;
+                if (typeof (obj[nodeName]) === "undefined") {
+                    obj[nodeName] = this.xmlToJson(item);
+                } else {
+                    if (typeof (obj[nodeName].push) === "undefined") {
+                        let old = obj[nodeName];
+                        obj[nodeName] = [];
+                        obj[nodeName].push(old);
+                    }
+                    obj[nodeName].push(this.xmlToJson(item));
+                }
+            }
+        }
+        return obj;
+    };
+
+    /**
      *
      * @param docXML {Document}
      * @return {Game_Object}
@@ -71,7 +106,7 @@ class Donjon_Interpreter {
         let attributes = json.EVENT.ATTRIBUTES;
 
         let pages = json.EVENT.PAGE;
-        pages = Array.isArray(pages) ? pages : new Array(pages);
+        pages = Array.isArray(pages) ? pages : [pages];
 
         pages.forEach(entity => {
             this._constructObject(entity, attributes);
@@ -123,51 +158,16 @@ class Donjon_Interpreter {
 
         for (let i = 0; i < components.length; i++) {
             /* Bad Smell */
-            //components[i] = eval("new " + Donjon_Interpreter.COMP_STRING_MAP[components[i]] + "(obj)")
+            //components[i] = eval("new " +
+            // Donjon_Interpreter.CompStringMap[components[i]] + "(obj)")
 
 
-            let a = new Unity_Transform;
+            let a = new Unity_Transform();
             // obj.addComponent();
         }
-        
+
         return obj;
     }
-
-    /**
-     * @param xml {Document}
-     * @return {JSON}
-     */
-    xmlToJson = function (xml) {
-        let obj = {};
-        if (xml.nodeType === 1) {
-            if (xml.attributes.length > 0) {
-                obj["ATTRIBUTES"] = {};
-                for (let j = 0; j < xml.attributes.length; j++) {
-                    let attribute = xml.attributes.item(j);
-                    obj["ATTRIBUTES"][attribute.nodeName] = attribute.nodeValue;
-                }
-            }
-        } else if (xml.nodeType === 3) {
-            obj = xml.nodeValue;
-        }
-        if (xml.hasChildNodes()) {
-            for (let i = 0; i < xml.childNodes.length; i++) {
-                let item = xml.childNodes.item(i);
-                let nodeName = item.nodeName;
-                if (typeof (obj[nodeName]) === "undefined") {
-                    obj[nodeName] = this.xmlToJson(item);
-                } else {
-                    if (typeof (obj[nodeName].push) === "undefined") {
-                        let old = obj[nodeName];
-                        obj[nodeName] = [];
-                        obj[nodeName].push(old);
-                    }
-                    obj[nodeName].push(this.xmlToJson(item));
-                }
-            }
-        }
-        return obj;
-    };
 
     /**
      * @param data {{events: *[]}}

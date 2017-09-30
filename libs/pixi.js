@@ -2992,14 +2992,14 @@
                     this._fn = fn;
                     this._once = once;
                     this._thisArg = thisArg;
-                    this._next = this._prev = this._owner = null;
+                    this._next = this._prev = this.owner_ = null;
                 }
 
                 _createClass(MiniSignalBinding, [{
                     key: 'detach',
                     value: function detach() {
-                        if (this._owner === null) return false;
-                        this._owner.detach(this);
+                        if (this.owner_ === null) return false;
+                        this.owner_.detach(this);
                         return true;
                     }
                 }]);
@@ -3017,7 +3017,7 @@
                     self._tail = node;
                 }
 
-                node._owner = self;
+                node.owner_ = self;
 
                 return node;
             }
@@ -3054,7 +3054,7 @@
                             throw new Error('MiniSignal#has(): First arg must be a MiniSignalBinding object.');
                         }
 
-                        return node._owner === this;
+                        return node.owner_ === this;
                     }
                 }, {
                     key: 'dispatch',
@@ -3097,7 +3097,7 @@
                         if (!(node instanceof MiniSignalBinding)) {
                             throw new Error('MiniSignal#detach(): First arg must be a MiniSignalBinding object.');
                         }
-                        if (node._owner !== this) return this;
+                        if (node.owner_ !== this) return this;
 
                         if (node._prev) node._prev._next = node._next;
                         if (node._next) node._next._prev = node._prev;
@@ -3112,7 +3112,7 @@
                             this._tail._next = null;
                         }
 
-                        node._owner = null;
+                        node.owner_ = null;
                         return this;
                     }
                 }, {
@@ -3124,7 +3124,7 @@
                         this._head = this._tail = null;
 
                         while (node) {
-                            node._owner = null;
+                            node.owner_ = null;
                             node = node._next;
                         }
                         return this;
@@ -9520,7 +9520,7 @@
 
 
                 Container.prototype.calculateBounds = function calculateBounds() {
-                    this._bounds.clear();
+                    this.bounds_.clear();
 
                     this._calculateBounds();
 
@@ -9536,11 +9536,11 @@
                         // TODO: filter+mask, need to mask both somehow
                         if (child._mask) {
                             child._mask.calculateBounds();
-                            this._bounds.addBoundsMask(child._bounds, child._mask._bounds);
+                            this.bounds_.addBoundsMask(child.bounds_, child._mask.bounds_);
                         } else if (child.filterArea) {
-                            this._bounds.addBoundsArea(child._bounds, child.filterArea);
+                            this.bounds_.addBoundsArea(child.bounds_, child.filterArea);
                         } else {
-                            this._bounds.addBounds(child._bounds);
+                            this.bounds_.addBounds(child.bounds_);
                         }
                     }
 
@@ -9960,7 +9960,7 @@
                      * @member {PIXI.Rectangle}
                      * @private
                      */
-                    _this._bounds = new _Bounds2.default();
+                    _this.bounds_ = new _Bounds2.default();
                     _this._boundsID = 0;
                     _this._lastBoundsID = -1;
                     _this._boundsRect = null;
@@ -10015,7 +10015,7 @@
                     // multiply the alphas..
                     this.worldAlpha = this.alpha * this.parent.worldAlpha;
 
-                    this._bounds.updateID++;
+                    this.bounds_.updateID++;
                 };
 
                 /**
@@ -10068,7 +10068,7 @@
                         rect = this._boundsRect;
                     }
 
-                    return this._bounds.getRectangle(rect);
+                    return this.bounds_.getRectangle(rect);
                 };
 
                 /**
@@ -10273,7 +10273,7 @@
 
                     this.parent = null;
 
-                    this._bounds = null;
+                    this.bounds_ = null;
                     this._currentBounds = null;
                     this._mask = null;
 
@@ -11976,7 +11976,7 @@
 
                     var lb = this._localBounds;
 
-                    this._bounds.addFrame(this.transform, lb.minX, lb.minY, lb.maxX, lb.maxY);
+                    this.bounds_.addFrame(this.transform, lb.minX, lb.minY, lb.maxX, lb.maxY);
                 };
 
                 /**
@@ -22091,11 +22091,11 @@
                     if (!trim || trim.width === orig.width && trim.height === orig.height) {
                         // no trim! lets use the usual calculations..
                         this.calculateVertices();
-                        this._bounds.addQuad(this.vertexData);
+                        this.bounds_.addQuad(this.vertexData);
                     } else {
                         // lets calculate a special trimmed bounds...
                         this.calculateTrimmedVertices();
-                        this._bounds.addQuad(this.vertexTrimmedData);
+                        this.bounds_.addQuad(this.vertexTrimmedData);
                     }
                 };
 
@@ -22110,10 +22110,10 @@
                 Sprite.prototype.getLocalBounds = function getLocalBounds(rect) {
                     // we can do a fast local bounds if the sprite has no children!
                     if (this.children.length === 0) {
-                        this._bounds.minX = this._texture.orig.width * -this._anchor._x;
-                        this._bounds.minY = this._texture.orig.height * -this._anchor._y;
-                        this._bounds.maxX = this._texture.orig.width * (1 - this._anchor._x);
-                        this._bounds.maxY = this._texture.orig.height * (1 - this._anchor._y);
+                        this.bounds_.minX = this._texture.orig.width * -this._anchor._x;
+                        this.bounds_.minY = this._texture.orig.height * -this._anchor._y;
+                        this.bounds_.maxX = this._texture.orig.width * (1 - this._anchor._x);
+                        this.bounds_.maxY = this._texture.orig.height * (1 - this._anchor._y);
 
                         if (!rect) {
                             if (!this._localBoundsRect) {
@@ -22123,7 +22123,7 @@
                             rect = this._localBoundsRect;
                         }
 
-                        return this._bounds.getRectangle(rect);
+                        return this.bounds_.getRectangle(rect);
                     }
 
                     return _Container.prototype.getLocalBounds.call(this, rect);
@@ -23930,7 +23930,7 @@
                     this.updateText(true);
                     this.calculateVertices();
                     // if we have already done this on THIS frame.
-                    this._bounds.addQuad(this.vertexData);
+                    this.bounds_.addQuad(this.vertexData);
                 };
 
                 /**
@@ -32819,7 +32819,7 @@
                     var maxX = this._width * (1 - this._anchor._x);
                     var maxY = this._height * (1 - this._anchor._y);
 
-                    this._bounds.addFrame(this.transform, minX, minY, maxX, maxY);
+                    this.bounds_.addFrame(this.transform, minX, minY, maxX, maxY);
                 };
 
                 /**
@@ -32833,10 +32833,10 @@
                 TilingSprite.prototype.getLocalBounds = function getLocalBounds(rect) {
                     // we can do a fast local bounds if the sprite has no children!
                     if (this.children.length === 0) {
-                        this._bounds.minX = this._width * -this._anchor._x;
-                        this._bounds.minY = this._height * -this._anchor._y;
-                        this._bounds.maxX = this._width * (1 - this._anchor._x);
-                        this._bounds.maxY = this._height * (1 - this._anchor._x);
+                        this.bounds_.minX = this._width * -this._anchor._x;
+                        this.bounds_.minY = this._height * -this._anchor._y;
+                        this.bounds_.maxX = this._width * (1 - this._anchor._x);
+                        this.bounds_.maxY = this._height * (1 - this._anchor._x);
 
                         if (!rect) {
                             if (!this._localBoundsRect) {
@@ -32846,7 +32846,7 @@
                             rect = this._localBoundsRect;
                         }
 
-                        return this._bounds.getRectangle(rect);
+                        return this.bounds_.getRectangle(rect);
                     }
 
                     return _core$Sprite.prototype.getLocalBounds.call(this, rect);
@@ -33291,7 +33291,7 @@
                 cachedSprite.anchor.x = -(bounds.x / bounds.width);
                 cachedSprite.anchor.y = -(bounds.y / bounds.height);
                 cachedSprite.alpha = cacheAlpha;
-                cachedSprite._bounds = this._bounds;
+                cachedSprite.bounds_ = this.bounds_;
 
                 // easy bounds..
                 this._calculateBounds = this._calculateCachedBounds;
@@ -33394,7 +33394,7 @@
                 cachedSprite.transform.worldTransform = this.transform.worldTransform;
                 cachedSprite.anchor.x = -(bounds.x / bounds.width);
                 cachedSprite.anchor.y = -(bounds.y / bounds.height);
-                cachedSprite._bounds = this._bounds;
+                cachedSprite.bounds_ = this.bounds_;
                 cachedSprite.alpha = cacheAlpha;
 
                 if (!this.parent) {
@@ -39173,7 +39173,7 @@
 
                 Mesh.prototype._calculateBounds = function _calculateBounds() {
                     // TODO - we can cache local bounds and use them if they are dirty (like graphics)
-                    this._bounds.addVertices(this.transform, this.vertices, 0, this.vertices.length);
+                    this.bounds_.addVertices(this.transform, this.vertices, 0, this.vertices.length);
                 };
 
                 /**

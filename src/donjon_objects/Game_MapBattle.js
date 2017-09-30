@@ -2,22 +2,14 @@
  * @extends Game_Map
  */
 class Game_BattleMap extends Game_Map {
-    /**
-     * @constructor
-     */
+
     constructor() {
         super();
-        /**
-         * @type {Manager_DynamicEntity}
-         * @private
-         */
+        /** @private @type {Manager_DynamicEntity} */
         this._dynamicEntities = null;
-        /**
-         * @type {Manager_BattleField}
-         * @private
-         */
-        this._battleField = null;
 
+        /** @private @type {Manager_BattleField} */
+        this._battleField = null;
     }
 
     /**
@@ -29,8 +21,8 @@ class Game_BattleMap extends Game_Map {
         //set up static manager
 
         //set up dynamic entity manager
-        // this._setupDynamicManager();
-        // this._setupBattleField();
+        // this.setupDynamicManager_();
+        // this.setupBattleField_();
 
         //temp==================================================
         //this._interpreter = new Donjon_Interpreter($dataMap);
@@ -48,11 +40,8 @@ class Game_BattleMap extends Game_Map {
                 colliders.push(c);
             }
         }
-
-        //======================================================
         this._tempPhysics.setup(colliders);
-
-
+        //======================================================
     }
 
     /**
@@ -67,32 +56,30 @@ class Game_BattleMap extends Game_Map {
         actor.getComponent(CircleCollider).attachedRigidbody = actor.getComponent(Rigidbody);
         actor.addComponent(CharacterRenderComponent);
         //identity
-        actor.tag = "character";
+        actor.tag = Game_Object.Tags.PLAYER;
         //transform
         actor.transform.position.x = x;
         actor.transform.position.y = y;
+
         //add god's first force
-        //actor.getComponent(Rigidbody).addForce(new Victor(3,0));
+        actor.getComponent(Rigidbody).addForce(new Victor(3,0));
         return actor;
     }
 
-    /**
-     * @private
-     */
-    _setupDynamicManager() {
+    /** @private */
+    setupDynamicManager_() {
         this._dynamicEntities = new Manager_DynamicEntity(
-            this.width(), this.height()
-        );
+            this.width(), this.height());
         this._dynamicEntities.setup(this.mapId());
-
     }
 
-    _setupBattleField() {
+    /** @private */
+    setupBattleField_() {
         this._battleField = new Manager_BattleField(this._dynamicEntities);
     }
 
     /**
-     * @param sceneActive
+     * @param sceneActive{boolean}
      */
     update(sceneActive) {
         super.update(sceneActive);
@@ -118,12 +105,13 @@ class Game_BattleMap extends Game_Map {
 
 
         if (!direction.isZero()) {
-            //direction.normalize(); //this make sure player move at the same speed in all direction
+            //direction.normalize(); //this make sure player move at the same
+            // speed in all direction
             delta_pos = direction.multiplyScalar(test_speed);
 
-            //rigidbody._velocity.limit(3.0,0.9);
+            //rigidbody.velocity_.limit(3.0,0.9);
 
-            //rigidbody._velocity.add(delta_pos.multiplyScalar(delta_time));
+            //rigidbody.velocity_.add(delta_pos.multiplyScalar(delta_time));
 
             rigidbody.movePosition(delta_pos.multiplyScalar(delta_time).add(player.transform.position));
             //player.transform.translate(delta_pos.multiplyScalar(delta_time));
@@ -135,14 +123,15 @@ class Game_BattleMap extends Game_Map {
         //     let v = new Victor(-20,0);
         //     rigidbody.addForce(v.multiplyScalar(delta_time));
         // }else{
-        //     //let v = rigidbody._velocity.clone().invert().multiplyScalar(0.1);
-        //     //rigidbody._velocity.add(v);
-        // }
+        //     //let v =
+        // rigidbody.velocity_.clone().invert().multiplyScalar(0.1);
+        // //rigidbody.velocity_.add(v); }
 
         rigidbody.update(delta_time);
 
         //let pos = player.transform.position;
-        //console.log(pos.toString() + ": "+ this.isEqual(pos.x, Math.round(pos.x)));
+        //console.log(pos.toString() + ": "+ this.isEqual(pos.x,
+        // Math.round(pos.x)));
 
     }
 
