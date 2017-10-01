@@ -1,4 +1,6 @@
-
+/**
+ * @author JQline
+ */
 
 //PluginManager.setup($plugins);
 
