@@ -42,27 +42,6 @@ class Damage {
 
 class Game_Items {
 
-    static ITEM_TYPE = {
-        HORSE: 0,
-        ONE_HANDED_WPN: 1,
-        TWO_HANDED_WPN: 2,
-        POLEARM: 3,
-        ARROW: 4,
-        BOLT: 5,
-        SHIELD: 6,
-        BOW: 7,
-        CROSSBOW: 8,
-        THROWN: 9,
-        GOODS: 10,
-        HEAD_ARMOR: 11,
-        BODY_ARMOR: 12,
-        PISTOL: 13,
-        MUSKET: 14,
-        BULLET: 15,
-        ANIMAL: 16,
-        BOOK: 17,
-    };
-
     /**
      * @param pDataItem {{id:number,name:String}}
      */
@@ -78,6 +57,30 @@ class Game_Items {
          */
         this._name = pDataItem.name || '';
 
+    }
+
+    /** @enum {number} */
+    static get ITEM_TYPE() {
+        return {
+            HORSE: 0,
+            ONE_HANDED_WPN: 1,
+            TWO_HANDED_WPN: 2,
+            POLEARM: 3,
+            ARROW: 4,
+            BOLT: 5,
+            SHIELD: 6,
+            BOW: 7,
+            CROSSBOW: 8,
+            THROWN: 9,
+            GOODS: 10,
+            HEAD_ARMOR: 11,
+            BODY_ARMOR: 12,
+            PISTOL: 13,
+            MUSKET: 14,
+            BULLET: 15,
+            ANIMAL: 16,
+            BOOK: 17,
+        }
     }
 
     /**
@@ -102,14 +105,6 @@ class Game_Equipment extends Game_Items {
 
 class Game_Weapon extends Game_Equipment {
 
-    static BASE_CRITICAL = 25;
-
-    static ATTACK_TYPES = {
-        SWING: 1,
-        THRUST: 2,
-        OVERHEAD: 3,
-    };
-
     /**
      * @constructor
      * @param pDataItem {{
@@ -131,6 +126,18 @@ class Game_Weapon extends Game_Equipment {
 
     }
 
+    /** @return {number} */
+    static get BASE_CRITICAL() { return 25 }
+
+    /** @enum {number} */
+    static get ATTACK_TYPES() {
+        return {
+            SWING: 1,
+            THRUST: 2,
+            OVERHEAD: 3,
+        }
+    }
+
     toString() {
         return "[" + this._id + ": " + this._name + " ("
             + this._baseDamage + ", " + this._ignoreArmor + "%,"
@@ -147,7 +154,8 @@ class Game_Weapon extends Game_Equipment {
     }
 
     /**
-     * @param speed_factor{number} speed bonus to damage, 1.0 stands for normal speed
+     * @param speed_factor{number} speed bonus to damage, 1.0 stands for normal
+     *     speed
      * @param critical{boolean} is hitting head
      * @return {Damage} the raw damages delivered out
      */
@@ -178,7 +186,6 @@ class Game_MeleeWeapon extends Game_Weapon {
 }
 
 
-
 class Game_Armor extends Game_Equipment {
 
     /**
@@ -201,7 +208,8 @@ class Game_Armor extends Game_Equipment {
     }
 
     /**
-     * taking raw damage, and apply the damages to armor, generate final damage to flesh after.
+     * taking raw damage, and apply the damages to armor, generate final damage
+     * to flesh after.
      * @param pDamage{Damage} raw damages
      */
     receiveDamage(pDamage) {
@@ -248,7 +256,8 @@ class Game_Armor extends Game_Equipment {
         if (this._durability <= 0) {
             this._durability = 0;
             this._broken = true;
-            //armor break event should send out.. maybe to notify environment dropping?
+            //armor break event should send out.. maybe to notify environment
+            // dropping?
         }
     }
 

@@ -3,26 +3,6 @@
  */
 class Rigidbody extends Component {
 
-    /** @const @enum {number} */
-    static BodyTypes = {
-        DYNAMIC: 0x0001,
-        KINEMATIC: 0x0002,
-        STATIC: 0x0003,
-    };
-
-    /** @const @enum {number} */
-    static CollisionDetectionModes = {
-        DISCRETE: 0x0001,
-        CONTINUOUS: 0x0002,
-    };
-
-    /** @const @enum {number} */
-    static SleepModes = {
-        NEVER_SLEEP: 0x0001,
-        START_AWAKE: 0x0002,
-        START_ASLEEP: 0x0003,
-    };
-
     /**
      * @param owner {GameObject}
      */
@@ -59,6 +39,32 @@ class Rigidbody extends Component {
 
         //Ivan: should I add interpolation?
         this.deltaPos_ = new Victor();
+    }
+
+    /** @const @enum {number} */
+    static get CollisionDetectionModes() {
+        return {
+            DISCRETE: 0x0001,
+            CONTINUOUS: 0x0002,
+        }
+    }
+
+    /** @const @enum {number} */
+    static get BodyTypes() {
+        return {
+            DYNAMIC: 0x0001,
+            KINEMATIC: 0x0002,
+            STATIC: 0x0003,
+        }
+    }
+
+    /** get @const @enum {number} */
+    static get SleepModes() {
+        return {
+            NEVER_SLEEP: 0x0001,
+            START_AWAKE: 0x0002,
+            START_ASLEEP: 0x0003,
+        }
     }
 
     /** @return {Victor} */

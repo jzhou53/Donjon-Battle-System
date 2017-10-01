@@ -3,15 +3,6 @@
  */
 class BattleCore extends Component {
 
-    static STATES = {
-        WAIT: 0,
-        ATTACK: 1,
-        DEFEND: 2,
-        HIT: 4,
-        DYING: 5,
-        DEAD: 6
-    };
-
     /**
      * @constructor
      * @param owner
@@ -37,6 +28,17 @@ class BattleCore extends Component {
         this._bodyArmor = null;
 
         this._setupData(pDataBattler);
+    }
+
+    static get STATES() {
+        return {
+            WAIT: 0,
+            ATTACK: 1,
+            DEFEND: 2,
+            HIT: 4,
+            DYING: 5,
+            DEAD: 6
+        }
     }
 
     get hp() {

@@ -9,9 +9,6 @@ class ConfigManager {
         throw new Error('This is a static class');
     }
 
-    static alwaysDash = false;
-    static commandRemember = false;
-
     /**
      * @return {number}
      */
@@ -121,3 +118,6 @@ class ConfigManager {
 
 
 }
+
+ConfigManager.alwaysDash = false;
+ConfigManager.commandRemember = false;

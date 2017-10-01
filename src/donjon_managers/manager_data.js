@@ -4,45 +4,29 @@
 class DataManager {
 
     /**
-     * @type {string}
-     * @private
-     */
-    static _globalId = 'RPGMV';
-    /**
-     * @type {number}
-     * @private
-     */
-    static _lastAccessedId = 1;
-
-    /**
-     * @type {String}
-     * @private
-     */
-    static _errorUrl = null;
-
-    /**
-     * @type {Array}
-     * @private
-     */
-    static _databaseFiles = [
-        {name: '$dataTilesets', src: 'Tilesets.json'},
-        {name: '$dataSystem', src: 'System.json'},
-        {name: '$dataMapInfos', src: 'MapInfos.json'},
-        //custom data
-        {name: '$dataArmors', src: 'Donjon_Armors.json'},
-        {name: '$dataWeapons', src: 'Donjon_Weapons.json'},
-        {name: '$dataBattlers', src: 'Donjon_Battlers.json'},
-        {name: '$dataSourceConfig', src: 'Donjon_SourceConfig.json'},
-        {name: '$dataAnimations', src: 'Donjon_Animations.json'}
-    ];
-
-    /**
      * @constructor
      */
     constructor() {
         throw new Error("This is a static class");
     }
 
+    /**
+     * @type {Array}
+     * @private
+     */
+    static get _databaseFiles() {
+        return [
+            {name: '$dataTilesets', src: 'Tilesets.json'},
+            {name: '$dataSystem', src: 'System.json'},
+            {name: '$dataMapInfos', src: 'MapInfos.json'},
+            //custom data
+            {name: '$dataArmors', src: 'Donjon_Armors.json'},
+            {name: '$dataWeapons', src: 'Donjon_Weapons.json'},
+            {name: '$dataBattlers', src: 'Donjon_Battlers.json'},
+            {name: '$dataSourceConfig', src: 'Donjon_SourceConfig.json'},
+            {name: '$dataAnimations', src: 'Donjon_Animations.json'}
+        ]
+    }
 
     static loadDatabase() {
         for (let i = 0; i < this._databaseFiles.length; i++) {
@@ -384,3 +368,7 @@ class DataManager {
     }
 
 }
+
+DataManager._lastAccessedId = 1;
+DataManager._errorUrl = null;
+DataManager._globalId = 'RPGMV';

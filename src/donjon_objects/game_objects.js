@@ -3,18 +3,6 @@
  */
 class GameObject {
 
-    /** @enum {number} */
-    static Layers = {
-        DEFAULT: 0x0000,
-    };
-
-    /** @enum {number} */
-    static Tags = {
-        UNTAGGED: 0x0000,
-        RESPAWN: 0x0001,
-        PLAYER: 0x0002,
-    };
-
     /**
      * @param name {String} The name that the GameObject is created with.
      */
@@ -49,6 +37,22 @@ class GameObject {
         /** @private @type {boolean} */
         this.active_ = true;
     }
+
+    /** @enum {number} */
+    static get Layers() {
+        return {
+            DEFAULT: 0x0000,
+        }
+    };
+
+    /** @enum {number} */
+    static get Tags() {
+        return {
+            UNTAGGED: 0x0000,
+            RESPAWN: 0x0001,
+            PLAYER: 0x0002,
+        }
+    };
 
     /** @return {number} */
     get id() { return this.id_ }

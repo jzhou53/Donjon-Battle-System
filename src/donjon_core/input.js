@@ -6,6 +6,10 @@
  */
 class Input {
 
+    constructor() {
+        throw new Error('This is a static class');
+    }
+
     static get dir4() {
         return this._dir4
     }
@@ -22,8 +26,84 @@ class Input {
         return this._date
     }
 
-    constructor() {
-        throw new Error('This is a static class');
+    /**
+     * The wait time of the key repeat in frames.
+     *
+     * @const
+     * @property keyRepeatWait
+     * @type Number
+     */
+    static get KEY_REPEAT_WAIT() {
+        return 24;
+    }
+
+    /**
+     * The interval of the key repeat in frames.
+     *
+     * @const
+     * @property keyRepeatInterval
+     * @type Number
+     */
+    static get KEY_REPEAT_INTERVAL() {
+        return 6;
+    }
+
+    /**
+     * A hash table to convert from a virtual key code to a mapped key name.
+     *
+     * @const
+     * @property keyMapper
+     * @type Object
+     */
+    static get KEY_MAPPER() {
+        return {
+            9: 'tab',       // tab
+            13: 'ok',       // enter
+            16: 'shift',    // shift
+            17: 'control',  // control
+            18: 'control',  // alt
+            27: 'escape',   // escape
+            32: 'ok',       // space
+            33: 'pageup',   // pageup
+            34: 'pagedown', // pagedown
+            37: 'left',     // left arrow
+            38: 'up',       // up arrow
+            39: 'right',    // right arrow
+            40: 'down',     // down arrow
+            45: 'escape',   // insert
+            81: 'pageup',   // Q
+            87: 'pagedown', // W
+            88: 'escape',   // X
+            90: 'ok',       // Z
+            96: 'escape',   // numpad 0
+            98: 'down',     // numpad 2
+            100: 'left',    // numpad 4
+            102: 'right',   // numpad 6
+            104: 'up',      // numpad 8
+            120: 'debug'    // F9
+        }
+    }
+
+    /**
+     * A hash table to convert from a gamepad button to a mapped key name.
+     *
+     * @static
+     * @property gamepadMapper
+     * @type Object
+     */
+    static get GAMEPAD_MAPPER() {
+        return {
+            0: 'ok',        // A
+            1: 'cancel',    // B
+            2: 'shift',     // X
+            3: 'menu',      // Y
+            4: 'pageup',    // LB
+            5: 'pagedown',  // RB
+            12: 'up',       // D-pad up
+            13: 'down',     // D-pad down
+            14: 'left',     // D-pad left
+            15: 'right',    // D-pad right
+        }
     }
 
     /**
@@ -36,78 +116,6 @@ class Input {
         this.clear();
         this._wrapNwjsAlert();
         this._setupEventHandlers();
-    };
-
-    /**
-     * The wait time of the key repeat in frames.
-     *
-     * @static
-     * @property keyRepeatWait
-     * @type Number
-     */
-    static KEY_REPEAT_WAIT = 24;
-
-    /**
-     * The interval of the key repeat in frames.
-     *
-     * @static
-     * @property keyRepeatInterval
-     * @type Number
-     */
-    static KEY_REPEAT_INTERVAL = 6;
-
-    /**
-     * A hash table to convert from a virtual key code to a mapped key name.
-     *
-     * @static
-     * @property keyMapper
-     * @type Object
-     */
-    static KEY_MAPPER = {
-        9: 'tab',       // tab
-        13: 'ok',       // enter
-        16: 'shift',    // shift
-        17: 'control',  // control
-        18: 'control',  // alt
-        27: 'escape',   // escape
-        32: 'ok',       // space
-        33: 'pageup',   // pageup
-        34: 'pagedown', // pagedown
-        37: 'left',     // left arrow
-        38: 'up',       // up arrow
-        39: 'right',    // right arrow
-        40: 'down',     // down arrow
-        45: 'escape',   // insert
-        81: 'pageup',   // Q
-        87: 'pagedown', // W
-        88: 'escape',   // X
-        90: 'ok',       // Z
-        96: 'escape',   // numpad 0
-        98: 'down',     // numpad 2
-        100: 'left',    // numpad 4
-        102: 'right',   // numpad 6
-        104: 'up',      // numpad 8
-        120: 'debug'    // F9
-    };
-
-    /**
-     * A hash table to convert from a gamepad button to a mapped key name.
-     *
-     * @static
-     * @property gamepadMapper
-     * @type Object
-     */
-    static GAMEPAD_MAPPER = {
-        0: 'ok',        // A
-        1: 'cancel',    // B
-        2: 'shift',     // X
-        3: 'menu',      // Y
-        4: 'pageup',    // LB
-        5: 'pagedown',  // RB
-        12: 'up',       // D-pad up
-        13: 'down',     // D-pad down
-        14: 'left',     // D-pad left
-        15: 'right',    // D-pad right
     };
 
     /**
@@ -611,7 +619,8 @@ TouchInput.isRepeated = function () {
  *
  * @static
  * @method isLongPressed
- * @return {Boolean} True if the left mouse button or touchscreen is long-pressed
+ * @return {Boolean} True if the left mouse button or touchscreen is
+ *     long-pressed
  */
 TouchInput.isLongPressed = function () {
     return this.isPressed() && this._pressedTime >= this.keyRepeatWait;

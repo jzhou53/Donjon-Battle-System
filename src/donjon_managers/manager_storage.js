@@ -1,8 +1,8 @@
 /**
  * The static class that manages storage for saving game data.
  */
-import fs from "fs";
-import path from "path";
+// import fs from "fs";
+//import path from "path";
 
 
 class StorageManager{
@@ -64,6 +64,7 @@ class StorageManager{
             if (this.isLocalMode()) {
                 let data = this.loadFromLocalFile(savefileId);
                 let compressed = LZString.compressToBase64(data);
+                let fs = require('fs');
                 let dirPath = this.localFileDirectoryPath();
                 let filePath = this.localFilePath(savefileId) + ".bak";
                 if (!fs.existsSync(dirPath)) {
@@ -94,6 +95,7 @@ class StorageManager{
         if (this.backupExists(savefileId)) {
             if (this.isLocalMode()) {
                 //let dirPath = this.localFileDirectoryPath();
+                let fs = require('fs');
                 let filePath = this.localFilePath(savefileId);
                 fs.unlinkSync(filePath + ".bak");
             } else {
@@ -108,6 +110,7 @@ class StorageManager{
             if (this.isLocalMode()) {
                 let data = this.loadFromLocalBackupFile(savefileId);
                 let compressed = LZString.compressToBase64(data);
+                let fs = require('fs');
                 let dirPath = this.localFileDirectoryPath();
                 let filePath = this.localFilePath(savefileId);
                 if (!fs.existsSync(dirPath)) {
@@ -131,6 +134,7 @@ class StorageManager{
 
     static saveToLocalFile(savefileId,json){
         let data = LZString.compressToBase64(json);
+        let fs = require('fs');
         let dirPath = this.localFileDirectoryPath();
         let filePath = this.localFilePath(savefileId);
         if (!fs.existsSync(dirPath)) {
@@ -142,6 +146,7 @@ class StorageManager{
     static loadFromLocalFile(savefileId){
         let data = null;
         let filePath = this.localFilePath(savefileId);
+        let fs = require('fs');
         if (fs.existsSync(filePath)) {
             data = fs.readFileSync(filePath, { encoding: 'utf8' });
         }
@@ -154,6 +159,7 @@ class StorageManager{
     static loadFromLocalBackupFile(savefileId){
         let data = null;
         let filePath = this.localFilePath(savefileId) + ".bak";
+        let fs = require('fs');
         if (fs.existsSync(filePath)) {
             data = fs.readFileSync(filePath, { encoding: 'utf8' });
         }
@@ -164,6 +170,7 @@ class StorageManager{
      * @param savefileId
      */
     static localFileBackupExists(savefileId){
+        let fs = require('fs');
         return fs.existsSync(this.localFilePath(savefileId) + ".bak");
     }
 
@@ -171,6 +178,7 @@ class StorageManager{
      * @param savefileId
      */
     static localFileExists(savefileId){
+        let fs = require('fs');
         return fs.existsSync(this.localFilePath(savefileId));
     }
 
@@ -179,6 +187,7 @@ class StorageManager{
      */
     static removeLocalFile(savefileId){
         const filePath = this.localFilePath(savefileId);
+        let fs = require('fs');
         if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath);
         }
@@ -237,6 +246,7 @@ class StorageManager{
     }
 
     static localFileDirectoryPath(){
+        let path = require('path');
         const base = path.dirname(process.mainModule.filename);
         return path.join(base, 'save/');
     }

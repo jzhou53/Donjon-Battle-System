@@ -5,38 +5,6 @@
 class SceneManager {
 
     /**
-     * @type {Scene_Base}
-     * @private
-     */
-    static _scene = null;
-    /**
-     * @type {Scene_Base}
-     * @private
-     */
-    static _nextScene = null;
-    /**
-     * @type {Array.<Scene_Base>}
-     * @private
-     */
-    static _stack = [];
-    static _stopped = false;
-    static _sceneStarted = false;
-    static _exiting = false;
-    static _previousClass = null;
-    /**
-     * @type {Bitmap}
-     * @private
-     */
-    static _backgroundBitmap = null;
-    static _screenWidth = 1280;
-    static _screenHeight = 720;
-    static _boxWidth = 1280;
-    static _boxHeight = 720;
-    static _deltaTime = 1.0 / 60.0;
-    static _currentTime = SceneManager.getTimeInMs();
-    static _accumulator = 0.0;
-
-    /**
      * @constructor
      */
     constructor() {
@@ -98,7 +66,7 @@ class SceneManager {
         this.initAudio();
         this.initInput();
         this.initNwjs();
-        // this.checkPluginErrors();
+        this.checkPluginErrors();
         this.setupErrorHandlers();
     }
 
@@ -465,3 +433,36 @@ class SceneManager {
     }
 
 }
+
+
+/**
+ * @type {Scene_Base}
+ * @private
+ */
+SceneManager._scene = null;
+/**
+ * @type {Scene_Base}
+ * @private
+ */
+SceneManager._nextScene = null;
+/**
+ * @type {Array.<Scene_Base>}
+ * @private
+ */
+SceneManager._stack = [];
+SceneManager._stopped = false;
+SceneManager._sceneStarted = false;
+SceneManager._exiting = false;
+SceneManager._previousClass = null;
+/**
+ * @type {Bitmap}
+ * @private
+ */
+SceneManager._backgroundBitmap = null;
+SceneManager._screenWidth = 1280;
+SceneManager._screenHeight = 720;
+SceneManager._boxWidth = 1280;
+SceneManager._boxHeight = 720;
+SceneManager._deltaTime = 1.0 / 60.0;
+SceneManager._currentTime = SceneManager.getTimeInMs();
+SceneManager._accumulator = 0.0;

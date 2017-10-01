@@ -5,8 +5,6 @@
  */
 class Manager_DynamicEntity {
 
-    static nextId = 0;
-
     /**
      * @param width {number}
      * @param height {number}
@@ -40,10 +38,11 @@ class Manager_DynamicEntity {
 
         //this._debugBoard = new Sprite();
 
+        this.nextId_ = 0;
     }
 
     static getNextEntityId() {
-        return ++Manager_DynamicEntity.nextId;
+        return ++this.nextId_;
     }
 
     /**

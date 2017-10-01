@@ -2,17 +2,9 @@
  * Interpreter class convert raw data stored in default RMMV data.json files
  * into Donjon data objects. For examples: Interpreter convert RMMV events into
  * XML structure that could be read by Donjon system.
- */``
+ */``;
 
 class DonjonInterpreter {
-
-    /** @const @enum {string} */
-    static CompStringMap = {
-        transform: "Transform",
-        rigidbody: "Rigidbody",
-        circle_collider: "CircleCollider",
-        box_collider: "BoxCollider"
-    };
 
     /**
      * @param map_data {{events:[]}}
@@ -52,6 +44,16 @@ class DonjonInterpreter {
             this.constructEntities(doc)
         }, this);
 
+    }
+
+    /** @const @enum {string} */
+    static get CompStringMap() {
+        return {
+            transform: "Transform",
+            rigidbody: "Rigidbody",
+            circle_collider: "CircleCollider",
+            box_collider: "BoxCollider"
+        }
     }
 
     /**
@@ -230,16 +232,18 @@ class DonjonInterpreter {
  */
 class DonjonExtractor {
 
-    /** @enum {number} */
-    static Codes = {
-        SCRIPT_BEGIN: 355,
-        SCRIPT: 655,
-        COMMENT_BEGIN: 108,
-        COMMENT: 408,
-        END_OF_PAGE: 0
-    };
-
     constructor() {
+    }
+
+    /** @enum {number} */
+    static get Codes() {
+        return {
+            SCRIPT_BEGIN: 355,
+            SCRIPT: 655,
+            COMMENT_BEGIN: 108,
+            COMMENT: 408,
+            END_OF_PAGE: 0
+        }
     }
 
     /**
